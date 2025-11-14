@@ -2,21 +2,25 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Adrián Bernardino</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Sitio personal de Adrián Bernardino: artista visual, fotógrafo, ingeniero en sistemas y DJ en construcción." />
+
+  <!-- Fuente similar a la que ya usas -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+
   <style>
     :root {
-      --bg: #050508;
-      --bg-soft: #0d0d11;
-      --accent: #ffdd33;
-      --accent-soft: rgba(255, 221, 51, 0.1);
-      --text: #f5f5f5;
-      --text-muted: #a0a0b5;
-      --border: #262638;
+      /* Colores base del “lava lamp” */
+      --color1: #ff4b1f;  /* rojo / naranja */
+      --color2: #ffb347;  /* amarillo / naranja suave */
+      --color3: #ff5ec4;  /* rosa */
+      --color4: #0b0000;  /* rojo muy oscuro casi negro */
+
+      /* Control general */
+      --brightness: 1.0;      /* 1 = normal */
+      --animation-speed: 45s; /* tiempo de una ida y vuelta de la animación */
     }
 
     * {
@@ -25,378 +29,436 @@
       padding: 0;
     }
 
+    html,
     body {
-      font-family: "Space Grotesk", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top left, #242445 0, #050508 45%, #050508 100%);
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: stretch;
-      padding: 24px;
-    }
-
-    .shell {
-      max-width: 1040px;
       width: 100%;
-      border-radius: 24px;
-      border: 1px solid var(--border);
-      background: linear-gradient(145deg, rgba(17,17,25,0.95), rgba(5,5,8,0.98));
-      box-shadow: 0 32px 120px rgba(0, 0, 0, 0.65);
-      display: grid;
-      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+      height: 100%;
+      font-family: "Space Grotesk", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: #f8f5ff;
+      background: #050007;
       overflow: hidden;
     }
 
-    @media (max-width: 800px) {
-      body {
-        padding: 16px;
+    /* Fondo tipo lava lamp */
+    .lava-bg {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 10% 20%, var(--color1) 0, transparent 60%),
+        radial-gradient(circle at 80% 0%,  var(--color2) 0, transparent 55%),
+        radial-gradient(circle at 0% 80%,  var(--color3) 0, transparent 60%),
+        radial-gradient(circle at 80% 80%, var(--color4) 0, #000000 60%);
+      background-size: 160% 160%;
+      filter: blur(36px) brightness(var(--brightness));
+      animation: lavaMove var(--animation-speed) ease-in-out infinite alternate;
+    }
+
+    @keyframes lavaMove {
+      0% {
+        background-position:
+          0% 0%,
+          100% 0%,
+          0% 100%,
+          100% 100%;
       }
-      .shell {
-        grid-template-columns: 1fr;
+      50% {
+        background-position:
+          20% 40%,
+          80% 10%,
+          0% 80%,
+          90% 70%;
+      }
+      100% {
+        background-position:
+          0% 100%,
+          100% 100%,
+          0% 0%,
+          100% 0%;
       }
     }
 
-    .main {
-      padding: 32px 32px 28px 32px;
+    /* Contenido central */
+    .content {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
       display: flex;
       flex-direction: column;
-      gap: 24px;
-      border-right: 1px solid var(--border);
-    }
-
-    @media (max-width: 800px) {
-      .main {
-        border-right: none;
-        border-bottom: 1px solid var(--border);
-      }
-    }
-
-    .tagline {
-      display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 6px 12px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: rgba(10, 10, 20, 0.9);
-      font-size: 11px;
-      letter-spacing: 0.08em;
+      justify-content: center;
+      text-align: center;
+      padding: 2.4rem 1.6rem;
+      backdrop-filter: blur(8px);
+    }
+
+    .title {
+      font-size: clamp(3rem, 6vw, 4.8rem);
+      letter-spacing: 0.06em;
       text-transform: uppercase;
-      color: var(--text-muted);
+      line-height: 0.9;
+      text-shadow: 0 0 32px rgba(0, 0, 0, 0.9);
     }
 
-    .tagline-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 999px;
-      background: #37ff9f;
-      box-shadow: 0 0 12px #37ff9f;
-    }
-
-    h1 {
-      font-size: 40px;
-      line-height: 1.05;
-      letter-spacing: -0.04em;
-    }
-
-    h1 span {
+    .title span {
       display: block;
     }
 
-    .accent {
-      background: linear-gradient(120deg, #ffdd33, #ff7af0);
-      -webkit-background-clip: text;
-      color: transparent;
+    .title span:last-child {
+      color: #ffd86b;
     }
 
-    .subtitle {
-      margin-top: 10px;
-      font-size: 15px;
-      color: var(--text-muted);
-      max-width: 460px;
-    }
-
-    .cta-row {
-      margin-top: 20px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-
-    .btn {
-      border-radius: 999px;
-      padding: 10px 20px;
-      font-size: 14px;
-      border: 1px solid transparent;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
-      transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease, border-color 0.12s ease;
+    .description {
+      margin-top: 1.5rem;
+      font-size: clamp(1.1rem, 2vw, 1.35rem);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      opacity: 0.9;
+      text-shadow: 0 0 18px rgba(0, 0, 0, 0.9);
       white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
     }
 
-    .btn-primary {
-      background: linear-gradient(135deg, #ffdd33, #ff8b3d);
-      color: #141416;
-      font-weight: 600;
-      box-shadow: 0 14px 40px rgba(255, 210, 90, 0.45);
+    /* Botón engranaje */
+    .settings-btn {
+      position: fixed;
+      right: 1.5rem;
+      bottom: 1.5rem;
+      z-index: 10;
+      width: 44px;
+      height: 44px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      background: radial-gradient(circle at 30% 0%, rgba(255,255,255,0.35) 0, rgba(0,0,0,0.65) 60%);
+      color: #fefefe;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow:
+        0 0 0 1px rgba(0, 0, 0, 0.5),
+        0 12px 30px rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(10px);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
     }
 
-    .btn-primary:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 18px 60px rgba(255, 210, 90, 0.6);
+    .settings-btn:hover {
+      transform: translateY(-2px) rotate(15deg);
+      box-shadow:
+        0 0 0 1px rgba(0, 0, 0, 0.4),
+        0 16px 40px rgba(0, 0, 0, 0.85);
     }
 
-    .btn-ghost {
-      border-color: var(--border);
-      background: rgba(10, 10, 20, 0.9);
-      color: var(--text);
+    .settings-btn:active {
+      transform: translateY(1px) scale(0.97);
     }
 
-    .btn-ghost:hover {
-      background: rgba(26, 26, 40, 0.9);
-      transform: translateY(-1px);
+    /* Panel de ajustes */
+    .settings-panel {
+      position: fixed;
+      right: 1.5rem;
+      bottom: 4.5rem;
+      width: min(320px, 90vw);
+      background: rgba(5, 5, 15, 0.96);
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 1.1rem 1.35rem 1.2rem;
+      color: #f2ecff;
+      font-size: 0.85rem;
+      box-shadow:
+        0 0 0 1px rgba(0, 0, 0, 0.6),
+        0 22px 50px rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(18px);
+      z-index: 9;
+      display: none;
     }
 
-    .sections {
-      margin-top: 16px;
+    .settings-panel.open {
+      display: block;
+    }
+
+    .settings-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.7rem;
+    }
+
+    .settings-header h2 {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      opacity: 0.9;
+    }
+
+    .settings-header button {
+      border: none;
+      background: transparent;
+      color: #b9b5ff;
+      font-size: 0.85rem;
+      cursor: pointer;
+      padding: 0.1rem 0.3rem;
+    }
+
+    .settings-group {
+      margin-bottom: 0.85rem;
+    }
+
+    .settings-group label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.3rem;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      opacity: 0.8;
+    }
+
+    .settings-group small {
+      opacity: 0.6;
+      font-size: 0.7rem;
+    }
+
+    .settings-colors {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.4rem;
     }
 
-    @media (max-width: 900px) {
-      .sections {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+    .settings-colors input[type="color"] {
+      width: 100%;
+      height: 32px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      background: transparent;
+      padding: 0;
+      cursor: pointer;
+    }
+
+    .slider {
+      width: 100%;
+    }
+
+    .settings-footer {
+      margin-top: 0.6rem;
+      font-size: 0.72rem;
+      opacity: 0.6;
+      line-height: 1.4;
+    }
+
+    @media (max-width: 600px) {
+      .description {
+        letter-spacing: 0.1em;
+        font-size: 0.95rem;
       }
-    }
 
-    @media (max-width: 640px) {
-      .sections {
-        grid-template-columns: 1fr;
+      .settings-btn {
+        right: 1rem;
+        bottom: 1rem;
       }
-    }
 
-    .card {
-      border-radius: 18px;
-      padding: 14px 14px 16px;
-      background: rgba(11, 11, 20, 0.85);
-      border: 1px solid var(--border);
-    }
-
-    .card-label {
-      font-size: 11px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: 6px;
-    }
-
-    .card-title {
-      font-size: 15px;
-      font-weight: 500;
-      margin-bottom: 6px;
-    }
-
-    .card-body {
-      font-size: 13px;
-      color: var(--text-muted);
-      line-height: 1.5;
-    }
-
-    .side {
-      padding: 32px 28px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      background: radial-gradient(circle at top right, rgba(255, 221, 51, 0.2), transparent 55%),
-                  radial-gradient(circle at bottom left, rgba(122, 88, 255, 0.25), transparent 55%);
-    }
-
-    .side-header {
-      font-size: 12px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-    }
-
-    .era-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 12px;
-      border-radius: 999px;
-      background: rgba(10, 10, 20, 0.9);
-      border: 1px solid var(--border);
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-
-    .pill-accent {
-      width: 10px;
-      height: 10px;
-      border-radius: 999px;
-      background: linear-gradient(135deg, #ffdd33, #ff8b3d);
-      box-shadow: 0 0 14px rgba(255, 210, 90, 0.8);
-    }
-
-    .side-box {
-      margin-top: 8px;
-      padding: 14px 14px 16px;
-      border-radius: 18px;
-      background: var(--accent-soft);
-      border: 1px solid rgba(255, 221, 51, 0.4);
-      font-size: 13px;
-      color: var(--text);
-      line-height: 1.5;
-    }
-
-    .side-links {
-      margin-top: 8px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      font-size: 13px;
-    }
-
-    .side-link {
-      color: var(--text-muted);
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 8px 10px;
-      border-radius: 999px;
-      background: rgba(10, 10, 20, 0.88);
-      border: 1px solid var(--border);
-      transition: background 0.12s ease, border-color 0.12s ease, transform 0.12s ease;
-    }
-
-    .side-link:hover {
-      background: rgba(22, 22, 36, 0.95);
-      border-color: rgba(255, 221, 51, 0.4);
-      transform: translateY(-1px);
-    }
-
-    .side-link span {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-    }
-
-    footer {
-      margin-top: auto;
-      font-size: 11px;
-      color: var(--text-muted);
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-      flex-wrap: wrap;
+      .settings-panel {
+        right: 1rem;
+        bottom: 4rem;
+      }
     }
   </style>
 </head>
 <body>
-  <main class="shell">
-    <section class="main">
-      <div class="tagline">
-        <span class="tagline-dot"></span>
-        ARTISTA DIGITAL · MÉXICO
-      </div>
+  <!-- Fondo animado -->
+  <div class="lava-bg" aria-hidden="true"></div>
 
-      <header>
-        <h1>
-          <span>Adrián</span>
-          <span class="accent">Bernardino</span>
-        </h1>
-        <p class="subtitle">
-          Artista visual, fotógrafo e ingeniero en sistemas.  
-          Construyendo un universo propio de imágenes, sonido y memoria digital.
-        </p>
-        <div class="cta-row">
-          <a class="btn btn-primary" href="mailto:angeladrianmartinezbernardino@gmail.com">
-            Contacto / colaboraciones
-          </a>
-          <a class="btn btn-ghost" href="https://www.instagram.com/adrianbernardino_" target="_blank" rel="noreferrer">
-            Ver portfolio en Instagram
-          </a>
-        </div>
-      </header>
+  <!-- Contenido principal -->
+  <main class="content">
+    <h1 class="title">
+      <span>Adrián</span>
+      <span>Bernardino</span>
+    </h1>
 
-      <section class="sections" aria-label="Áreas principales">
-        <article class="card">
-          <div class="card-label">Fotografía</div>
-          <div class="card-title">Retratos · Objetos · Ciudades</div>
-          <p class="card-body">
-            Series fotográficas en alta resolución, desde autorretratos íntimos hasta tecnología,
-            escenarios urbanos y detalles cotidianos.
-          </p>
-        </article>
-
-        <article class="card">
-          <div class="card-label">Música / DJ</div>
-          <div class="card-title">Sets en construcción</div>
-          <p class="card-body">
-            Explorando mezclas entre electrónica, pop y atmósferas cinematográficas.
-            Próximamente demos y sesiones seleccionadas.
-          </p>
-        </article>
-
-        <article class="card">
-          <div class="card-label">Archivo digital</div>
-          <div class="card-title">Legado y eras</div>
-          <p class="card-body">
-            Trabajo continuo de preservar fotos, proyectos y documentos como un archivo personal,
-            inspirado en la filosofía de Internet Archive.
-          </p>
-        </article>
-      </section>
-
-      <footer>
-        <span>© <span id="year"></span> Adrián Bernardino.</span>
-        <span>Este sitio crecerá contigo.</span>
-      </footer>
-    </section>
-
-    <aside class="side">
-      <div>
-        <div class="side-header">Era actual</div>
-        <div class="era-tag">
-          <span class="pill-accent"></span>
-          <span>Primera versión del sitio</span>
-        </div>
-        <div class="side-box">
-          Este espacio es el punto de partida.  
-          Aquí vivirán tus fotos clave, futuras portadas, proyectos visuales y
-          enlaces a música y redes. Lo que hoy es simple, mañana será tu propio portal de artista.
-        </div>
-      </div>
-
-      <div>
-        <div class="side-header">Enlaces rápidos</div>
-        <div class="side-links">
-          <a class="side-link" href="https://www.instagram.com/adrianbernardino_" target="_blank" rel="noreferrer">
-            <strong>Instagram</strong>
-            <span>Fotos & stories</span>
-          </a>
-          <a class="side-link" href="https://www.youtube.com" target="_blank" rel="noreferrer">
-            <strong>YouTube</strong>
-            <span>Próximos videos</span>
-          </a>
-          <a class="side-link" href="mailto:angeladrianmartinezbernardino@gmail.com">
-            <strong>Email</strong>
-            <span>Contacto directo</span>
-          </a>
-        </div>
-      </div>
-    </aside>
+    <p class="description">
+      0 — 🌲🌱📌🌐☀️🎬🕣💧🔥🌸🍇🪵📡 — ∞
+    </p>
   </main>
 
+  <!-- Botón engranaje -->
+  <button class="settings-btn" id="settingsToggle" aria-label="Abrir panel de ajustes de fondo">
+    ⚙️
+  </button>
+
+  <!-- Panel de ajustes -->
+  <section class="settings-panel" id="settingsPanel" aria-label="Ajustes del degradado">
+    <div class="settings-header">
+      <h2>Degradado “lava”</h2>
+      <button type="button" id="resetBtn">Reiniciar</button>
+    </div>
+
+    <div class="settings-group">
+      <label>Colores <small>del rojo al negro</small></label>
+      <div class="settings-colors">
+        <input type="color" id="color1" value="#ff4b1f" data-var="--color1" />
+        <input type="color" id="color2" value="#ffb347" data-var="--color2" />
+        <input type="color" id="color3" value="#ff5ec4" data-var="--color3" />
+        <input type="color" id="color4" value="#0b0000" data-var="--color4" />
+      </div>
+    </div>
+
+    <div class="settings-group">
+      <label for="brightnessRange">
+        Brillo
+        <small id="brightnessValue">1.0</small>
+      </label>
+      <input
+        type="range"
+        id="brightnessRange"
+        class="slider"
+        min="0.5"
+        max="1.7"
+        step="0.01"
+        value="1.0"
+      />
+    </div>
+
+    <div class="settings-group">
+      <label for="speedRange">
+        Velocidad
+        <small id="speedValue">45s</small>
+      </label>
+      <input
+        type="range"
+        id="speedRange"
+        class="slider"
+        min="15"
+        max="90"
+        step="1"
+        value="45"
+      />
+    </div>
+
+    <div class="settings-footer">
+      Panel pensado para ti o tu futuro equipo para ajustar el look del sitio.  
+      Para protección real de estos ajustes necesitarás autenticación en backend (Netlify Identity, etc.).
+    </div>
+  </section>
+
   <script>
-    // Actualiza el año automáticamente.
-    document.getElementById("year").textContent = new Date().getFullYear();
+    const root = document.documentElement;
+    const settingsToggle = document.getElementById("settingsToggle");
+    const settingsPanel = document.getElementById("settingsPanel");
+    const resetBtn = document.getElementById("resetBtn");
+
+    const brightnessRange = document.getElementById("brightnessRange");
+    const speedRange = document.getElementById("speedRange");
+    const brightnessValueLabel = document.getElementById("brightnessValue");
+    const speedValueLabel = document.getElementById("speedValue");
+
+    const colorInputs = Array.from(
+      document.querySelectorAll(".settings-colors input[type='color']")
+    );
+
+    const STORAGE_KEY = "adrian-gradient-settings-v1";
+
+    // Abrir/cerrar panel
+    settingsToggle.addEventListener("click", () => {
+      settingsPanel.classList.toggle("open");
+    });
+
+    // Aplicar y guardar colores
+    colorInputs.forEach((input) => {
+      input.addEventListener("input", () => {
+        const cssVar = input.dataset.var;
+        root.style.setProperty(cssVar, input.value);
+        saveSettings();
+      });
+    });
+
+    // Brillo
+    brightnessRange.addEventListener("input", () => {
+      const value = parseFloat(brightnessRange.value).toFixed(2);
+      root.style.setProperty("--brightness", value);
+      brightnessValueLabel.textContent = value;
+      saveSettings();
+    });
+
+    // Velocidad de animación
+    speedRange.addEventListener("input", () => {
+      const seconds = parseInt(speedRange.value, 10);
+      root.style.setProperty("--animation-speed", seconds + "s");
+      speedValueLabel.textContent = seconds + "s";
+      saveSettings();
+    });
+
+    // Guardar ajustes en localStorage
+    function saveSettings() {
+      const settings = {
+        colors: colorInputs.map((input) => ({
+          var: input.dataset.var,
+          value: input.value,
+        })),
+        brightness: brightnessRange.value,
+        speed: speedRange.value,
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
+    }
+
+    // Cargar ajustes guardados
+    function loadSettings() {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+
+      try {
+        const settings = JSON.parse(raw);
+        if (settings.colors) {
+          settings.colors.forEach((c, index) => {
+            const input = colorInputs[index];
+            if (!input) return;
+            input.value = c.value;
+            root.style.setProperty(c.var, c.value);
+          });
+        }
+        if (settings.brightness) {
+          brightnessRange.value = settings.brightness;
+          const value = parseFloat(settings.brightness).toFixed(2);
+          root.style.setProperty("--brightness", value);
+          brightnessValueLabel.textContent = value;
+        }
+        if (settings.speed) {
+          speedRange.value = settings.speed;
+          const seconds = parseInt(settings.speed, 10);
+          root.style.setProperty("--animation-speed", seconds + "s");
+          speedValueLabel.textContent = seconds + "s";
+        }
+      } catch (e) {
+        console.warn("No se pudo leer la configuración guardada:", e);
+      }
+    }
+
+    // Reiniciar a valores por defecto
+    resetBtn.addEventListener("click", () => {
+      // Colores por defecto
+      const defaults = ["#ff4b1f", "#ffb347", "#ff5ec4", "#0b0000"];
+      colorInputs.forEach((input, index) => {
+        input.value = defaults[index];
+        root.style.setProperty(input.dataset.var, input.value);
+      });
+
+      brightnessRange.value = 1.0;
+      root.style.setProperty("--brightness", "1.0");
+      brightnessValueLabel.textContent = "1.0";
+
+      speedRange.value = 45;
+      root.style.setProperty("--animation-speed", "45s");
+      speedValueLabel.textContent = "45s";
+
+      localStorage.removeItem(STORAGE_KEY);
+    });
+
+    // Inicializar al cargar la página
+    loadSettings();
   </script>
 </body>
 </html>
