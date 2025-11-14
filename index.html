@@ -5,46 +5,36 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Adrián Bernardino</title>
 
-  <!-- Fuente similar a la que ya usas -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      /* Colores base del “lava lamp” */
-      --color1: #ff4b1f;  /* rojo / naranja */
-      --color2: #ffb347;  /* amarillo / naranja suave */
-      --color3: #ff5ec4;  /* rosa */
-      --color4: #0b0000;  /* rojo muy oscuro casi negro */
-
-      /* Control general */
-      --brightness: 1.0;      /* 1 = normal */
-      --animation-speed: 45s; /* tiempo de una ida y vuelta de la animación */
+      --color1: #ff4b1f;
+      --color2: #ffb347;
+      --color3: #ff5ec4;
+      --color4: #0b0000;
+      --brightness: 1;
+      --animation-speed: 45s;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    html,
-    body {
+    html, body {
       width: 100%;
       height: 100%;
-      font-family: "Space Grotesk", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      color: #f8f5ff;
+      font-family: "Space Grotesk", system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
       background: #050007;
+      color: #f6f2ff;
       overflow: hidden;
     }
 
-    /* Fondo tipo lava lamp */
     .lava-bg {
       position: fixed;
       inset: 0;
       z-index: -1;
-      pointer-events: none;
       background:
         radial-gradient(circle at 10% 20%, var(--color1) 0, transparent 60%),
         radial-gradient(circle at 80% 0%,  var(--color2) 0, transparent 55%),
@@ -53,66 +43,107 @@
       background-size: 160% 160%;
       filter: blur(36px) brightness(var(--brightness));
       animation: lavaMove var(--animation-speed) ease-in-out infinite alternate;
+      pointer-events: none;
     }
 
     @keyframes lavaMove {
-      0% {
-        background-position:
-          0% 0%,
-          100% 0%,
-          0% 100%,
-          100% 100%;
-      }
-      50% {
-        background-position:
-          20% 40%,
-          80% 10%,
-          0% 80%,
-          90% 70%;
-      }
-      100% {
-        background-position:
-          0% 100%,
-          100% 100%,
-          0% 0%,
-          100% 0%;
-      }
+      0%   { background-position: 0% 0%, 100% 0%, 0% 100%, 100% 100%; }
+      50%  { background-position: 20% 40%, 80% 10%, 0% 80%, 90% 70%; }
+      100% { background-position: 0% 100%, 100% 100%, 0% 0%, 100% 0%; }
     }
 
-    /* Contenido central */
-    .content {
+    .page {
       position: relative;
       z-index: 1;
       width: 100%;
       height: 100%;
       display: flex;
       flex-direction: column;
+    }
+
+    /* NAV SUPERIOR */
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1.8rem;
+      backdrop-filter: blur(10px);
+      background: linear-gradient(
+        to bottom,
+        rgba(3, 0, 10, 0.85),
+        rgba(3, 0, 10, 0.4),
+        transparent
+      );
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .nav-logo {
+      font-weight: 600;
+      font-size: 0.95rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      opacity: 0.9;
+    }
+
+    .nav-menu {
+      display: flex;
+      gap: 0.8rem;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .nav-link {
+      padding: 0.35rem 0.8rem;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      background: transparent;
+      color: #efe9ff;
+      opacity: 0.82;
+      transition: all 0.18s ease;
+    }
+
+    .nav-link:hover {
+      opacity: 1;
+      background: rgba(0, 0, 0, 0.35);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .nav-link.active {
+      background: rgba(255, 216, 107, 0.14);
+      border-color: rgba(255, 216, 107, 0.7);
+      color: #ffe9a4;
+    }
+
+    /* CONTENIDO CENTRAL */
+    .content {
+      flex: 1;
+      display: flex;
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 2.4rem 1.6rem;
+      padding: 2.5rem 1.8rem 2.1rem;
+    }
+
+    .hero {
+      max-width: 720px;
       backdrop-filter: blur(8px);
     }
 
     .title {
-      font-size: clamp(3rem, 6vw, 4.8rem);
-      letter-spacing: 0.06em;
+      font-size: clamp(3rem, 6vw, 4.7rem);
       text-transform: uppercase;
-      line-height: 0.9;
+      letter-spacing: 0.08em;
+      line-height: 0.92;
       text-shadow: 0 0 32px rgba(0, 0, 0, 0.9);
     }
 
-    .title span {
-      display: block;
-    }
-
-    .title span:last-child {
-      color: #ffd86b;
-    }
+    .title span:last-child { color: #ffd86b; }
 
     .description {
       margin-top: 1.5rem;
-      font-size: clamp(1.1rem, 2vw, 1.35rem);
+      font-size: clamp(1.05rem, 2vw, 1.35rem);
       letter-spacing: 0.18em;
       text-transform: uppercase;
       opacity: 0.9;
@@ -120,15 +151,21 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      max-width: 100%;
     }
 
-    /* Botón engranaje */
+    .section-label {
+      margin-top: 1.8rem;
+      font-size: 0.82rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      opacity: 0.7;
+    }
+
+    /* BOTÓN CONFIG (solo admin) */
     .settings-btn {
       position: fixed;
       right: 1.5rem;
       bottom: 1.5rem;
-      z-index: 10;
       width: 44px;
       height: 44px;
       border-radius: 999px;
@@ -143,8 +180,12 @@
         0 0 0 1px rgba(0, 0, 0, 0.5),
         0 12px 30px rgba(0, 0, 0, 0.7);
       backdrop-filter: blur(10px);
-      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+      z-index: 10;
+      display: none; /* se muestra solo en modo admin */
     }
+
+    .settings-btn.visible { display: flex; }
 
     .settings-btn:hover {
       transform: translateY(-2px) rotate(15deg);
@@ -153,11 +194,6 @@
         0 16px 40px rgba(0, 0, 0, 0.85);
     }
 
-    .settings-btn:active {
-      transform: translateY(1px) scale(0.97);
-    }
-
-    /* Panel de ajustes */
     .settings-panel {
       position: fixed;
       right: 1.5rem;
@@ -166,7 +202,7 @@
       background: rgba(5, 5, 15, 0.96);
       border-radius: 18px;
       border: 1px solid rgba(255, 255, 255, 0.12);
-      padding: 1.1rem 1.35rem 1.2rem;
+      padding: 1rem 1.3rem 1.15rem;
       color: #f2ecff;
       font-size: 0.85rem;
       box-shadow:
@@ -177,15 +213,13 @@
       display: none;
     }
 
-    .settings-panel.open {
-      display: block;
-    }
+    .settings-panel.open { display: block; }
 
     .settings-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 0.7rem;
+      margin-bottom: 0.6rem;
     }
 
     .settings-header h2 {
@@ -199,20 +233,17 @@
       border: none;
       background: transparent;
       color: #b9b5ff;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       cursor: pointer;
-      padding: 0.1rem 0.3rem;
     }
 
-    .settings-group {
-      margin-bottom: 0.85rem;
-    }
+    .settings-group { margin-bottom: 0.75rem; }
 
     .settings-group label {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 0.3rem;
+      margin-bottom: 0.25rem;
       font-size: 0.78rem;
       text-transform: uppercase;
       letter-spacing: 0.08em;
@@ -232,7 +263,7 @@
 
     .settings-colors input[type="color"] {
       width: 100%;
-      height: 32px;
+      height: 30px;
       border-radius: 999px;
       border: 1px solid rgba(255, 255, 255, 0.25);
       background: transparent;
@@ -240,225 +271,296 @@
       cursor: pointer;
     }
 
-    .slider {
+    .slider { width: 100%; }
+
+    .sections-inputs {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .sections-inputs input {
       width: 100%;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      background: rgba(12, 10, 26, 0.9);
+      color: #f7f4ff;
+      padding: 0.35rem 0.7rem;
+      font-size: 0.8rem;
     }
 
     .settings-footer {
-      margin-top: 0.6rem;
+      margin-top: 0.55rem;
       font-size: 0.72rem;
       opacity: 0.6;
       line-height: 1.4;
     }
 
-    @media (max-width: 600px) {
-      .description {
-        letter-spacing: 0.1em;
-        font-size: 0.95rem;
-      }
-
-      .settings-btn {
-        right: 1rem;
-        bottom: 1rem;
-      }
-
-      .settings-panel {
-        right: 1rem;
-        bottom: 4rem;
-      }
+    @media (max-width: 700px) {
+      .nav { padding: 0.7rem 1rem; }
+      .nav-menu { gap: 0.4rem; font-size: 0.75rem; }
+      .settings-btn { right: 1rem; bottom: 1rem; }
+      .settings-panel { right: 1rem; bottom: 4rem; }
     }
   </style>
 </head>
 <body>
-  <!-- Fondo animado -->
   <div class="lava-bg" aria-hidden="true"></div>
 
-  <!-- Contenido principal -->
-  <main class="content">
-    <h1 class="title">
-      <span>Adrián</span>
-      <span>Bernardino</span>
-    </h1>
+  <div class="page">
+    <!-- NAV SUPERIOR -->
+    <header class="nav">
+      <div class="nav-logo">Adrián Bernardino</div>
+      <nav class="nav-menu" id="navMenu"></nav>
+    </header>
 
-    <p class="description">
-      0 — 🌲🌱📌🌐☀️🎬🕣💧🔥🌸🍇🪵📡 — ∞
-    </p>
-  </main>
+    <!-- CONTENIDO CENTRAL -->
+    <main class="content">
+      <section class="hero">
+        <h1 class="title">
+          <span>Adrián</span>
+          <span>Bernardino</span>
+        </h1>
+        <p class="description">
+          0 — 🌲🌱📌🌐☀️🎬🕣💧🔥🌸🍇🪵📡 — ∞
+        </p>
+        <p class="section-label" id="currentSectionLabel">
+          INICIO · LOBBY
+        </p>
+      </section>
+    </main>
+  </div>
 
-  <!-- Botón engranaje -->
-  <button class="settings-btn" id="settingsToggle" aria-label="Abrir panel de ajustes de fondo">
+  <!-- BOTÓN CONFIG (solo admin) -->
+  <button class="settings-btn" id="settingsToggle" aria-label="Ajustes de fondo">
     ⚙️
   </button>
 
-  <!-- Panel de ajustes -->
-  <section class="settings-panel" id="settingsPanel" aria-label="Ajustes del degradado">
+  <!-- PANEL CONFIG -->
+  <section class="settings-panel" id="settingsPanel" aria-label="Ajustes del sitio">
     <div class="settings-header">
-      <h2>Degradado “lava”</h2>
+      <h2>Panel creativo</h2>
       <button type="button" id="resetBtn">Reiniciar</button>
     </div>
 
     <div class="settings-group">
-      <label>Colores <small>del rojo al negro</small></label>
+      <label>Colores del degradado <small>lava</small></label>
       <div class="settings-colors">
-        <input type="color" id="color1" value="#ff4b1f" data-var="--color1" />
-        <input type="color" id="color2" value="#ffb347" data-var="--color2" />
-        <input type="color" id="color3" value="#ff5ec4" data-var="--color3" />
-        <input type="color" id="color4" value="#0b0000" data-var="--color4" />
+        <input type="color" data-var="--color1" id="color1" value="#ff4b1f">
+        <input type="color" data-var="--color2" id="color2" value="#ffb347">
+        <input type="color" data-var="--color3" id="color3" value="#ff5ec4">
+        <input type="color" data-var="--color4" id="color4" value="#0b0000">
       </div>
     </div>
 
     <div class="settings-group">
       <label for="brightnessRange">
-        Brillo
-        <small id="brightnessValue">1.0</small>
+        Brillo <small id="brightnessValue">1.0</small>
       </label>
-      <input
-        type="range"
-        id="brightnessRange"
-        class="slider"
-        min="0.5"
-        max="1.7"
-        step="0.01"
-        value="1.0"
-      />
+      <input type="range" id="brightnessRange" class="slider"
+             min="0.5" max="1.7" step="0.01" value="1">
     </div>
 
     <div class="settings-group">
       <label for="speedRange">
-        Velocidad
-        <small id="speedValue">45s</small>
+        Velocidad animación <small id="speedValue">45s</small>
       </label>
-      <input
-        type="range"
-        id="speedRange"
-        class="slider"
-        min="15"
-        max="90"
-        step="1"
-        value="45"
-      />
+      <input type="range" id="speedRange" class="slider"
+             min="15" max="90" step="1" value="45">
+    </div>
+
+    <div class="settings-group">
+      <label>Secciones del menú</label>
+      <div class="sections-inputs" id="sectionsInputs"></div>
     </div>
 
     <div class="settings-footer">
-      Panel pensado para ti o tu futuro equipo para ajustar el look del sitio.  
-      Para protección real de estos ajustes necesitarás autenticación en backend (Netlify Identity, etc.).
+      Este panel está pensado solo para ti (modo admin con ?admin=1).  
+      Más adelante podemos conectarlo a un backend para que las
+      configuraciones se sincronicen para todos los visitantes.
     </div>
   </section>
 
   <script>
+    const STORAGE_KEY = "adrian-site-config-v1";
+
+    const DEFAULT_CONFIG = {
+      gradient: {
+        color1: "#ff4b1f",
+        color2: "#ffb347",
+        color3: "#ff5ec4",
+        color4: "#0b0000",
+        brightness: 1,
+        speed: 45
+      },
+      sections: [
+        { id: "inicio",   label: "Inicio" },
+        { id: "fotos",    label: "Fotos" },
+        { id: "series",   label: "Series" },
+        { id: "archivo",  label: "Archivo" }
+      ],
+      currentSectionId: "inicio"
+    };
+
+    let config = loadConfigOrDefault();
     const root = document.documentElement;
+
+    const navMenu = document.getElementById("navMenu");
+    const currentSectionLabel = document.getElementById("currentSectionLabel");
+
     const settingsToggle = document.getElementById("settingsToggle");
     const settingsPanel = document.getElementById("settingsPanel");
     const resetBtn = document.getElementById("resetBtn");
 
+    const colorInputs = [
+      document.getElementById("color1"),
+      document.getElementById("color2"),
+      document.getElementById("color3"),
+      document.getElementById("color4"),
+    ];
     const brightnessRange = document.getElementById("brightnessRange");
     const speedRange = document.getElementById("speedRange");
     const brightnessValueLabel = document.getElementById("brightnessValue");
     const speedValueLabel = document.getElementById("speedValue");
+    const sectionsInputsContainer = document.getElementById("sectionsInputs");
 
-    const colorInputs = Array.from(
-      document.querySelectorAll(".settings-colors input[type='color']")
-    );
+    // ----------- INIT ----------
+    applyConfigToUI();
+    renderNav();
+    updateCurrentSectionLabel();
+    setupAdminVisibility();
 
-    const STORAGE_KEY = "adrian-gradient-settings-v1";
+    // ----------- NAV ----------
+    function renderNav() {
+      navMenu.innerHTML = "";
+      config.sections.forEach(section => {
+        const btn = document.createElement("button");
+        btn.className = "nav-link" +
+          (section.id === config.currentSectionId ? " active" : "");
+        btn.textContent = section.label;
+        btn.addEventListener("click", () => {
+          config.currentSectionId = section.id;
+          saveConfig();
+          renderNav();
+          updateCurrentSectionLabel();
+        });
+        navMenu.appendChild(btn);
+      });
 
-    // Abrir/cerrar panel
-    settingsToggle.addEventListener("click", () => {
-      settingsPanel.classList.toggle("open");
-    });
+      // Inputs en panel admin
+      sectionsInputsContainer.innerHTML = "";
+      config.sections.forEach((section, index) => {
+        const input = document.createElement("input");
+        input.type = "text";
+        input.value = section.label;
+        input.placeholder = `Sección ${index + 1}`;
+        input.addEventListener("input", () => {
+          config.sections[index].label = input.value || `Sección ${index + 1}`;
+          saveConfig();
+          renderNav();
+        });
+        sectionsInputsContainer.appendChild(input);
+      });
+    }
 
-    // Aplicar y guardar colores
-    colorInputs.forEach((input) => {
+    function updateCurrentSectionLabel() {
+      const sec = config.sections.find(s => s.id === config.currentSectionId);
+      currentSectionLabel.textContent =
+        (sec ? sec.label : "Sección") + " · lobby";
+    }
+
+    // ----------- CONFIG GRADIENTE ----------
+    function applyConfigToUI() {
+      const g = config.gradient;
+
+      // Colores
+      colorInputs[0].value = g.color1;
+      colorInputs[1].value = g.color2;
+      colorInputs[2].value = g.color3;
+      colorInputs[3].value = g.color4;
+
+      root.style.setProperty("--color1", g.color1);
+      root.style.setProperty("--color2", g.color2);
+      root.style.setProperty("--color3", g.color3);
+      root.style.setProperty("--color4", g.color4);
+
+      // Brillo
+      brightnessRange.value = g.brightness;
+      root.style.setProperty("--brightness", g.brightness);
+      brightnessValueLabel.textContent = Number(g.brightness).toFixed(2);
+
+      // Velocidad
+      speedRange.value = g.speed;
+      root.style.setProperty("--animation-speed", g.speed + "s");
+      speedValueLabel.textContent = g.speed + "s";
+    }
+
+    colorInputs.forEach((input, index) => {
       input.addEventListener("input", () => {
-        const cssVar = input.dataset.var;
-        root.style.setProperty(cssVar, input.value);
-        saveSettings();
+        const key = "color" + (index + 1);
+        config.gradient[key] = input.value;
+        root.style.setProperty("--" + key, input.value);
+        saveConfig();
       });
     });
 
-    // Brillo
     brightnessRange.addEventListener("input", () => {
-      const value = parseFloat(brightnessRange.value).toFixed(2);
-      root.style.setProperty("--brightness", value);
-      brightnessValueLabel.textContent = value;
-      saveSettings();
+      config.gradient.brightness = brightnessRange.value;
+      root.style.setProperty("--brightness", brightnessRange.value);
+      brightnessValueLabel.textContent =
+        Number(brightnessRange.value).toFixed(2);
+      saveConfig();
     });
 
-    // Velocidad de animación
     speedRange.addEventListener("input", () => {
-      const seconds = parseInt(speedRange.value, 10);
-      root.style.setProperty("--animation-speed", seconds + "s");
-      speedValueLabel.textContent = seconds + "s";
-      saveSettings();
+      config.gradient.speed = speedRange.value;
+      root.style.setProperty("--animation-speed", speedRange.value + "s");
+      speedValueLabel.textContent = speedRange.value + "s";
+      saveConfig();
     });
 
-    // Guardar ajustes en localStorage
-    function saveSettings() {
-      const settings = {
-        colors: colorInputs.map((input) => ({
-          var: input.dataset.var,
-          value: input.value,
-        })),
-        brightness: brightnessRange.value,
-        speed: speedRange.value,
-      };
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
-    }
-
-    // Cargar ajustes guardados
-    function loadSettings() {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return;
-
+    // ----------- STORAGE ----------
+    function loadConfigOrDefault() {
       try {
-        const settings = JSON.parse(raw);
-        if (settings.colors) {
-          settings.colors.forEach((c, index) => {
-            const input = colorInputs[index];
-            if (!input) return;
-            input.value = c.value;
-            root.style.setProperty(c.var, c.value);
-          });
-        }
-        if (settings.brightness) {
-          brightnessRange.value = settings.brightness;
-          const value = parseFloat(settings.brightness).toFixed(2);
-          root.style.setProperty("--brightness", value);
-          brightnessValueLabel.textContent = value;
-        }
-        if (settings.speed) {
-          speedRange.value = settings.speed;
-          const seconds = parseInt(settings.speed, 10);
-          root.style.setProperty("--animation-speed", seconds + "s");
-          speedValueLabel.textContent = seconds + "s";
-        }
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return structuredClone(DEFAULT_CONFIG);
+        const parsed = JSON.parse(raw);
+        return {
+          ...structuredClone(DEFAULT_CONFIG),
+          ...parsed,
+          gradient: { ...DEFAULT_CONFIG.gradient, ...(parsed.gradient || {}) },
+          sections: parsed.sections || DEFAULT_CONFIG.sections
+        };
       } catch (e) {
-        console.warn("No se pudo leer la configuración guardada:", e);
+        console.warn("No se pudo leer config, usando default:", e);
+        return structuredClone(DEFAULT_CONFIG);
       }
     }
 
-    // Reiniciar a valores por defecto
+    function saveConfig() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
+    }
+
     resetBtn.addEventListener("click", () => {
-      // Colores por defecto
-      const defaults = ["#ff4b1f", "#ffb347", "#ff5ec4", "#0b0000"];
-      colorInputs.forEach((input, index) => {
-        input.value = defaults[index];
-        root.style.setProperty(input.dataset.var, input.value);
-      });
-
-      brightnessRange.value = 1.0;
-      root.style.setProperty("--brightness", "1.0");
-      brightnessValueLabel.textContent = "1.0";
-
-      speedRange.value = 45;
-      root.style.setProperty("--animation-speed", "45s");
-      speedValueLabel.textContent = "45s";
-
       localStorage.removeItem(STORAGE_KEY);
+      config = loadConfigOrDefault();
+      applyConfigToUI();
+      renderNav();
+      updateCurrentSectionLabel();
     });
 
-    // Inicializar al cargar la página
-    loadSettings();
+    // ----------- MODO ADMIN ----------
+    function setupAdminVisibility() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const isAdmin = urlParams.get("admin") === "1";
+      if (isAdmin) {
+        settingsToggle.classList.add("visible");
+      }
+    }
+
+    settingsToggle.addEventListener("click", () => {
+      settingsPanel.classList.toggle("open");
+    });
   </script>
 </body>
 </html>
