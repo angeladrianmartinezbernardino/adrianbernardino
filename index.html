@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Adrián Bernardino</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Sitio personal de Adrián Bernardino: artista visual, fotógrafo, ingeniero en sistemas y DJ en construcción." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #050508;
+      --bg-soft: #0d0d11;
+      --accent: #ffdd33;
+      --accent-soft: rgba(255, 221, 51, 0.1);
+      --text: #f5f5f5;
+      --text-muted: #a0a0b5;
+      --border: #262638;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Space Grotesk", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #242445 0, #050508 45%, #050508 100%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      padding: 24px;
+    }
+
+    .shell {
+      max-width: 1040px;
+      width: 100%;
+      border-radius: 24px;
+      border: 1px solid var(--border);
+      background: linear-gradient(145deg, rgba(17,17,25,0.95), rgba(5,5,8,0.98));
+      box-shadow: 0 32px 120px rgba(0, 0, 0, 0.65);
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+      overflow: hidden;
+    }
+
+    @media (max-width: 800px) {
+      body {
+        padding: 16px;
+      }
+      .shell {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .main {
+      padding: 32px 32px 28px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      border-right: 1px solid var(--border);
+    }
+
+    @media (max-width: 800px) {
+      .main {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+    }
+
+    .tagline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(10, 10, 20, 0.9);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .tagline-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #37ff9f;
+      box-shadow: 0 0 12px #37ff9f;
+    }
+
+    h1 {
+      font-size: 40px;
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+    }
+
+    h1 span {
+      display: block;
+    }
+
+    .accent {
+      background: linear-gradient(120deg, #ffdd33, #ff7af0);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .subtitle {
+      margin-top: 10px;
+      font-size: 15px;
+      color: var(--text-muted);
+      max-width: 460px;
+    }
+
+    .cta-row {
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .btn {
+      border-radius: 999px;
+      padding: 10px 20px;
+      font-size: 14px;
+      border: 1px solid transparent;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease, border-color 0.12s ease;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #ffdd33, #ff8b3d);
+      color: #141416;
+      font-weight: 600;
+      box-shadow: 0 14px 40px rgba(255, 210, 90, 0.45);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 18px 60px rgba(255, 210, 90, 0.6);
+    }
+
+    .btn-ghost {
+      border-color: var(--border);
+      background: rgba(10, 10, 20, 0.9);
+      color: var(--text);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(26, 26, 40, 0.9);
+      transform: translateY(-1px);
+    }
+
+    .sections {
+      margin-top: 16px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    @media (max-width: 900px) {
+      .sections {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      .sections {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      border-radius: 18px;
+      padding: 14px 14px 16px;
+      background: rgba(11, 11, 20, 0.85);
+      border: 1px solid var(--border);
+    }
+
+    .card-label {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+
+    .card-body {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .side {
+      padding: 32px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      background: radial-gradient(circle at top right, rgba(255, 221, 51, 0.2), transparent 55%),
+                  radial-gradient(circle at bottom left, rgba(122, 88, 255, 0.25), transparent 55%);
+    }
+
+    .side-header {
+      font-size: 12px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .era-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(10, 10, 20, 0.9);
+      border: 1px solid var(--border);
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .pill-accent {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #ffdd33, #ff8b3d);
+      box-shadow: 0 0 14px rgba(255, 210, 90, 0.8);
+    }
+
+    .side-box {
+      margin-top: 8px;
+      padding: 14px 14px 16px;
+      border-radius: 18px;
+      background: var(--accent-soft);
+      border: 1px solid rgba(255, 221, 51, 0.4);
+      font-size: 13px;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .side-links {
+      margin-top: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 13px;
+    }
+
+    .side-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(10, 10, 20, 0.88);
+      border: 1px solid var(--border);
+      transition: background 0.12s ease, border-color 0.12s ease, transform 0.12s ease;
+    }
+
+    .side-link:hover {
+      background: rgba(22, 22, 36, 0.95);
+      border-color: rgba(255, 221, 51, 0.4);
+      transform: translateY(-1px);
+    }
+
+    .side-link span {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    footer {
+      margin-top: auto;
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="main">
+      <div class="tagline">
+        <span class="tagline-dot"></span>
+        ARTISTA DIGITAL · MÉXICO
+      </div>
+
+      <header>
+        <h1>
+          <span>Adrián</span>
+          <span class="accent">Bernardino</span>
+        </h1>
+        <p class="subtitle">
+          Artista visual, fotógrafo e ingeniero en sistemas.  
+          Construyendo un universo propio de imágenes, sonido y memoria digital.
+        </p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="mailto:angeladrianmartinezbernardino@gmail.com">
+            Contacto / colaboraciones
+          </a>
+          <a class="btn btn-ghost" href="https://www.instagram.com/adrianbernardino_" target="_blank" rel="noreferrer">
+            Ver portfolio en Instagram
+          </a>
+        </div>
+      </header>
+
+      <section class="sections" aria-label="Áreas principales">
+        <article class="card">
+          <div class="card-label">Fotografía</div>
+          <div class="card-title">Retratos · Objetos · Ciudades</div>
+          <p class="card-body">
+            Series fotográficas en alta resolución, desde autorretratos íntimos hasta tecnología,
+            escenarios urbanos y detalles cotidianos.
+          </p>
+        </article>
+
+        <article class="card">
+          <div class="card-label">Música / DJ</div>
+          <div class="card-title">Sets en construcción</div>
+          <p class="card-body">
+            Explorando mezclas entre electrónica, pop y atmósferas cinematográficas.
+            Próximamente demos y sesiones seleccionadas.
+          </p>
+        </article>
+
+        <article class="card">
+          <div class="card-label">Archivo digital</div>
+          <div class="card-title">Legado y eras</div>
+          <p class="card-body">
+            Trabajo continuo de preservar fotos, proyectos y documentos como un archivo personal,
+            inspirado en la filosofía de Internet Archive.
+          </p>
+        </article>
+      </section>
+
+      <footer>
+        <span>© <span id="year"></span> Adrián Bernardino.</span>
+        <span>Este sitio crecerá contigo.</span>
+      </footer>
+    </section>
+
+    <aside class="side">
+      <div>
+        <div class="side-header">Era actual</div>
+        <div class="era-tag">
+          <span class="pill-accent"></span>
+          <span>Primera versión del sitio</span>
+        </div>
+        <div class="side-box">
+          Este espacio es el punto de partida.  
+          Aquí vivirán tus fotos clave, futuras portadas, proyectos visuales y
+          enlaces a música y redes. Lo que hoy es simple, mañana será tu propio portal de artista.
+        </div>
+      </div>
+
+      <div>
+        <div class="side-header">Enlaces rápidos</div>
+        <div class="side-links">
+          <a class="side-link" href="https://www.instagram.com/adrianbernardino_" target="_blank" rel="noreferrer">
+            <strong>Instagram</strong>
+            <span>Fotos & stories</span>
+          </a>
+          <a class="side-link" href="https://www.youtube.com" target="_blank" rel="noreferrer">
+            <strong>YouTube</strong>
+            <span>Próximos videos</span>
+          </a>
+          <a class="side-link" href="mailto:angeladrianmartinezbernardino@gmail.com">
+            <strong>Email</strong>
+            <span>Contacto directo</span>
+          </a>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <script>
+    // Actualiza el año automáticamente.
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
