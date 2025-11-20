@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Panel admin · Adrián Bernardino</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #05040a;
+      color: #f5f5f5;
+      display: flex;
+      min-height: 100vh;
+      align-items: center;
+      justify-content: center;
+    }
+    .card {
+      background: #11131b;
+      border-radius: 16px;
+      padding: 24px 28px;
+      max-width: 420px;
+      width: 100%;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.55);
+    }
+    h1 {
+      font-size: 1.4rem;
+      margin: 0 0 0.75rem;
+    }
+    p {
+      font-size: 0.9rem;
+      opacity: 0.82;
+      margin: 0 0 1rem;
+    }
+    button {
+      border-radius: 999px;
+      border: none;
+      padding: 0.65rem 1.2rem;
+      cursor: pointer;
+      font-size: 0.95rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    #btn-login-google {
+      background: #ffffff;
+      color: #111827;
+    }
+    #btn-logout {
+      background: #1f2937;
+      color: #f9fafb;
+    }
+    .tag {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      opacity: 0.7;
+      margin-bottom: 0.5rem;
+    }
+    .muted {
+      font-size: 0.78rem;
+      opacity: 0.7;
+      margin-top: 1rem;
+    }
+    #panel-config {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(148,163,184,0.3);
+    }
+    .field {
+      margin-bottom: 0.8rem;
+    }
+    .field label {
+      display: block;
+      font-size: 0.8rem;
+      opacity: 0.8;
+      margin-bottom: 0.25rem;
+    }
+    .field input {
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: #020617;
+      color: #e5e7eb;
+      padding: 0.45rem 0.6rem;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="card">
+    <div class="tag">Panel interno</div>
+    <h1>Administración de adrianbernardino.com</h1>
+    <p id="estado">Comprobando sesión…</p>
+
+    <!-- Vista login -->
+    <section id="vista-login" style="display:none;">
+      <button id="btn-login-google">
+        <span>🔐 Acceder con Google</span>
+      </button>
+      <p class="muted">
+        Solo algunas cuentas de Google están autorizadas como administradores.
+      </p>
+    </section>
+
+    <!-- Vista admin -->
+    <section id="vista-admin" style="display:none;">
+      <p>
+        Hola, <strong id="admin-nombre"></strong>.<br>
+        Tienes acceso de administrador.
+      </p>
+
+      <section id="panel-config">
+        <h2 style="font-size:1rem; margin:0 0 .6rem;">Ajustes rápidos de la página</h2>
+
+        <div class="field">
+          <label for="input-titulo">Título principal</label>
+          <input id="input-titulo" type="text" placeholder="Hola, soy Adrián Bernardino">
+        </div>
+
+        <div class="field">
+          <label for="input-subtitulo">Subtítulo / descripción</label>
+          <input id="input-subtitulo" type="text"
+                 placeholder="0 — 🌲🌱📌🌐☀️🎬🕣💧🔥🌸🍇🪵📡 — ∞">
+        </div>
+
+        <p class="muted">
+          De momento estos cambios solo viven en la sesión del navegador.
+          Más adelante los conectamos a Firestore.
+        </p>
+      </section>
+
+      <button id="btn-logout" style="margin-top:1rem;">
+        🚪 Cerrar sesión
+      </button>
+    </section>
+  </main>
+
+  <!-- Firebase + Auth (CDN, modo módulo) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+    import {
+      getAuth,
+      GoogleAuthProvider,
+      signInWithPopup,
+      signOut,
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+
+    // Config de tu proyecto (la misma que en index.html)
+    const firebaseConfig = {
+      apiKey: "AIzaSyCXJH_AH-_lhnBv3CpDn-GKKLvZKzIjYTQ",
+      authDomain: "adrian-bernardino.firebaseapp.com",
+      projectId: "adrian-bernardino",
+      storageBucket: "adrian-bernardino.firebasestorage.app",
+      messagingSenderId: "666230030620",
+      appId: "1:666230030620:web:877ca977270ff3f7d73ad9",
+      measurementId: "G-K2GREQ6BL5"
+    };
+
+    // Inicializar Firebase + Auth
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+
+    // Lista de correos admin (aquí controlas quién ve el panel)
+    const ADMIN_EMAILS = [
+      "angeladrianmartinezbernardino@gmail.com"
+      // en el futuro puedes agregar otros correos de tu equipo
+    ];
+
+    // Referencias a la UI
+    const estado = document.getElementById("estado");
+    const vistaLogin = document.getElementById("vista-login");
+    const vistaAdmin = document.getElementById("vista-admin");
+    const adminNombre = document.getElementById("admin-nombre");
+    const btnLoginGoogle = document.getElementById("btn-login-google");
+    const btnLogout = document.getElementById("btn-logout");
+
+    function mostrarLogin(msg = "Inicia sesión con una cuenta autorizada.") {
+      estado.textContent = msg;
+      vistaLogin.style.display = "block";
+      vistaAdmin.style.display = "none";
+    }
+
+    function mostrarAdmin(user) {
+      estado.textContent = "Sesión verificada.";
+      vistaLogin.style.display = "none";
+      vistaAdmin.style.display = "block";
+      adminNombre.textContent = user.displayName || user.email || "Admin";
+    }
+
+    // Escuchar cambios de sesión
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        mostrarLogin("No hay sesión activa.");
+        return;
+      }
+
+      const correo = user.email || "";
+      const esAdmin = ADMIN_EMAILS.includes(correo);
+
+      if (!esAdmin) {
+        // Usuario autenticado pero no admin → lo mandamos al inicio público
+        window.location.href = "/";
+        return;
+      }
+
+      mostrarAdmin(user);
+    });
+
+    // Botón "Acceder con Google"
+    btnLoginGoogle.addEventListener("click", async () => {
+      try {
+        await signInWithPopup(auth, provider);
+        // onAuthStateChanged se encarga del resto
+      } catch (err) {
+        console.error(err);
+        estado.textContent = "Error al iniciar sesión. Inténtalo de nuevo.";
+      }
+    });
+
+    // Botón "Cerrar sesión"
+    btnLogout.addEventListener("click", async () => {
+      try {
+        await signOut(auth);
+        mostrarLogin("Sesión cerrada.");
+      } catch (err) {
+        console.error(err);
+        estado.textContent = "Error al cerrar sesión.";
+      }
+    });
+  </script>
+</body>
+</html>
