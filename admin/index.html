@@ -5,96 +5,135 @@
   <title>Panel admin · Adrián Bernardino</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
+    /* ======== Estilos generales del fondo ======== */
     body {
-      margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #05040a;
-      color: #f5f5f5;
-      display: flex;
-      min-height: 100vh;
-      align-items: center;
-      justify-content: center;
+      margin: 0; /* Quitamos márgenes del body. */
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; /* Fuente del sistema. */
+      background: #05040a; /* Fondo muy oscuro. */
+      color: #f5f5f5; /* Texto claro. */
+      display: flex; /* Usamos flexbox para centrar. */
+      min-height: 100vh; /* Altura mínima pantalla completa. */
+      align-items: center; /* Centra vertical. */
+      justify-content: center; /* Centra horizontal. */
     }
+
+    /* ======== Tarjeta principal ======== */
     .card {
-      background: #11131b;
-      border-radius: 16px;
-      padding: 24px 28px;
-      max-width: 420px;
-      width: 100%;
-      box-shadow: 0 18px 40px rgba(0,0,0,0.55);
+      background: #11131b; /* Fondo de la tarjeta. */
+      border-radius: 16px; /* Bordes redondeados. */
+      padding: 24px 28px; /* Espaciado interno. */
+      max-width: 520px; /* Ancho máximo. */
+      width: 100%; /* Ocupa todo el ancho disponible. */
+      box-shadow: 0 18px 40px rgba(0,0,0,0.55); /* Sombra. */
     }
+
     h1 {
-      font-size: 1.4rem;
-      margin: 0 0 0.75rem;
+      font-size: 1.4rem; /* Tamaño de título. */
+      margin: 0 0 0.75rem; /* Margen inferior. */
     }
+
     p {
-      font-size: 0.9rem;
-      opacity: 0.82;
-      margin: 0 0 1rem;
+      font-size: 0.9rem; /* Tamaño de texto. */
+      opacity: 0.82; /* Un poco translúcido. */
+      margin: 0 0 1rem; /* Margen inferior. */
     }
+
+    /* ======== Botones ======== */
     button {
-      border-radius: 999px;
-      border: none;
-      padding: 0.65rem 1.2rem;
-      cursor: pointer;
-      font-size: 0.95rem;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.6rem;
+      border-radius: 999px; /* Botón tipo píldora. */
+      border: none; /* Sin borde. */
+      padding: 0.65rem 1.2rem; /* Espaciado interno. */
+      cursor: pointer; /* Cursor de mano. */
+      font-size: 0.95rem; /* Tamaño de texto. */
+      display: inline-flex; /* Alineamos icono + texto. */
+      align-items: center; /* Centrado vertical. */
+      gap: 0.6rem; /* Separación icono-texto. */
     }
+
     #btn-login-google {
-      background: #ffffff;
-      color: #111827;
+      background: #ffffff; /* Fondo blanco. */
+      color: #111827; /* Texto oscuro. */
     }
+
     #btn-logout {
-      background: #1f2937;
-      color: #f9fafb;
+      background: #1f2937; /* Fondo gris oscuro. */
+      color: #f9fafb; /* Texto claro. */
     }
+
+    #btn-guardar {
+      background: #22c55e; /* Verde tipo éxito. */
+      color: #022c22; /* Texto verde muy oscuro. */
+      margin-top: 0.8rem; /* Separación superior. */
+    }
+
+    #btn-guardar:disabled {
+      opacity: 0.5; /* Cuando está deshabilitado se ve tenue. */
+      cursor: default; /* Sin mano. */
+    }
+
     .tag {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: .12em;
-      opacity: 0.7;
-      margin-bottom: 0.5rem;
+      font-size: 0.75rem; /* Texto pequeño. */
+      text-transform: uppercase; /* Mayúsculas. */
+      letter-spacing: .12em; /* Espaciado de letras. */
+      opacity: 0.7; /* Un poco translúcido. */
+      margin-bottom: 0.5rem; /* Margen inferior. */
     }
+
     .muted {
-      font-size: 0.78rem;
-      opacity: 0.7;
-      margin-top: 1rem;
+      font-size: 0.78rem; /* Texto pequeño. */
+      opacity: 0.7; /* Más translúcido. */
+      margin-top: 1rem; /* Margen superior. */
     }
+
     #panel-config {
-      margin-top: 1rem;
-      padding-top: 1rem;
-      border-top: 1px solid rgba(148,163,184,0.3);
+      margin-top: 1rem; /* Margen superior. */
+      padding-top: 1rem; /* Espaciado interno arriba. */
+      border-top: 1px solid rgba(148,163,184,0.3); /* Línea superior. */
     }
+
     .field {
-      margin-bottom: 0.8rem;
+      margin-bottom: 0.8rem; /* Separación entre campos. */
     }
+
     .field label {
-      display: block;
-      font-size: 0.8rem;
-      opacity: 0.8;
-      margin-bottom: 0.25rem;
+      display: block; /* Ocupa línea completa. */
+      font-size: 0.8rem; /* Texto pequeño. */
+      opacity: 0.8; /* Un poco translúcido. */
+      margin-bottom: 0.25rem; /* Separación con el input. */
     }
+
     .field input {
-      width: 100%;
-      border-radius: 8px;
-      border: 1px solid rgba(148,163,184,0.7);
-      background: #020617;
-      color: #e5e7eb;
-      padding: 0.45rem 0.6rem;
-      font-size: 0.9rem;
+      width: 100%; /* Ocupa ancho completo. */
+      border-radius: 8px; /* Bordes redondeados. */
+      border: 1px solid rgba(148,163,184,0.7); /* Borde gris. */
+      background: #020617; /* Fondo casi negro. */
+      color: #e5e7eb; /* Texto claro. */
+      padding: 0.45rem 0.6rem; /* Espaciado interno. */
+      font-size: 0.9rem; /* Tamaño de texto. */
+    }
+
+    .status-ok {
+      color: #4ade80; /* Verde para mensajes ok. */
+    }
+
+    .status-error {
+      color: #f97373; /* Rojo para mensajes de error. */
     }
   </style>
 </head>
 
 <body>
   <main class="card">
+    <!-- Etiqueta pequeña del panel interno. -->
     <div class="tag">Panel interno</div>
+
+    <!-- Título principal del panel. -->
     <h1>Administración de adrianbernardino.com</h1>
+
+    <!-- Estado de la sesión / guardado. -->
     <p id="estado">Comprobando sesión…</p>
 
-    <!-- Vista login -->
+    <!-- Vista de login (cuando no hay sesión o no es admin). -->
     <section id="vista-login" style="display:none;">
       <button id="btn-login-google">
         <span>🔐 Acceder con Google</span>
@@ -104,42 +143,58 @@
       </p>
     </section>
 
-    <!-- Vista admin -->
+    <!-- Vista de administración (solo admins). -->
     <section id="vista-admin" style="display:none;">
+      <!-- Texto que muestra el nombre del admin logueado. -->
       <p>
         Hola, <strong id="admin-nombre"></strong>.<br>
         Tienes acceso de administrador.
       </p>
 
+      <!-- Panel de configuración rápida de la home. -->
       <section id="panel-config">
         <h2 style="font-size:1rem; margin:0 0 .6rem;">Ajustes rápidos de la página</h2>
 
         <div class="field">
           <label for="input-titulo">Título principal</label>
-          <input id="input-titulo" type="text" placeholder="Hola, soy Adrián Bernardino">
+          <input
+            id="input-titulo"
+            type="text"
+            placeholder="Hola, soy Adrián Bernardino">
         </div>
 
         <div class="field">
           <label for="input-subtitulo">Subtítulo / descripción</label>
-          <input id="input-subtitulo" type="text"
-                 placeholder="0 — 🌲🌱📌🌐☀️🎬🕣💧🔥🌸🍇🪵📡 — ∞">
+          <input
+            id="input-subtitulo"
+            type="text"
+            placeholder="0 — 🌲🌱📌🌐☀️🎬🕣💧🔥🌸🍇🪵📡 — ∞">
         </div>
 
+        <!-- Botón para guardar los cambios en Firestore. -->
+        <button id="btn-guardar">
+          💾 Guardar cambios
+        </button>
+
         <p class="muted">
-          De momento estos cambios solo viven en la sesión del navegador.
-          Más adelante los conectamos a Firestore.
+          Estos campos se guardan en la colección <code>paginas/home</code> de Firestore.
+          El sitio público los puede leer para mostrar tu presentación.
         </p>
       </section>
 
+      <!-- Botón para cerrar sesión. -->
       <button id="btn-logout" style="margin-top:1rem;">
         🚪 Cerrar sesión
       </button>
     </section>
   </main>
 
-  <!-- Firebase + Auth (CDN, modo módulo) -->
+  <!-- ===================== LÓGICA DE FIREBASE (Auth + Firestore) ===================== -->
   <script type="module">
+    /* Importamos el núcleo de Firebase. */
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+
+    /* Importamos Auth para manejar Google Sign-In. */
     import {
       getAuth,
       GoogleAuthProvider,
@@ -148,7 +203,15 @@
       onAuthStateChanged
     } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
 
-    // Config de tu proyecto (la misma que en index.html)
+    /* Importamos Firestore para leer/escribir la home. */
+    import {
+      getFirestore,
+      doc,
+      getDoc,
+      setDoc
+    } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+    /* ======== Configuración de tu proyecto Firebase ======== */
     const firebaseConfig = {
       apiKey: "AIzaSyCXJH_AH-_lhnBv3CpDn-GKKLvZKzIjYTQ",
       authDomain: "adrian-bernardino.firebaseapp.com",
@@ -159,76 +222,169 @@
       measurementId: "G-K2GREQ6BL5"
     };
 
-    // Inicializar Firebase + Auth
+    /* Inicializamos la app Firebase. */
     const app = initializeApp(firebaseConfig);
+
+    /* Obtenemos instancia de Auth. */
     const auth = getAuth(app);
+
+    /* Proveedor de login con Google. */
     const provider = new GoogleAuthProvider();
 
-    // Lista de correos admin (aquí controlas quién ve el panel)
+    /* Obtenemos instancia de Firestore. */
+    const db = getFirestore(app);
+
+    /* ======== Lista de correos admin autorizados ======== */
     const ADMIN_EMAILS = [
       "angeladrianmartinezbernardino@gmail.com"
-      // en el futuro puedes agregar otros correos de tu equipo
+      // En el futuro puedes agregar más correos aquí.
     ];
 
-    // Referencias a la UI
-    const estado = document.getElementById("estado");
-    const vistaLogin = document.getElementById("vista-login");
-    const vistaAdmin = document.getElementById("vista-admin");
-    const adminNombre = document.getElementById("admin-nombre");
-    const btnLoginGoogle = document.getElementById("btn-login-google");
-    const btnLogout = document.getElementById("btn-logout");
+    /* ======== Referencias a elementos del DOM ======== */
+    const estado = document.getElementById("estado");           // Texto de estado.
+    const vistaLogin = document.getElementById("vista-login");  // Sección de login.
+    const vistaAdmin = document.getElementById("vista-admin");  // Sección admin.
+    const adminNombre = document.getElementById("admin-nombre");// Nombre del admin.
 
+    const btnLoginGoogle = document.getElementById("btn-login-google"); // Botón login.
+    const btnLogout = document.getElementById("btn-logout");            // Botón logout.
+    const btnGuardar = document.getElementById("btn-guardar");          // Botón guardar.
+
+    const inputTitulo = document.getElementById("input-titulo");        // Input título.
+    const inputSubtitulo = document.getElementById("input-subtitulo");  // Input subtítulo.
+
+    /* ======== Documento de Firestore que vamos a editar ======== */
+    // Ruta: colección "paginas", documento "home".
+    const docHomeRef = doc(db, "paginas", "home");
+
+    /* ======== Funciones de UI ======== */
+
+    // Muestra la vista de login.
     function mostrarLogin(msg = "Inicia sesión con una cuenta autorizada.") {
-      estado.textContent = msg;
-      vistaLogin.style.display = "block";
-      vistaAdmin.style.display = "none";
+      estado.textContent = msg;                    // Actualizamos mensaje.
+      estado.className = "";                       // Quitamos clases de color.
+      vistaLogin.style.display = "block";          // Mostramos login.
+      vistaAdmin.style.display = "none";           // Ocultamos admin.
     }
 
-    function mostrarAdmin(user) {
-      estado.textContent = "Sesión verificada.";
-      vistaLogin.style.display = "none";
-      vistaAdmin.style.display = "block";
-      adminNombre.textContent = user.displayName || user.email || "Admin";
+    // Muestra la vista admin y carga los datos de Firestore.
+    async function mostrarAdmin(user) {
+      estado.textContent = "Sesión verificada.";   // Mensaje de estado.
+      estado.className = "status-ok";              // Color verde.
+      vistaLogin.style.display = "none";           // Ocultamos login.
+      vistaAdmin.style.display = "block";          // Mostramos admin.
+      adminNombre.textContent = user.displayName || user.email || "Admin"; // Nombre.
+
+      // Cargamos los datos de la home desde Firestore.
+      await cargarHomeDesdeFirestore();
     }
 
-    // Escuchar cambios de sesión
+    /* ======== Funciones Firestore ======== */
+
+    // Lee titulo_principal y subtitulo_principal de Firestore y los pone en los inputs.
+    async function cargarHomeDesdeFirestore() {
+      try {
+        estado.textContent = "Cargando datos de la página…";
+        estado.className = "";                     // Sin color especial.
+
+        const snap = await getDoc(docHomeRef);     // Obtenemos el documento.
+
+        if (snap.exists()) {                       // Si el documento existe…
+          const data = snap.data();                // Obtenemos sus campos.
+          inputTitulo.value = data.titulo_principal || "";         // Título desde Firestore.
+          inputSubtitulo.value = data.subtitulo_principal || "";   // Subtítulo desde Firestore.
+          estado.textContent = "Datos cargados desde Firestore.";
+          estado.className = "status-ok";
+        } else {
+          // Si no existe, dejamos los placeholders y luego se creará al guardar.
+          inputTitulo.value = "";
+          inputSubtitulo.value = "";
+          estado.textContent = "La página aún no existe en Firestore. Guarda para crearla.";
+          estado.className = "";
+        }
+      } catch (error) {
+        console.error("Error al leer Firestore:", error);
+        estado.textContent = "Error al leer datos de Firestore.";
+        estado.className = "status-error";
+      }
+    }
+
+    // Guarda el título y subtítulo actuales en Firestore.
+    async function guardarHomeEnFirestore() {
+      try {
+        btnGuardar.disabled = true;                // Deshabilitamos el botón mientras guarda.
+        estado.textContent = "Guardando cambios…";
+        estado.className = "";
+
+        await setDoc(
+          docHomeRef,
+          {
+            titulo_principal: inputTitulo.value,      // Guardamos el título.
+            subtitulo_principal: inputSubtitulo.value // Guardamos el subtítulo.
+          },
+          { merge: true } // merge:true mantiene otros campos que pudiera tener el doc.
+        );
+
+        estado.textContent = "Cambios guardados correctamente en Firestore.";
+        estado.className = "status-ok";
+      } catch (error) {
+        console.error("Error al guardar en Firestore:", error);
+        estado.textContent = "Error al guardar cambios en Firestore.";
+        estado.className = "status-error";
+      } finally {
+        btnGuardar.disabled = false;               // Volvemos a habilitar el botón.
+      }
+    }
+
+    /* ======== Escucha de cambios de sesión (Auth) ======== */
+
     onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        mostrarLogin("No hay sesión activa.");
+      if (!user) {                                 // Si no hay sesión…
+        mostrarLogin("No hay sesión activa.");     // Mostramos login.
         return;
       }
 
-      const correo = user.email || "";
-      const esAdmin = ADMIN_EMAILS.includes(correo);
+      const correo = user.email || "";             // Correo del usuario.
+      const esAdmin = ADMIN_EMAILS.includes(correo); // Vemos si está en la lista.
 
-      if (!esAdmin) {
-        // Usuario autenticado pero no admin → lo mandamos al inicio público
-        window.location.href = "/";
+      if (!esAdmin) {                              // Si no es admin…
+        // Usuario autenticado pero no admin → lo mandamos al inicio público.
+        window.location.href = "/";                // Redirección al lobby público.
         return;
       }
 
+      // Es admin → mostramos panel admin.
       mostrarAdmin(user);
     });
 
-    // Botón "Acceder con Google"
+    /* ======== Eventos de los botones ======== */
+
+    // Botón "Acceder con Google".
     btnLoginGoogle.addEventListener("click", async () => {
       try {
-        await signInWithPopup(auth, provider);
-        // onAuthStateChanged se encarga del resto
+        await signInWithPopup(auth, provider);     // Lanza popup de Google.
+        // onAuthStateChanged se encargará de mostrar la vista correcta.
       } catch (err) {
         console.error(err);
         estado.textContent = "Error al iniciar sesión. Inténtalo de nuevo.";
+        estado.className = "status-error";
       }
     });
 
-    // Botón "Cerrar sesión"
+    // Botón "Guardar cambios".
+    btnGuardar.addEventListener("click", async () => {
+      await guardarHomeEnFirestore();             // Guardamos en Firestore.
+    });
+
+    // Botón "Cerrar sesión".
     btnLogout.addEventListener("click", async () => {
       try {
-        await signOut(auth);
-        mostrarLogin("Sesión cerrada.");
+        await signOut(auth);                      // Cerramos sesión.
+        mostrarLogin("Sesión cerrada.");          // Volvemos al login.
       } catch (err) {
         console.error(err);
         estado.textContent = "Error al cerrar sesión.";
+        estado.className = "status-error";
       }
     });
   </script>
