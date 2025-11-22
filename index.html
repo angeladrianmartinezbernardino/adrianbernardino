@@ -35,11 +35,11 @@
 </head>
 
 <body>
-  <!-- Contenido que se llenará con Firestore -->
+  <!-- Contenido que se llenará con Firestore. -->
   <h1 id="titulo-principal">Cargando…</h1>
   <p id="subtitulo-principal"></p>
 
-  <!-- Firebase (CDN, modo módulo) -->
+  <!-- Firebase (CDN, modo módulo). -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-analytics.js";
@@ -50,7 +50,7 @@
       getDoc
     } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
-    // Config de tu proyecto (la misma que en admin)
+    // Configuración del proyecto (la misma que en la Administración).
     const firebaseConfig = {
       apiKey: "AIzaSyCXJH_AH-_lhnBv3CpDn-GKKLvZKzIjYTQ",
       authDomain: "adrian-bernardino.firebaseapp.com",
@@ -65,40 +65,30 @@
     const analytics = getAnalytics(app);
     const db = getFirestore(app);
 
-    // Referencias a la UI
+    // Referencias a la UI.
     const tituloEl = document.getElementById("titulo-principal");
     const subtituloEl = document.getElementById("subtitulo-principal");
 
-    // Referencia al doc paginas/home
+    // Referencia al documento de paginas/home.
     const homeRef = doc(db, "paginas", "home");
 
-    // 1) Intento inicial de lectura (por si no quieres tiempo real)
-    getDoc(homeRef).then((snap) => {
+    // Escuchar cambios en tiempo real desde el panel de Administración.
+    onSnapshot(homeRef, (snap) => {
       if (snap.exists()) {
         const data = snap.data();
-        tituloEl.textContent = data.titulo_principal || "Hola, soy Adrián Bernardino";
-        subtituloEl.textContent =
-          data.subtitulo_principal || "0 — 🌲🌱📌🌐☀️🎬🕣💧🔥🌸🍇🪵📡 — ∞";
+        // Asignamos los valores si existen.
+        if (data.titulo_principal) tituloEl.textContent = data.titulo_principal;
+        if (data.subtitulo_principal) subtituloEl.textContent = data.subtitulo_principal;
       } else {
+        // Si el documento no existe, mostramos los valores por defecto.
         tituloEl.textContent = "Hola, soy Adrián Bernardino";
         subtituloEl.textContent = "0 — 🌲🌱📌🌐☀️🎬🕣💧🔥🌸🍇🪵📡 — ∞";
       }
-    }).catch((err) => {
-      console.error("Error leyendo Firestore:", err);
+    }, (error) => {
+      // Aquí manejamos el error.
+      console.error("Error leyendo Firestore:", error);
       tituloEl.textContent = "Hola, soy Adrián Bernardino";
-      subtituloEl.textContent = "Error al cargar datos, usando valores por defecto.";
-    });
-
-    // 2) Escuchar cambios en tiempo real desde el panel admin
-    onSnapshot(homeRef, (snap) => {
-      if (!snap.exists()) return;
-      const data = snap.data();
-      if (data.titulo_principal) {
-        tituloEl.textContent = data.titulo_principal;
-      }
-      if (data.subtitulo_principal) {
-        subtituloEl.textContent = data.subtitulo_principal;
-      }
+      subtituloEl.textContent = "Error al cargar datos.";
     });
   </script>
 </body>
