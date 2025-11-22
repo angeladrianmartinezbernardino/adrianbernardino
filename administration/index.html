@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Administration Panel · Adrián Bernardino</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    /* General background styles. */
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #05040a;
+      color: #f5f5f5;
+      display: flex;
+      min-height: 100vh;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Main card. */
+    .card {
+      background: #11131b;
+      border-radius: 16px;
+      padding: 24px 28px;
+      max-width: 520px;
+      width: 100%;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.55);
+    }
+
+    h1 {
+      font-size: 1.4rem;
+      margin: 0 0 0.75rem;
+    }
+
+    p {
+      font-size: 0.9rem;
+      opacity: 0.82;
+      margin: 0 0 1rem;
+    }
+
+    /* Buttons. */
+    button {
+      border-radius: 999px;
+      border: none;
+      padding: 0.65rem 1.2rem;
+      cursor: pointer;
+      font-size: 0.95rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    #btn-login-google {
+      background: #ffffff;
+      color: #111827;
+    }
+
+    #btn-logout {
+      background: #1f2937;
+      color: #f9fafb;
+    }
+
+    #btn-save {
+      background: #22c55e;
+      color: #022c22;
+      margin-top: 0.8rem;
+    }
+
+    #btn-save:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
+
+    .tag {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      opacity: 0.7;
+      margin-bottom: 0.5rem;
+    }
+
+    .muted {
+      font-size: 0.78rem;
+      opacity: 0.7;
+      margin-top: 1rem;
+    }
+
+    #config-panel {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(148,163,184,0.3);
+    }
+
+    .field {
+      margin-bottom: 0.8rem;
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.8rem;
+      opacity: 0.8;
+      margin-bottom: 0.25rem;
+    }
+
+    .field input {
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: #020617;
+      color: #e5e7eb;
+      padding: 0.45rem 0.6rem;
+      font-size: 0.9rem;
+    }
+
+    .status-ok {
+      color: #4ade80;
+    }
+
+    .status-error {
+      color: #f97373;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="card">
+    <div class="tag">Internal Panel</div>
+
+    <h1>Administration of adrianbernardino.com</h1>
+
+    <p id="status">Checking session...</p>
+
+    <section id="login-view" style="display:none;">
+      <button id="btn-login-google">
+        <span>🔐 Sign in with Google</span>
+      </button>
+      <p class="muted">
+        Only specific Google accounts are authorized as administrators.
+      </p>
+    </section>
+
+    <section id="admin-view" style="display:none;">
+      <p>
+        Hello, <strong id="admin-name"></strong>.<br>
+        You have administrator access.
+      </p>
+
+      <section id="config-panel">
+        <h2 style="font-size:1rem; margin:0 0 .6rem;">Quick Page Settings</h2>
+
+        <div class="field">
+          <label for="input-title">Main Title</label>
+          <input
+            id="input-title"
+            type="text"
+            placeholder="Hello, I am Adrián Bernardino">
+        </div>
+
+        <div class="field">
+          <label for="input-subtitle">Subtitle / Description</label>
+          <input
+            id="input-subtitle"
+            type="text"
+            placeholder="0 — 🌲🌱📌🌐☀️🎬🕣💧🔥🌸🍇🪵📡 — ∞">
+        </div>
+
+        <button id="btn-save">
+          💾 Save Changes
+        </button>
+
+        <p class="muted">
+          These fields are stored in the <code>pages/home</code> Firestore collection.
+          The public site can read them to display your presentation.
+        </p>
+      </section>
+
+      <button id="btn-logout" style="margin-top:1rem;">
+        🚪 Sign Out
+      </button>
+    </section>
+  </main>
+
+  <script type="module">
+    /* Import Firebase core. */
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+
+    /* Import Auth to handle Google Sign-In. */
+    import {
+      getAuth,
+      GoogleAuthProvider,
+      signInWithPopup,
+      signOut,
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+
+    /* Import Firestore to read/write home data. */
+    import {
+      getFirestore,
+      doc,
+      getDoc,
+      setDoc
+    } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+    /* Firebase project configuration. */
+    const firebaseConfig = {
+      apiKey: "AIzaSyCXJH_AH-_lhnBv3CpDn-GKKLvZKzIjYTQ",
+      authDomain: "adrian-bernardino.firebaseapp.com",
+      projectId: "adrian-bernardino",
+      storageBucket: "adrian-bernardino.firebasestorage.app",
+      messagingSenderId: "666230030620",
+      appId: "1:666230030620:web:877ca977270ff3f7d73ad9",
+      measurementId: "G-K2GREQ6BL5"
+    };
+
+    /* Initialize Firebase app. */
+    const app = initializeApp(firebaseConfig);
+
+    /* Get Auth instance. */
+    const auth = getAuth(app);
+
+    /* Google Login Provider. */
+    const provider = new GoogleAuthProvider();
+
+    /* Get Firestore instance. */
+    const db = getFirestore(app);
+
+    /* List of authorized admin emails. */
+    const ADMIN_EMAILS = [
+      "angeladrianmartinezbernardino@gmail.com"
+      // Future emails can be added here.
+    ];
+
+    /* DOM Element References. */
+    const statusEl = document.getElementById("status"); // Status text.
+    const loginView = document.getElementById("login-view"); // Login section.
+    const adminView = document.getElementById("admin-view"); // Admin section.
+    const adminName = document.getElementById("admin-name"); // Admin name.
+
+    const btnLoginGoogle = document.getElementById("btn-login-google"); // Login button.
+    const btnLogout = document.getElementById("btn-logout"); // Logout button.
+    const btnSave = document.getElementById("btn-save"); // Save button.
+
+    const inputTitle = document.getElementById("input-title"); // Title input.
+    const inputSubtitle = document.getElementById("input-subtitle"); // Subtitle input.
+
+    /* Firestore document we are going to edit. */
+    // Path: collection "pages", document "home".
+    const docHomeRef = doc(db, "pages", "home");
+
+    /* UI Functions. */
+
+    // Shows the login view.
+    function showLogin(msg = "Sign in with an authorized account.") {
+      statusEl.textContent = msg;                    // Update message.
+      statusEl.className = "";                       // Remove color classes.
+      loginView.style.display = "block";             // Show login.
+      adminView.style.display = "none";              // Hide admin.
+    }
+
+    // Shows the admin view and loads data from Firestore.
+    async function showAdmin(user) {
+      statusEl.textContent = "Session verified.";    // Status message.
+      statusEl.className = "status-ok";              // Green color.
+      loginView.style.display = "none";              // Hide login.
+      adminView.style.display = "block";             // Show admin.
+      adminName.textContent = user.displayName || user.email || "Admin"; // Name.
+
+      // Load home data from Firestore.
+      await loadHomeFromFirestore();
+    }
+
+    /* Firestore Functions. */
+
+    // Reads main_title and main_subtitle from Firestore and puts them in inputs.
+    async function loadHomeFromFirestore() {
+      try {
+        statusEl.textContent = "Loading page data...";
+        statusEl.className = ""; // No special color.
+
+        const snap = await getDoc(docHomeRef); // Get the document.
+
+        if (snap.exists()) { // If the document exists...
+          const data = snap.data(); // Get its fields.
+          inputTitle.value = data.main_title || ""; // Title from Firestore.
+          inputSubtitle.value = data.main_subtitle || ""; // Subtitle from Firestore.
+          statusEl.textContent = "Data loaded from Firestore.";
+          statusEl.className = "status-ok";
+        } else {
+          // If it doesn't exist, leave placeholders and create on save.
+          inputTitle.value = "";
+          inputSubtitle.value = "";
+          statusEl.textContent = "The page does not exist in Firestore yet. Save to create it.";
+          statusEl.className = "";
+        }
+      } catch (error) {
+        console.error("Error reading Firestore:", error);
+        statusEl.textContent = "Error reading data from Firestore.";
+        statusEl.className = "status-error";
+      }
+    }
+
+    // Saves the current title and subtitle to Firestore.
+    async function saveHomeToFirestore() {
+      try {
+        btnSave.disabled = true; // Disable button while saving.
+        statusEl.textContent = "Saving changes...";
+        statusEl.className = "";
+
+        await setDoc(
+          docHomeRef,
+          {
+            main_title: inputTitle.value, // Save the title.
+            main_subtitle: inputSubtitle.value // Save the subtitle.
+          },
+          { merge: true } // merge:true keeps other fields if any.
+        );
+
+        statusEl.textContent = "Changes saved successfully to Firestore.";
+        statusEl.className = "status-ok";
+      } catch (error) {
+        console.error("Error saving to Firestore:", error);
+        statusEl.textContent = "Error saving changes to Firestore.";
+        statusEl.className = "status-error";
+      } finally {
+        btnSave.disabled = false; // Re-enable the button.
+      }
+    }
+
+    /* Auth State Listener. */
+
+    onAuthStateChanged(auth, (user) => {
+      if (!user) { // If no session...
+        showLogin("No active session."); // Show login.
+        return;
+      }
+
+      const email = user.email || ""; // User email.
+      const isAdmin = ADMIN_EMAILS.includes(email); // Check if in list.
+
+      if (!isAdmin) { // If not admin...
+        // Authenticated but not admin -> send to public home.
+        window.location.href = "/"; // Redirect to public lobby.
+        return;
+      }
+
+      // Is admin -> show admin panel.
+      showAdmin(user);
+    });
+
+    /* Button Events. */
+
+    // "Sign in with Google" button.
+    btnLoginGoogle.addEventListener("click", async () => {
+      try {
+        await signInWithPopup(auth, provider); // Launch Google popup.
+        // onAuthStateChanged will handle showing the correct view.
+      } catch (err) {
+        console.error(err);
+        statusEl.textContent = "Error signing in. Please try again.";
+        statusEl.className = "status-error";
+      }
+    });
+
+    // "Save Changes" button.
+    btnSave.addEventListener("click", async () => {
+      await saveHomeToFirestore(); // Save to Firestore.
+    });
+
+    // "Sign Out" button.
+    btnLogout.addEventListener("click", async () => {
+      try {
+        await signOut(auth); // Sign out.
+        showLogin("Signed out."); // Back to login.
+      } catch (err) {
+        console.error(err);
+        statusEl.textContent = "Error signing out.";
+        statusEl.className = "status-error";
+      }
+    });
+  </script>
+</body>
+</html>
