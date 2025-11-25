@@ -33,61 +33,10 @@
     }
   </style>
 </head>
-
+  <!-- Public home logic (reads main_title and main_subtitle from Firestore) -->
+  <script type="module" src="/js/public-home.js"></script>
 <body>
   <h1 id="main-title">Loading...</h1>
   <p id="main-subtitle"></p>
-
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-analytics.js";
-    import {
-      getFirestore,
-      doc,
-      onSnapshot,
-      getDoc
-    } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
-
-    // Project configuration (same as in Admin).
-    const firebaseConfig = {
-      apiKey: "AIzaSyCXJH_AH-_lhnBv3CpDn-GKKLvZKzIjYTQ",
-      authDomain: "adrian-bernardino.firebaseapp.com",
-      projectId: "adrian-bernardino",
-      storageBucket: "adrian-bernardino.firebasestorage.app",
-      messagingSenderId: "666230030620",
-      appId: "1:666230030620:web:877ca977270ff3f7d73ad9",
-      measurementId: "G-K2GREQ6BL5"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-    const db = getFirestore(app);
-
-    // UI References.
-    const titleEl = document.getElementById("main-title");
-    const subtitleEl = document.getElementById("main-subtitle");
-
-    // Reference to the pages/home document.
-    const homeRef = doc(db, "pages", "home");
-
-    // Listen for real-time changes from the Admin panel.
-    onSnapshot(homeRef, (snap) => {
-      if (snap.exists()) {
-        const data = snap.data();
-        // Assign values if they exist.
-        if (data.main_title) titleEl.textContent = data.main_title;
-        if (data.main_subtitle) subtitleEl.textContent = data.main_subtitle;
-      } else {
-        // If the document does not exist, show default values.
-        titleEl.textContent = "Hello, I am Adrián Bernardino";
-        subtitleEl.textContent = "0 — 🌲🌱📌🌐☀️🎬🕣💧🔥🌸🍇🪵📡 — ∞";
-      }
-    }, (error) => {
-      // Handle the error here.
-      console.error("Error reading Firestore:", error);
-      titleEl.textContent = "Hello, I am Adrián Bernardino";
-      subtitleEl.textContent = "Error loading data.";
-    });
-  </script>
 </body>
 </html>
