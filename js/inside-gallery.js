@@ -256,6 +256,3 @@ async function loadPhotosFromFirestore() {
     throw error;
   }
 }
-
-  return photos;
-}
