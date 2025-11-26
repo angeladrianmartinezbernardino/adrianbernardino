@@ -216,38 +216,46 @@ window.addEventListener("DOMContentLoaded", () => {
  */
 async function loadPhotosFromFirestore() {
   const photosRef = collection(db, "pages", "inside", "inside");
-
-  // You can adjust this query (by year, order, etc.) later.
   const q = query(photosRef, orderBy("year", "asc"), orderBy("order", "asc"));
-  const snapshot = await getDocs(q);
+  
+  try {
+    const snapshot = await getDocs(q);
+    const photos = [];
 
-  const photos = [];
+    for (const docSnap of snapshot.docs) {
+      const data = docSnap.data();
+      
+      try {
+        const pathForStandard = data.standard_path || data.original_path;
+        
+        const standardRef = ref(storage, pathForStandard);
+        const originalRef = ref(storage, data.original_path);
 
-  for (const docSnap of snapshot.docs) {
-    const data = docSnap.data();
+        const [standardUrl, originalUrl] = await Promise.all([
+          getDownloadURL(standardRef),
+          getDownloadURL(originalRef),
+        ]);
 
-    // Create Storage references for standard and original paths.
-    const standardRef = ref(storage, data.standard_path);
-    const originalRef = ref(storage, data.original_path);
-
-    // Resolve public URLs for both versions.
-    const [standardUrl, originalUrl] = await Promise.all([
-      getDownloadURL(standardRef),
-      getDownloadURL(originalRef),
-    ]);
-
-    photos.push({
-      id: docSnap.id,
-      album: data.album || "unknown",
-      colorLabel: data.color_label || "",
-      chapter: data.chapter || "",
-      year: data.year || null,
-      title: data.title || "",
-      standardUrl,
-      originalUrl,
-      order: data.order || 0,
-    });
+        photos.push({
+          id: docSnap.id,
+          album: data.album || "unknown",
+          colorLabel: data.color_label || "",
+          year: data.year || null,
+          title: data.title || "",
+          standardUrl,
+          originalUrl,
+          order: data.order || 0,
+        });
+      } catch (err) {
+        console.warn(`Error cargando foto ${docSnap.id}:`, err);
+      }
+    }
+    return photos;
+  } catch (error) {
+    console.error("Error crítico en Firestore:", error);
+    throw error;
   }
+}
 
   return photos;
 }
