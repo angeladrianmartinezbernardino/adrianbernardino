@@ -1,0 +1,94 @@
+{
+  "context": "inside",
+  "default_theme": {
+    "background_mode": "deep_ocean",
+    "lava_speed": 25,
+    "lava_intensity": 50,
+    "lava_blob_count": 4,
+    "lava_softness": 90,
+    "lava_follow_cursor": false,
+    "lava_scroll_reactive": true,
+    "lava_quality": "medium",
+    "use_custom_colors": true,
+    "lava_color_primary": "#1f2937",
+    "lava_color_secondary": "#0ea5e9",
+    "lava_color_accent": "#22c55e"
+  },
+  "albums": {
+    "album_01": {
+      "slug": "album_01",
+      "title": "Album 01",
+      "background_mode": "deep_ocean"
+    },
+    "album_02": {
+      "slug": "album_02",
+      "title": "Album 02",
+      "background_mode": "monochrome_glass"
+    },
+    "album_03": {
+      "slug": "album_03",
+      "title": "Album 03",
+      "background_mode": "classic_lava"
+    },
+    "album_04": {
+      "slug": "album_04",
+      "title": "Album 04",
+      "background_mode": "neon_night"
+    },
+    "album_05": {
+      "slug": "album_05",
+      "title": "Album 05",
+      "background_mode": "deep_ocean"
+    },
+    "album_06": {
+      "slug": "album_06",
+      "title": "Album 06",
+      "background_mode": "infrared"
+    },
+    "album_07": {
+      "slug": "album_07",
+      "title": "Album 07",
+      "background_mode": "monochrome_glass"
+    },
+    "album_08": {
+      "slug": "album_08",
+      "title": "Album 08",
+      "background_mode": "classic_lava"
+    },
+    "album_09": {
+      "slug": "album_09",
+      "title": "Album 09",
+      "background_mode": "neon_night"
+    },
+    "album_10": {
+      "slug": "album_10",
+      "title": "Album 10",
+      "background_mode": "deep_ocean"
+    },
+    "album_11": {
+      "slug": "album_11",
+      "title": "Album 11",
+      "background_mode": "infrared"
+    },
+    "album_12": {
+      "slug": "album_12",
+      "title": "Album 12",
+      "background_mode": "monochrome_glass"
+    },
+    "album_13": {
+      "slug": "album_13",
+      "title": "Album 13",
+      "background_mode": "classic_lava"
+    },
+    "album_14": {
+      "slug": "album_14",
+      "title": "Album 14",
+      "background_mode": "neon_night"
+    },
+    "album_15": {
+      "slug": "album_15",
+      "title": "Album 15",
+      "background_mode": "deep_ocean"
+    }
+  }
+}

@@ -215,7 +215,7 @@ window.addEventListener("DOMContentLoaded", () => {
  * @returns {Promise<Array>}
  */
 async function loadPhotosFromFirestore() {
-  const photosRef = collection(db, "inside_photos");
+  const photosRef = collection(db, "pages", "inside", "inside");
 
   // You can adjust this query (by year, order, etc.) later.
   const q = query(photosRef, orderBy("year", "asc"), orderBy("order", "asc"));

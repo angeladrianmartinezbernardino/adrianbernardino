@@ -1,0 +1,94 @@
+{
+  "context": "outside",
+  "default_theme": {
+    "background_mode": "classic_lava",
+    "lava_speed": 45,
+    "lava_intensity": 70,
+    "lava_blob_count": 6,
+    "lava_softness": 80,
+    "lava_follow_cursor": true,
+    "lava_scroll_reactive": true,
+    "lava_quality": "high",
+    "use_custom_colors": true,
+    "lava_color_primary": "#ff4b5c",
+    "lava_color_secondary": "#ffb347",
+    "lava_color_accent": "#ff00ff"
+  },
+  "albums": {
+    "album_01": {
+      "slug": "album_01",
+      "title": "Album 01",
+      "background_mode": "classic_lava"
+    },
+    "album_02": {
+      "slug": "album_02",
+      "title": "Album 02",
+      "background_mode": "neon_night"
+    },
+    "album_03": {
+      "slug": "album_03",
+      "title": "Album 03",
+      "background_mode": "deep_ocean"
+    },
+    "album_04": {
+      "slug": "album_04",
+      "title": "Album 04",
+      "background_mode": "infrared"
+    },
+    "album_05": {
+      "slug": "album_05",
+      "title": "Album 05",
+      "background_mode": "monochrome_glass"
+    },
+    "album_06": {
+      "slug": "album_06",
+      "title": "Album 06",
+      "background_mode": "classic_lava"
+    },
+    "album_07": {
+      "slug": "album_07",
+      "title": "Album 07",
+      "background_mode": "neon_night"
+    },
+    "album_08": {
+      "slug": "album_08",
+      "title": "Album 08",
+      "background_mode": "deep_ocean"
+    },
+    "album_09": {
+      "slug": "album_09",
+      "title": "Album 09",
+      "background_mode": "infrared"
+    },
+    "album_10": {
+      "slug": "album_10",
+      "title": "Album 10",
+      "background_mode": "monochrome_glass"
+    },
+    "album_11": {
+      "slug": "album_11",
+      "title": "Album 11",
+      "background_mode": "classic_lava"
+    },
+    "album_12": {
+      "slug": "album_12",
+      "title": "Album 12",
+      "background_mode": "neon_night"
+    },
+    "album_13": {
+      "slug": "album_13",
+      "title": "Album 13",
+      "background_mode": "deep_ocean"
+    },
+    "album_14": {
+      "slug": "album_14",
+      "title": "Album 14",
+      "background_mode": "infrared"
+    },
+    "album_15": {
+      "slug": "album_15",
+      "title": "Album 15",
+      "background_mode": "monochrome_glass"
+    }
+  }
+}
