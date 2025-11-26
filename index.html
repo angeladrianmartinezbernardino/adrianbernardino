@@ -5,39 +5,260 @@
   <title>Adrián Bernardino</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
+    :root {
+      --page-bg: #05040a;
+      --page-text: #f5f5f5;
+      --muted: #9ca3af;
+    }
+
     body {
       margin: 0;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--page-bg);
+      color: var(--page-text);
+    }
+
+    .page-shell {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Transparent header on top of the global background. */
+    .site-header {
+      position: relative;
+      z-index: 10;
+      padding: 1rem 1.5rem 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: transparent;
+    }
+
+    .header-left {
+      font-size: 0.8rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      opacity: 0.7;
+    }
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .menu {
+      position: relative;
+    }
+
+    /* Borderless hamburger button. */
+    .menu-button {
+      border: none;
+      background: transparent;
+      padding: 0.45rem;
+      display: inline-flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 0.18rem;
+      cursor: pointer;
+    }
+
+    .menu-button-bar {
+      width: 18px;
+      height: 2px;
+      border-radius: 999px;
+      background: rgba(245, 245, 245, 0.92);
+    }
+
+    .menu-button:hover .menu-button-bar {
+      transform-origin: center;
+    }
+
+    /* Dropdown panel. */
+    .menu-panel {
+      position: absolute;
+      right: 0;
+      margin-top: 0.4rem;
+      padding: 0.45rem 0.55rem;
+      min-width: 150px;
+      border-radius: 12px;
+      background: rgba(5, 4, 10, 0.92);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(14px);
+      opacity: 0;
+      transform: translateY(-4px);
+      pointer-events: none;
+      transition: opacity 0.16s ease-out, transform 0.16s ease-out;
+    }
+
+    /* Show on hover/focus (desktop hover + keyboard focus). */
+    .menu:hover .menu-panel,
+    .menu:focus-within .menu-panel {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .menu-item {
+      display: block;
+      padding: 0.4rem 0.55rem;
+      margin: 0.05rem 0;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      text-decoration: none;
+      color: var(--page-text);
+      opacity: 0.88;
+      cursor: pointer;
+      text-align: left;
+      background: transparent;
+      border: none;
+      width: 100%;
+    }
+
+    .menu-item:hover {
+      opacity: 1;
+      background: rgba(148, 163, 184, 0.16);
+    }
+
+    .menu-item[disabled] {
+      opacity: 0.4;
+      cursor: default;
+      background: transparent;
+    }
+
+    /* Hero in the center of the page. */
+    .hero {
+      flex: 1;
+      display: flex;
       align-items: center;
       justify-content: center;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #05040a;
-      color: #f5f5f5;
       text-align: center;
-      padding: 1.5rem;
+      padding: 2.5rem 1.5rem 2rem;
     }
-    h1 {
-      font-size: 2.4rem;
-      margin-bottom: 0.75rem;
+
+    #main-title {
+      font-size: clamp(2.2rem, 4vw, 2.8rem);
+      margin: 0 0 0.75rem;
     }
-    p {
-      font-size: 1.1rem;
+
+    #main-subtitle {
+      font-size: 1rem;
       opacity: 0.9;
+      max-width: 36rem;
+      margin: 0 auto;
     }
-    small {
-      margin-top: 1.5rem;
-      font-size: .75rem;
-      opacity: .6;
+
+    /* Transparent footer aligned to the left. */
+    .site-footer {
+      padding: 0.75rem 1.5rem 1.25rem;
+      background: transparent;
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    .footer-button {
+      border: none;
+      background: transparent;
+      padding: 0;
+      font-size: 0.8rem;
+      color: var(--muted);
+      cursor: pointer;
+      opacity: 0.75;
+    }
+
+    .footer-button:hover {
+      opacity: 1;
+      color: var(--page-text);
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
-  <h1 id="main-title">Loading...</h1>
-  <p id="main-subtitle"></p>
+  <div class="page-shell">
+    <header class="site-header">
+      <div class="header-left">
+        ADRIÁN&nbsp;BERNARDINO
+      </div>
 
-  <!-- Public home logic (reads main_title and main_subtitle from Firestore) -->
+      <nav class="header-nav" aria-label="Main navigation">
+        <div class="menu">
+          <button
+            class="menu-button"
+            type="button"
+            aria-haspopup="true"
+            aria-expanded="false"
+            aria-label="Open main menu"
+          >
+            <span class="menu-button-bar"></span>
+            <span class="menu-button-bar"></span>
+            <span class="menu-button-bar"></span>
+          </button>
+
+          <div class="menu-panel">
+            <!-- First option: outside / "It's Me" -->
+            <a class="menu-item" href="/outside">
+              It's Me
+            </a>
+            <!-- Direct link to inside, for convenience. -->
+            <a class="menu-item" href="/inside">
+              Inside
+            </a>
+            <!-- Placeholder options for future sections. -->
+            <button class="menu-item" type="button" disabled>
+              More soon
+            </button>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="hero">
+      <div>
+        <!-- Firestore-driven content (kept from the original file). -->
+        <h1 id="main-title">Loading...</h1>
+        <p id="main-subtitle"></p>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <!-- Hidden-but-functional copyright button that redirects to /inside. -->
+      <button
+        id="footer-inside-button"
+        class="footer-button"
+        type="button"
+        aria-label="Open Inside · Personal Archive"
+      >
+        © <span id="current-year">2025</span> Adrián Bernardino
+      </button>
+    </footer>
+  </div>
+
+  <!-- Public home logic (reads main_title and main_subtitle from Firestore). -->
   <script type="module" src="/js/public-home.js"></script>
+
+  <!-- Layout helpers: dynamic year + footer navigation. -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Dynamic year (can later be replaced by a server time source if needed).
+      const yearSpan = document.getElementById("current-year");
+      if (yearSpan) {
+        const currentYear = new Date().getFullYear();
+        yearSpan.textContent = currentYear;
+      }
+
+      // Footer button → Inside (personal archive).
+      const footerButton = document.getElementById("footer-inside-button");
+      if (footerButton) {
+        footerButton.addEventListener("click", function () {
+          window.location.href = "/inside";
+        });
+      }
+    });
+  </script>
 </body>
 </html>
