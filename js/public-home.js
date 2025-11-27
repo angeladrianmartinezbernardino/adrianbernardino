@@ -3,19 +3,49 @@
 // Import shared Firebase app and Firestore.
 import { app, db } from "./firebase-setup.js";
 
-// Import Analytics only here (not needed in admin panel).
+// Import Analytics.
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-analytics.js";
 
-// Import Firestore helpers for this page.
+// Import Firestore helpers.
 import {
   doc,
   onSnapshot,
 } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
-// Initialize Analytics (no need to use the variable later).
+// Initialize Analytics.
 const analytics = getAnalytics(app);
 
-// Wait until the DOM is fully loaded before querying elements.
+// --- DESIGN LOGIC ---
+
+// Reference to Outside design document
+const designRef = doc(db, "pages", "design_outside");
+
+function applyTheme(theme) {
+  if (!theme) return;
+  
+  const root = document.documentElement;
+  
+  // Apply colors
+  if (theme.lava_color_primary) root.style.setProperty("--lava-color-primary", theme.lava_color_primary);
+  if (theme.lava_color_secondary) root.style.setProperty("--lava-color-secondary", theme.lava_color_secondary);
+  if (theme.lava_color_accent) root.style.setProperty("--lava-color-accent", theme.lava_color_accent);
+  
+  // Apply speed
+  if (theme.lava_speed) root.style.setProperty("--lava-speed", theme.lava_speed + "s");
+}
+
+// Listen for design changes
+onSnapshot(designRef, (snapshot) => {
+  if (snapshot.exists()) {
+    const data = snapshot.data();
+    const theme = data.default_theme || {};
+    applyTheme(theme);
+    console.log("🎨 Public design updated:", theme.background_mode);
+  }
+});
+
+// --- CONTENT LOGIC ---
+
 window.addEventListener("DOMContentLoaded", () => {
   const titleElement = document.getElementById("main-title");
   const subtitleElement = document.getElementById("main-subtitle");
@@ -25,28 +55,18 @@ window.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  // Reference to the pages/home document in Firestore.
+  // Reference to the pages/home document in Firestore (Texts)
   const homeRef = doc(db, "pages", "home");
 
-  // Listen for real-time updates written from the Admin panel.
-  onSnapshot(
-    homeRef,
-    (snapshot) => {
+  // Listen for content updates
+  onSnapshot(homeRef, (snapshot) => {
       if (snapshot.exists()) {
         const data = snapshot.data();
-
-        if (data.main_title) {
-          titleElement.textContent = data.main_title;
-        }
-
-        if (data.main_subtitle) {
-          subtitleElement.textContent = data.main_subtitle;
-        }
+        if (data.main_title) titleElement.textContent = data.main_title;
+        if (data.main_subtitle) subtitleElement.textContent = data.main_subtitle;
       } else {
-        // Fallback values if the document does not exist.
         titleElement.textContent = "Hello, I am Adrián Bernardino";
-        subtitleElement.textContent =
-          "0 — 🌲🌱📌🌐☀️🎬🕣💧🔥🌸🍇🪵📡 — ∞";
+        subtitleElement.textContent = "0 — 🌲🌱📌🌐☀️🎬🕣💧🔥🌸🍇🪵📡 — ∞";
       }
     },
     (error) => {
