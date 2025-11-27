@@ -1,340 +1,204 @@
 <!DOCTYPE html>
 <html lang="en">
+<main class="card">
+  <div class="tag">Internal Panel</div>
 
-<head>
-  <meta charset="UTF-8" />
-  <title>Administration Panel · Adrián Bernardino</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <style>
-    /* General background styles. */
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #05040a;
-      color: #f5f5f5;
-      display: flex;
-      min-height: 100vh;
-      align-items: center;
-      justify-content: center;
-      padding: 1rem;
-      /* Added padding for mobile */
-    }
+  <h1>Administration</h1>
+  <p id="status">Checking session...</p>
 
-    /* Main card. */
-    .card {
-      background: #11131b;
-      border-radius: 16px;
-      padding: 24px 28px;
-      max-width: 520px;
-      width: 100%;
-      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
-      max-height: 90vh;
-      /* Limit height */
-      overflow-y: auto;
-      /* Scroll if content is too long */
-    }
+  <section id="login-view" style="display:none;">
+    <button id="btn-login-google">
+      <span>🔐 Sign in with Google</span>
+      <!DOCTYPE html>
+      <html lang="en">
+      <main class="card">
+        <div class="tag">Internal Panel</div>
 
-    h1 {
-      font-size: 1.4rem;
-      margin: 0 0 0.75rem;
-    }
+        <h1>Administration</h1>
+        <p id="status">Checking session...</p>
 
-    p {
-      font-size: 0.9rem;
-      opacity: 0.82;
-      margin: 0 0 1rem;
-    }
-
-    /* Buttons. */
-    button {
-      border-radius: 999px;
-      border: none;
-      padding: 0.65rem 1.2rem;
-      cursor: pointer;
-      font-size: 0.95rem;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.6rem;
-    }
-
-    #btn-login-google {
-      background: #ffffff;
-      color: #111827;
-    }
-
-    #btn-logout {
-      background: #1f2937;
-      color: #f9fafb;
-    }
-
-    .btn-primary {
-      background: #22c55e;
-      color: #022c22;
-      margin-top: 0.8rem;
-      width: 100%;
-      justify-content: center;
-    }
-
-    .btn-primary:disabled {
-      opacity: 0.5;
-      cursor: default;
-    }
-
-    .tag {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: .12em;
-      opacity: 0.7;
-      margin-bottom: 0.5rem;
-    }
-
-    .muted {
-      font-size: 0.78rem;
-      opacity: 0.7;
-      margin-top: 1rem;
-    }
-
-    section.panel-section {
-      margin-top: 1.5rem;
-      padding-top: 1rem;
-      border-top: 1px solid rgba(148, 163, 184, 0.2);
-    }
-
-    h2 {
-      font-size: 1rem;
-      margin: 0 0 1rem;
-      opacity: 0.9;
-    }
-
-    .field {
-      margin-bottom: 0.8rem;
-    }
-
-    .field label {
-      display: block;
-      font-size: 0.8rem;
-      opacity: 0.8;
-      margin-bottom: 0.25rem;
-    }
-
-    .field input,
-    .field select {
-      width: 100%;
-      border-radius: 8px;
-      border: 1px solid rgba(148, 163, 184, 0.3);
-      background: #020617;
-      color: #e5e7eb;
-      padding: 0.45rem 0.6rem;
-      font-size: 0.9rem;
-      box-sizing: border-box;
-      /* Ensure padding doesn't break width */
-    }
-
-    .field input[type="color"] {
-      padding: 0.2rem;
-      height: 40px;
-    }
-
-    .row {
-      display: flex;
-      gap: 0.5rem;
-    }
-
-    .row .field {
-      flex: 1;
-    }
-
-    .status-ok {
-      color: #4ade80;
-    }
-
-    .status-error {
-      color: #f97373;
-    }
-  </style>
-</head>
-
-<body>
-  <main class="card">
-    <div class="tag">Internal Panel</div>
-
-    <h1>Administration</h1>
-    <p id="status">Checking session...</p>
-
-    <section id="login-view" style="display:none;">
-      <button id="btn-login-google">
-        <span>🔐 Sign in with Google</span>
-      </button>
-      <p class="muted">
-        Only specific Google accounts are authorized as administrators.
-      </p>
-    </section>
-
-    <section id="admin-view" style="display:none;">
-      <p>
-        Hello, <strong id="admin-name"></strong>.<br>
-        You have administrator access.
-      </p>
-
-      <section id="config-panel" class="panel-section">
-        <h2>Content Settings (Home)</h2>
-
-        <div class="field">
-          <label for="input-title">Main Title</label>
-          <input id="input-title" type="text" placeholder="Hello, I am Adrián Bernardino">
-        </div>
-
-        <div class="field">
-          <label for="input-subtitle">Subtitle / Description</label>
-          <input id="input-subtitle" type="text" placeholder="0 — ... — ∞">
-        </div>
-
-        <button id="btn-save-content" class="btn-primary">
-          💾 Save Content
-        </button>
-      </section>
-
-      <section id="design-panel" class="panel-section">
-        <h2>Design Settings</h2>
-
-        <div class="row">
-          <div class="field">
-            <label for="design-context">Context (Page)</label>
-            <select id="design-context">
-              <option value="inside">Inside (Personal)</option>
-              <option value="outside">Outside (Public)</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="design-target">Target (Album/Default)</label>
-            <select id="design-target">
-              <option value="default">Default Theme</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="field">
-          <label for="design-bg-mode">Background Mode</label>
-          <select id="design-bg-mode">
-            <option value="classic_lava">Classic Lava</option>
-            <option value="deep_ocean">Deep Ocean</option>
-            <option value="neon_night">Neon Night</option>
-            <option value="infrared">Infrared</option>
-            <option value="monochrome_glass">Monochrome Glass</option>
-          </select>
-        </div>
-
-        <div class="row">
-          <div class="field">
-            <label>Speed (0-100)</label>
-            <input id="design-speed" type="number" min="0" max="100">
-          </div>
-          <div class="field">
-            <label>Intensity (0-100)</label>
-            <input id="design-intensity" type="number" min="0" max="100">
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="field">
-            <label>Primary Color</label>
-            <input id="design-col-pri" type="color">
-          </div>
-          <div class="field">
-            <label>Secondary Color</label>
-            <input id="design-col-sec" type="color">
-          </div>
-          <div class="field">
-            <label>Accent Color</label>
-            <input id="design-col-acc" type="color">
-          </div>
-        </div>
-
-        <button id="btn-save-design" class="btn-primary">
-          🎨 Save Design
-        </button>
-      </section>
-
-      <section id="gallery-panel" class="panel-section">
-        <h2>Multimedia CRUD (Inside Archive)</h2>
-
-        <div style="
-      background: rgba(255, 255, 255, 0.05);
-      padding: 1rem;
-      border-radius: 12px;
-      margin-bottom: 2rem;
-    ">
-          <h3 style="margin-top: 0; font-size: 0.95rem;">
-            ➕ One-Click Upload (Create)
-          </h3>
-
-          <div class="field">
-            <label>Select Image (JPG/PNG)</label>
-            <input type="file" id="upload-file" accept="image/jpeg, image/png" />
-          </div>
-
-          <div class="row">
-            <div class="field">
-              <label>Title</label>
-              <input type="text" id="upload-title" placeholder="e.g. Summer Vibes" />
-            </div>
-            <div class="field">
-              <label>Year</label>
-              <input type="number" id="upload-year" placeholder="2025" value="2025" />
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="field">
-              <label>Album / Context</label>
-              <select id="upload-album">
-                <option value="daily">Daily/Personal</option>
-                <option value="artistic">Artistic/Public</option>
-                <option value="darkgreen">Dark Green</option>
-                <option value="lightgreen">Light Green</option>
-                <option value="red">Red</option>
-                <option value="darkblue">Dark Blue</option>
-                <option value="yellow">Yellow</option>
-                <option value="black">Black</option>
-                <option value="white">White</option>
-                <option value="lightblue">Light Blue</option>
-                <option value="orange">Orange</option>
-                <option value="pink">Pink</option>
-                <option value="purple">Purple</option>
-                <option value="brown">Brown</option>
-                <option value="gray">Gray</option>
-              </select>
-            </div>
-            <div class="field">
-              <label>Color Label</label>
-              <input type="text" id="upload-color" placeholder="e.g. Red, Blue, None" />
-            </div>
-          </div>
-
-          <button id="btn-upload" class="btn-primary">
-            ☁️ Upload & Save
+        <section id="login-view" style="display:none;">
+          <button id="btn-login-google">
+            <span>🔐 Sign in with Google</span>
           </button>
-
-          <p id="upload-progress" class="muted" style="display: none;">
-            Uploading...
+          <p class="muted">
+            Only specific Google accounts are authorized as administrators.
           </p>
-        </div>
+        </section>
 
-        <h3 style="font-size: 0.95rem;">
-          📂 Gallery Management (Read/Update/Delete)
-        </h3>
-        <p class="muted">Live view of database records.</p>
+        <section id="admin-view" style="display:none;">
+          <div
+            style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1rem; flex-shrink: 0;">
+            <p style="margin:0;">
+              Hello, <strong id="admin-name"></strong>.<br>
+              You have administrator access.
+            </p>
+            <button id="btn-logout" style="margin:0; background: transparent; border: 1px solid #333;">
+              🚪 Sign Out
+            </button>
+          </div>
 
-        <div id="gallery-list" style="
-      display: flex;
-      flex-direction: column;
-      gap: 0.8rem;
-    ">
-          <p class="muted">Loading gallery...</p>
-        </div>
-      </section>
+          <div class="admin-grid">
+            <section id="config-panel" class="panel-section">
+              <h2>Content Settings (Home)</h2>
 
-      <dialog id="edit-dialog" style="
+              <div class="field">
+                <label for="input-title">Main Title</label>
+                <input id="input-title" type="text" placeholder="Hello, I am Adrián Bernardino">
+              </div>
+
+              <div class="field">
+                <label for="input-subtitle">Subtitle / Description</label>
+                <input id="input-subtitle" type="text" placeholder="0 — ... — ∞">
+              </div>
+
+              <button id="btn-save-content" class="btn-primary">
+                💾 Save Content
+              </button>
+            </section>
+
+            <section id="design-panel" class="panel-section">
+              <h2>Design Settings</h2>
+
+              <div class="row">
+                <div class="field">
+                  <label for="design-context">Context (Page)</label>
+                  <select id="design-context">
+                    <option value="inside">Inside (Personal)</option>
+                    <option value="outside">Outside (Public)</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="design-target">Target (Album/Default)</label>
+                  <select id="design-target">
+                    <option value="default">Default Theme</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="design-bg-mode">Background Mode</label>
+                <select id="design-bg-mode">
+                  <option value="classic_lava">Classic Lava</option>
+                  <option value="deep_ocean">Deep Ocean</option>
+                  <option value="neon_night">Neon Night</option>
+                  <option value="infrared">Infrared</option>
+                  <option value="monochrome_glass">Monochrome Glass</option>
+                </select>
+              </div>
+
+              <div class="row">
+                <div class="field">
+                  <label>Speed (0-100)</label>
+                  <input id="design-speed" type="number" min="0" max="100">
+                </div>
+                <div class="field">
+                  <label>Intensity (0-100)</label>
+                  <input id="design-intensity" type="number" min="0" max="100">
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="field">
+                  <label>Primary Color</label>
+                  <input id="design-col-pri" type="color">
+                </div>
+                <div class="field">
+                  <label>Secondary Color</label>
+                  <input id="design-col-sec" type="color">
+                </div>
+                <div class="field">
+                  <label>Accent Color</label>
+                  <input id="design-col-acc" type="color">
+                </div>
+              </div>
+
+              <button id="btn-save-design" class="btn-primary">
+                🎨 Save Design
+              </button>
+            </section>
+
+            <section id="gallery-panel" class="panel-section">
+              <h2>Multimedia CRUD (Inside Archive)</h2>
+
+              <div style="
+        background: rgba(255, 255, 255, 0.05);
+        padding: 1rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+      ">
+                <h3 style="margin-top: 0; font-size: 0.95rem;">
+                  ➕ One-Click Upload (Create)
+                </h3>
+
+                <div class="field">
+                  <label>Select Image (JPG/PNG)</label>
+                  <input type="file" id="upload-file" accept="image/jpeg, image/png" />
+                </div>
+
+                <div class="row">
+                  <div class="field">
+                    <label>Title</label>
+                    <input type="text" id="upload-title" placeholder="e.g. Summer Vibes" />
+                  </div>
+                  <div class="field">
+                    <label>Year</label>
+                    <input type="number" id="upload-year" placeholder="2025" value="2025" />
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="field">
+                    <label>Album / Context</label>
+                    <select id="upload-album">
+                      <option value="daily">Daily/Personal</option>
+                      <option value="artistic">Artistic/Public</option>
+                      <option value="darkgreen">Dark Green</option>
+                      <option value="lightgreen">Light Green</option>
+                      <option value="red">Red</option>
+                      <option value="darkblue">Dark Blue</option>
+                      <option value="yellow">Yellow</option>
+                      <option value="black">Black</option>
+                      <option value="white">White</option>
+                      <option value="lightblue">Light Blue</option>
+                      <option value="orange">Orange</option>
+                      <option value="pink">Pink</option>
+                      <option value="purple">Purple</option>
+                      <option value="brown">Brown</option>
+                      <option value="gray">Gray</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label>Color Label</label>
+                    <input type="text" id="upload-color" placeholder="e.g. Red, Blue, None" />
+                  </div>
+                </div>
+
+                <button id="btn-upload" class="btn-primary">
+                  ☁️ Upload & Save
+                </button>
+
+                <p id="upload-progress" class="muted" style="display: none;">
+                  Uploading...
+                </p>
+              </div>
+
+              <h3 style="font-size: 0.95rem;">
+                📂 Gallery Management (Read/Update/Delete)
+              </h3>
+              <p class="muted">Live view of database records.</p>
+
+              <div id="gallery-list" style="
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+      ">
+                <p class="muted">Loading gallery...</p>
+              </div>
+            </section>
+          </div>
+
+          <dialog id="edit-dialog" style="
     background: #11131b;
     color: white;
     border: 1px solid #333;
@@ -342,55 +206,51 @@
     padding: 1.5rem;
     max-width: 400px;
   ">
-        <h3 style="margin-top: 0;">Edit Image Metadata</h3>
-        <input type="hidden" id="edit-id" />
+            <h3 style="margin-top: 0;">Edit Image Metadata</h3>
+            <input type="hidden" id="edit-id" />
 
-        <div class="field">
-          <label>Title</label>
-          <input type="text" id="edit-title" />
-        </div>
+            <div class="field">
+              <label>Title</label>
+              <input type="text" id="edit-title" />
+            </div>
 
-        <div class="row">
-          <div class="field">
-            <label>Year</label>
-            <input type="number" id="edit-year" />
-          </div>
-          <div class="field">
-            <label>Sort Order</label>
-            <input type="number" id="edit-order" />
-          </div>
-        </div>
+            <div class="row">
+              <div class="field">
+                <label>Year</label>
+                <input type="number" id="edit-year" />
+              </div>
+              <div class="field">
+                <label>Sort Order</label>
+                <input type="number" id="edit-order" />
+              </div>
+            </div>
 
-        <div class="field">
-          <label>Album</label>
-          <input type="text" id="edit-album" />
-        </div>
+            <div class="field">
+              <label>Album</label>
+              <input type="text" id="edit-album" />
+            </div>
 
-        <div style="
+            <div style="
       display: flex;
       gap: 0.5rem;
       margin-top: 1rem;
     ">
-          <button id="btn-confirm-update" class="btn-primary" style="margin-top: 0;">
-            Save Changes
-          </button>
-          <button id="btn-cancel-edit" style="
+              <button id="btn-confirm-update" class="btn-primary" style="margin-top: 0;">
+                Save Changes
+              </button>
+              <button id="btn-cancel-edit" style="
         background: transparent;
         color: #fff;
         border: 1px solid #555;
       ">
-            Cancel
-          </button>
-        </div>
-      </dialog>
+                Cancel
+              </button>
+            </div>
+          </dialog>
+        </section>
+      </main>
 
-      <button id="btn-logout" style="margin-top:2rem; background: transparent; border: 1px solid #333;">
-        🚪 Sign Out
-      </button>
-    </section>
-  </main>
+      <script type="module" src="/js/admin-home.js"></script>
+      </body>
 
-  <script type="module" src="/js/admin-home.js"></script>
-</body>
-
-</html>
+      </html>
