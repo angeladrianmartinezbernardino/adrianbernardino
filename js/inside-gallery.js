@@ -277,12 +277,12 @@ async function loadPhotosFromFirestore() {
           order: data.order || 0,
         });
       } catch (err) {
-        console.warn(`Error cargando foto ${docSnap.id}:`, err);
+        console.warn(`Error loading photo ${docSnap.id}:`, err);
       }
     }
     return photos;
   } catch (error) {
-    console.error("Error crítico en Firestore:", error);
+    console.error("Critical error in Firestore:", error);
     throw error;
   }
 }
