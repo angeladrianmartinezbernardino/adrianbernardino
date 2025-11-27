@@ -9,36 +9,131 @@
     /* Page shell. */
     /* In inside/index.html */
     :root {
-      --page-bg: #05040a;
+      /* Valores por defecto (serán sobrescritos por JS) */
+      --bg-base: #05040a;
+      --lava-c1: #ff0000;
+      --lava-c2: #00ff00;
+      --lava-c3: #0000ff;
+      --lava-duration: 30s;
+      --lava-opacity: 0.6;
+      --lava-blend: normal;
+
       --page-text: #f5f5f5;
       --muted: #9ca3af;
-
-      /* Lava effect variables (Default: Classic Lava) */
-      --lava-color-primary: #ff4b5c;
-      --lava-color-secondary: #ffb347;
-      --lava-color-accent: #ff00ff;
-      --lava-speed: 45s;
-      --lava-opacity: 0.7;
     }
 
     body {
       margin: 0;
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-
-      background-color: var(--page-bg);
+      background-color: var(--bg-base);
       color: var(--page-text);
+      overflow-x: hidden;
+      /* Importante para evitar scroll horizontal por los blobs */
+      transition: background-color 0.5s ease;
+    }
 
-      /* The magic background */
-      background-image:
-        radial-gradient(circle at 15% 50%, var(--lava-color-primary), transparent 25%),
-        radial-gradient(circle at 85% 30%, var(--lava-color-secondary), transparent 25%),
-        radial-gradient(circle at 50% 80%, var(--lava-color-accent), transparent 25%);
+    /* --- LAVA LAMP ENGINE --- */
+    #lava-container {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      /* Detrás de todo */
+      overflow: hidden;
+      background: var(--bg-base);
+      /* El filtro blur fusiona los colores */
+      filter: blur(80px);
+      pointer-events: none;
+    }
 
-      background-attachment: fixed;
-      transition: background 1.5s ease;
+    .lava-blob {
+      position: absolute;
+      border-radius: 50%;
+      opacity: var(--lava-opacity);
+      mix-blend-mode: var(--lava-blend);
+      animation-timing-function: ease-in-out;
+      animation-iteration-count: infinite;
+      animation-direction: alternate;
+    }
+
+    /* Blob 1: Color Primario (Grande, movimiento lento circular) */
+    .blob-1 {
+      background: var(--lava-c1);
+      width: 70vw;
+      height: 70vw;
+      top: -10%;
+      left: -10%;
+      animation-name: move1;
+      animation-duration: var(--lava-duration);
+    }
+
+    /* Blob 2: Color Secundario (Mediano, movimiento cruzado) */
+    .blob-2 {
+      background: var(--lava-c2);
+      width: 60vw;
+      height: 60vw;
+      bottom: -10%;
+      right: -10%;
+      animation-name: move2;
+      animation-duration: calc(var(--lava-duration) * 1.2);
+    }
+
+    /* Blob 3: Acento (Pequeño, movimiento rápido) */
+    .blob-3 {
+      background: var(--lava-c3);
+      width: 50vw;
+      height: 50vw;
+      top: 40%;
+      left: 40%;
+      animation-name: move3;
+      animation-duration: calc(var(--lava-duration) * 0.8);
+    }
+
+    /* ANIMACIONES KEYFRAMES (Complejos para evitar repetición obvia) */
+    @keyframes move1 {
+      0% {
+        transform: translate(0, 0) scale(1);
+      }
+
+      33% {
+        transform: translate(30vw, 10vh) scale(1.1);
+      }
+
+      66% {
+        transform: translate(10vw, 40vh) scale(0.9);
+      }
+
+      100% {
+        transform: translate(40vw, 5vh) scale(1);
+      }
+    }
+
+    @keyframes move2 {
+      0% {
+        transform: translate(0, 0) rotate(0deg);
+      }
+
+      50% {
+        transform: translate(-20vw, -20vh) rotate(180deg);
+      }
+
+      100% {
+        transform: translate(-40vw, 10vh) rotate(360deg);
+      }
+    }
+
+    @keyframes move3 {
+      0% {
+        transform: translate(0, 0) scale(1);
+      }
+
+      50% {
+        transform: translate(20vw, -30vh) scale(1.2);
+      }
+
+      100% {
+        transform: translate(-20vw, 20vh) scale(0.8);
+      }
     }
 
     .page-shell {
@@ -130,6 +225,14 @@
       border-radius: 12px;
       background: #0b1020;
       cursor: zoom-in;
+    }
+
+    .photo-card {
+      background: rgba(11, 16, 32, 0.6);
+      /* Más transparente */
+      backdrop-filter: blur(10px);
+      /* Efecto vidrio */
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .photo-thumb {
@@ -313,38 +416,63 @@
       justify-content: space-between;
       background: transparent;
     }
+
+    /* Asegura que el header y contenido tengan z-index > 0 para estar sobre la lava */
+    .site-header,
+    .filters,
+    .gallery-grid {
+      position: relative;
+      z-index: 1;
+    }
   </style>
 </head>
 
 <body>
   <div class="page-shell">
-    <header>
-      <h1>Inside / Personal Archive</h1>
-      <p>Daily photos across all life chapters and colors.</p>
+    <header class="site-header">
+      <div class="header-left">ADRIÁN BERNARDINO</div>
     </header>
 
-    <!-- Album filters: later you can sync slugs with your 15 albums. -->
     <div class="filters" id="album-filters">
-      <button class="filter-btn is-active" data-album="all">All</button>
-      <button class="filter-btn" data-album="darkgreen">Dark Green</button>
-      <button class="filter-btn" data-album="lightgreen">Light Green</button>
-      <button class="filter-btn" data-album="red">Red</button>
-      <button class="filter-btn" data-album="darkblue">Dark Blue</button>
-      <button class="filter-btn" data-album="yellow">Yellow</button>
-      <button class="filter-btn" data-album="black">Black</button>
-      <button class="filter-btn" data-album="white">White</button>
-      <button class="filter-btn" data-album="lightblue">Light Blue</button>
-      <button class="filter-btn" data-album="orange">Orange</button>
-      <button class="filter-btn" data-album="pink">Pink</button>
-      <button class="filter-btn" data-album="purple">Purple</button>
-      <button class="filter-btn" data-album="brown">Brown</button>
-      <button class="filter-btn" data-album="gray">Gray</button>
-      <button class="filter-btn" data-album="zero">Zero</button>
-      <button class="filter-btn" data-album="infinity">Infinity</button>
     </div>
 
-    <!-- Grid container; JS will inject cards here. -->
     <section id="gallery-grid" class="gallery-grid"></section>
+  </div>
+
+  <script type="module" src="/js/inside-gallery.js"></script>
+
+  <script type="module">
+    import { initLavaLamp } from "/js/lava-lamp.js";
+    // Usa 'home' o 'outside' según prefieras
+    initLavaLamp("home");
+  </script>
+  <header>
+    <h1>Inside / Personal Archive</h1>
+    <p>Daily photos across all life chapters and colors.</p>
+  </header>
+
+  <!-- Album filters: later you can sync slugs with your 15 albums. -->
+  <div class="filters" id="album-filters">
+    <button class="filter-btn is-active" data-album="all">All</button>
+    <button class="filter-btn" data-album="darkgreen">Dark Green</button>
+    <button class="filter-btn" data-album="lightgreen">Light Green</button>
+    <button class="filter-btn" data-album="red">Red</button>
+    <button class="filter-btn" data-album="darkblue">Dark Blue</button>
+    <button class="filter-btn" data-album="yellow">Yellow</button>
+    <button class="filter-btn" data-album="black">Black</button>
+    <button class="filter-btn" data-album="white">White</button>
+    <button class="filter-btn" data-album="lightblue">Light Blue</button>
+    <button class="filter-btn" data-album="orange">Orange</button>
+    <button class="filter-btn" data-album="pink">Pink</button>
+    <button class="filter-btn" data-album="purple">Purple</button>
+    <button class="filter-btn" data-album="brown">Brown</button>
+    <button class="filter-btn" data-album="gray">Gray</button>
+    <button class="filter-btn" data-album="zero">Zero</button>
+    <button class="filter-btn" data-album="infinity">Infinity</button>
+  </div>
+
+  <!-- Grid container; JS will inject cards here. -->
+  <section id="gallery-grid" class="gallery-grid"></section>
   </div>
 
   <!-- Modal to focus on a single photo. -->
