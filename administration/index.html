@@ -99,57 +99,6 @@
 
     /* Grid Layout for Admin View */
     #admin-view {
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-      overflow: hidden;
-    }
-
-    .admin-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 2rem;
-      flex: 1;
-      overflow-y: auto;
-      /* Scroll the grid content if needed, or individual columns */
-      padding-bottom: 2rem;
-    }
-
-    /* On smaller screens, stack them */
-    @media (max-width: 1024px) {
-      .admin-grid {
-        grid-template-columns: 1fr;
-        overflow-y: auto;
-      }
-
-      .card {
-        height: auto;
-        max-height: 90vh;
-      }
-    }
-
-    section.panel-section {
-      margin-top: 0;
-      /* Reset margin since we are using grid gap */
-      padding-top: 0;
-      border-top: none;
-      background: rgba(255, 255, 255, 0.02);
-      padding: 1.5rem;
-      border-radius: 12px;
-      border: 1px solid rgba(148, 163, 184, 0.1);
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* Make the gallery list scrollable within its column */
-    #gallery-panel {
-      overflow-y: auto;
-      max-height: 100%;
-    }
-
-    h2 {
-      font-size: 1.1rem;
-      margin: 0 0 1.2rem;
       opacity: 0.9;
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       padding-bottom: 0.5rem;
