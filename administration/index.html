@@ -21,12 +21,12 @@
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background: var(--bg-color);
       color: var(--text-main);
-      height: 100vh; /* Altura completa de la ventana */
+      height: 100vh;
       width: 100vw;
       display: flex;
       align-items: center;
       justify-content: center;
-      overflow: hidden; /* Evita scroll en la página web principal */
+      overflow: hidden; /* Evita scroll en el body */
       padding: 1rem;
       box-sizing: border-box;
     }
@@ -36,19 +36,20 @@
       background: var(--card-bg);
       border-radius: 16px;
       width: 100%;
-      max-width: 1800px; /* Permitir que sea muy ancha */
-      height: 95vh;      /* Ocupa casi toda la altura de la pantalla */
-      display: flex;     /* Flex para organizar Header vs Grid */
+      max-width: 1800px;
+      /* Usamos dvh para mejor soporte en pantallas con barras dinámicas */
+      height: 95dvh;      
+      display: flex;     
       flex-direction: column;
       box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
-      overflow: hidden;  /* QUITAMOS la barra de desplazamiento general */
-      padding: 0;        /* Padding gestionado internamente */
+      overflow: hidden;  /* Sin scroll en la tarjeta */
+      padding: 0;
     }
 
-    /* --- CABECERA DE LA TARJETA --- */
+    /* --- CABECERA FIJA --- */
     .card-header {
-      padding: 20px 28px 10px; /* Espacio superior */
-      flex-shrink: 0; /* No se encoge */
+      padding: 20px 28px 15px;
+      flex-shrink: 0; /* No encoger */
       border-bottom: 1px solid var(--border-color);
       background: var(--card-bg);
       z-index: 10;
@@ -56,43 +57,61 @@
 
     /* --- GRID DE 3 COLUMNAS --- */
     .admin-grid {
-      flex: 1; /* Ocupa todo el espacio restante hacia abajo */
+      flex: 1; /* Ocupa todo el espacio restante */
       display: grid;
-      grid-template-columns: repeat(3, 1fr); /* 3 columnas iguales */
-      gap: 0; /* Sin gap externo, usamos bordes o padding interno */
-      overflow: hidden; /* Evita scroll en el grid contenedor */
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      overflow: hidden; /* Sin scroll aquí */
       height: 100%;
+      min-height: 0; /* <--- FIX CRÍTICO: Permite que el flex container no se desborde */
     }
 
-    /* --- SECCIONES INDIVIDUALES (CON SCROLL PROPIO) --- */
+    /* --- SECCIONES INDIVIDUALES (CON SCROLL) --- */
     .panel-section {
       padding: 1.5rem;
-      overflow-y: auto; /* AQUÍ está la magia: Scroll independiente */
-      height: 100%;     /* Forza a ocupar la altura del grid */
-      border-right: 1px solid var(--border-color); /* Línea divisoria entre columnas */
+      overflow-y: auto; /* Scroll independiente */
+      height: 100%;
+      border-right: 1px solid var(--border-color);
       box-sizing: border-box;
+      /* Padding extra abajo para asegurar que el contenido final no se corte */
+      padding-bottom: 150px; 
     }
 
     .panel-section:last-child {
       border-right: none;
     }
 
-    /* Estilizar las barras de desplazamiento de las columnas */
-    .panel-section::-webkit-scrollbar { width: 6px; }
-    .panel-section::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
-    .panel-section::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+    /* Estilizar las barras de desplazamiento */
+    .panel-section::-webkit-scrollbar { width: 8px; }
+    .panel-section::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); }
+    .panel-section::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
     .panel-section::-webkit-scrollbar-thumb:hover { background: #555; }
 
-    /* --- MODIFICACIONES RESPONSIVE --- */
+    /* --- RESPONSIVE --- */
     @media (max-width: 1024px) {
-      .card { height: auto; max-height: 95vh; overflow-y: auto; display: block; }
+      .card { height: auto; max-height: 95dvh; overflow-y: auto; display: block; }
       .admin-grid { display: block; height: auto; }
-      .panel-section { height: auto; overflow-y: visible; border-right: none; border-bottom: 1px solid var(--border-color); }
+      .panel-section { height: auto; overflow-y: visible; border-right: none; border-bottom: 1px solid var(--border-color); padding-bottom: 2rem;}
     }
 
-    /* --- ESTILOS DE CONTENIDO --- */
+    /* --- TIPOGRAFÍA Y COMPONENTES --- */
     h1 { margin: 0 0 0.2rem; font-size: 1.4rem; }
-    h2 { font-size: 1.1rem; margin: 0 0 1.5rem; color: var(--accent-color); display:flex; align-items:center; gap:0.5rem; position: sticky; top: -1.5rem; background: var(--card-bg); padding: 1rem 0; z-index: 5; margin-top:-1.5rem; border-bottom:1px dashed #333; }
+    /* Títulos de sección pegajosos (Sticky) */
+    h2 { 
+      font-size: 1.1rem; 
+      margin: 0 0 1.5rem; 
+      color: var(--accent-color); 
+      display:flex; 
+      align-items:center; 
+      gap:0.5rem; 
+      position: sticky; 
+      top: -1.5rem; /* Ajustado al padding negativo */
+      background: var(--card-bg); /* Fondo para tapar contenido al scrollear */
+      padding: 1rem 0; 
+      z-index: 5; 
+      margin-top:-1.5rem; 
+      border-bottom:1px dashed #333; 
+    }
     
     h3 { font-size: 0.85rem; margin: 1.5rem 0 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); border-left: 3px solid var(--accent-color); padding-left: 0.5rem; }
     
@@ -149,7 +168,7 @@
     .status-error { color: #f97373; }
     .muted { font-size: 0.8rem; opacity: 0.7; }
 
-    /* Upload box styling */
+    /* Upload box */
     .upload-box {
         background: rgba(255, 255, 255, 0.03);
         border: 1px dashed rgba(255, 255, 255, 0.15);
@@ -177,7 +196,7 @@
       <div class="card-header">
         <div style="display:flex; justify-content:space-between; align-items:start;">
             <div>
-                <div class="tag">INTERNAL PANEL V2.1</div>
+                <div class="tag">INTERNAL PANEL V2.2</div>
                 <h1 id="admin-name">Admin</h1>
                 <p class="muted" style="margin:0; font-size:0.8rem;">Session active</p>
             </div>
