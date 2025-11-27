@@ -1,33 +1,26 @@
 // js/admin-home.js
 console.log("Admin script loading...");
 
-// Import shared Firestore and Auth instances.
 import { app, db, auth } from "./firebase-setup.js";
-
-// Import Auth helpers.
 import {
   GoogleAuthProvider,
   signInWithPopup,
   signOut,
   onAuthStateChanged,
 } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
-
-// Import Firestore helpers.
 import {
   doc,
   getDoc,
   setDoc,
-  collection,       // To create/read the photo list
-  addDoc,           // To add photo record
-  updateDoc,        // To edit record
-  deleteDoc,        // To delete record
-  query,            // To sort list
-  orderBy,          // To sort list
-  onSnapshot,       // To listen for real-time changes
-  serverTimestamp   // To save upload date
+  collection,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  query,
+  orderBy,
+  onSnapshot,
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
-
-// Import Storage helpers.
 import {
   getStorage,
   ref,
@@ -36,16 +29,10 @@ import {
   getDownloadURL
 } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-storage.js";
 
-// Initialize Storage
 const storage = getStorage(app);
-
-// --- CONFIGURATION ---
-const ADMIN_EMAILS = [
-  "angeladrianmartinezbernardino@gmail.com"
-];
+const ADMIN_EMAILS = ["angeladrianmartinezbernardino@gmail.com"];
 
 // --- DOM ELEMENTS ---
-// General
 const statusElement = document.getElementById("status");
 const loginViewElement = document.getElementById("login-view");
 const adminViewElement = document.getElementById("admin-view");
@@ -53,35 +40,10 @@ const adminNameElement = document.getElementById("admin-name");
 const loginButton = document.getElementById("btn-login-google");
 const logoutButton = document.getElementById("btn-logout");
 
-// Content Form (Home Texts)
-const titleInput = document.getElementById("input-title");
-const subtitleInput = document.getElementById("input-subtitle");
-const saveContentButton = document.getElementById("btn-save-content");
-
-// Design Form (Lava Lamp)
-const contextSelect = document.getElementById("design-context");
-const targetSelect = document.getElementById("design-target");
-const bgModeSelect = document.getElementById("design-bg-mode");
-const speedInput = document.getElementById("design-speed");
-const intensityInput = document.getElementById("design-intensity");
-const colorPriInput = document.getElementById("design-col-pri");
-const colorSecInput = document.getElementById("design-col-sec");
-const colorAccInput = document.getElementById("design-col-acc");
-const saveDesignButton = document.getElementById("btn-save-design");
-
-// --- GALLERY CRUD DOM ELEMENTS ---
-const uploadFile = document.getElementById("upload-file");
-const uploadTitle = document.getElementById("upload-title");
-const uploadYear = document.getElementById("upload-year");
-const uploadAlbum = document.getElementById("upload-album");
-const uploadColor = document.getElementById("upload-color");
-const btnUpload = document.getElementById("btn-upload");
-const uploadProgress = document.getElementById("upload-progress");
-const galleryList = document.getElementById("gallery-list");
-
-// Edit Modal Elements
+// Edit Modal
 const editDialog = document.getElementById("edit-dialog");
 const editIdInput = document.getElementById("edit-id");
+const editContextInput = document.getElementById("edit-context");
 const editTitleInput = document.getElementById("edit-title");
 const editYearInput = document.getElementById("edit-year");
 const editOrderInput = document.getElementById("edit-order");
@@ -90,18 +52,16 @@ const btnConfirmUpdate = document.getElementById("btn-confirm-update");
 const btnCancelEdit = document.getElementById("btn-cancel-edit");
 
 // --- STATE ---
-let currentDesignData = null;
-let currentContext = "inside";
-
-// Firestore references
-const homeDocRef = doc(db, "pages", "home");
-const designRef = (ctx) => doc(db, "pages", `design_${ctx}`);
-const photosCollectionRef = collection(db, "pages", "inside", "inside");
+const designData = {
+  home: null,
+  inside: null,
+  outside: null
+};
 
 // Provider
 const provider = new GoogleAuthProvider();
 
-// --- UI HELPERS ---
+// --- AUTH FLOW ---
 function showLogin(message = "Sign in with an authorized account.") {
   statusElement.textContent = message;
   statusElement.className = "";
@@ -116,152 +76,175 @@ async function showAdmin(user) {
   adminViewElement.style.display = "block";
   adminNameElement.textContent = user.displayName || user.email || "Admin";
 
-  // Load everything: Content, Design, and Gallery
+  // Initialize all sections
   await Promise.all([
     loadHomeContent(),
-    loadDesignData("inside"),
-    initGalleryListener()
+    initDesignSection("home"),
+    initDesignSection("inside"),
+    initDesignSection("outside"),
+    initGallerySection("inside"),
+    initGallerySection("outside")
   ]);
 }
 
-// --- 1. CONTENT FUNCTIONS (TEXTS) ---
+// --- 1. HOME CONTENT ---
 async function loadHomeContent() {
+  const titleInput = document.getElementById("home-title");
+  const subtitleInput = document.getElementById("home-subtitle");
+  const saveBtn = document.getElementById("btn-save-home-content");
+
   try {
-    const snapshot = await getDoc(homeDocRef);
+    const docRef = doc(db, "pages", "home");
+    const snapshot = await getDoc(docRef);
     if (snapshot.exists()) {
       const data = snapshot.data();
       titleInput.value = data.main_title || "";
       subtitleInput.value = data.main_subtitle || "";
-    } else {
-      titleInput.value = "Hello, I am Adrián Bernardino";
-      subtitleInput.value = "0 — ... — ∞";
     }
-  } catch (error) { console.error("Error loading content:", error); }
+  } catch (error) { console.error("Error loading home content:", error); }
+
+  saveBtn.addEventListener("click", async () => {
+    try {
+      saveBtn.disabled = true;
+      await setDoc(doc(db, "pages", "home"), {
+        main_title: titleInput.value,
+        main_subtitle: subtitleInput.value,
+      }, { merge: true });
+      alert("Home content saved.");
+    } catch (e) { alert("Error saving content: " + e.message); }
+    finally { saveBtn.disabled = false; }
+  });
 }
 
-async function saveHomeContent() {
-  try {
-    saveContentButton.disabled = true;
-    statusElement.textContent = "Saving content...";
-    await setDoc(homeDocRef, {
-      main_title: titleInput.value,
-      main_subtitle: subtitleInput.value,
-    }, { merge: true });
-    statusElement.textContent = "Content saved.";
-    statusElement.className = "status-ok";
-  } catch (error) {
-    console.error(error);
-    statusElement.textContent = "Error saving content.";
-    statusElement.className = "status-error";
-  } finally {
-    saveContentButton.disabled = false;
-  }
-}
+// --- 2. DESIGN SECTIONS ---
+async function initDesignSection(context) {
+  const saveBtn = document.getElementById(`btn-save-design-${context}`);
+  const targetSelect = document.getElementById(`design-target-${context}`);
 
-// --- 2. DESIGN FUNCTIONS (LAVA LAMP) ---
-async function loadDesignData(context) {
-  currentContext = context;
-  statusElement.textContent = `Loading design for ${context}...`;
+  // Load data
   try {
-    const ref = designRef(context);
-    const snapshot = await getDoc(ref);
+    const docRef = doc(db, "pages", `design_${context}`);
+    const snapshot = await getDoc(docRef);
     if (snapshot.exists()) {
-      currentDesignData = snapshot.data();
+      designData[context] = snapshot.data();
     } else {
-      try {
-        const response = await fetch(`/design/${context}.json`);
-        if (response.ok) currentDesignData = await response.json();
-        else throw new Error("JSON not found");
-      } catch (e) {
-        currentDesignData = { default_theme: { background_mode: "deep_ocean" }, albums: {} };
-      }
+      designData[context] = { default_theme: { background_mode: "deep_ocean" }, albums: {} };
     }
-    populateTargetSelect();
-    fillDesignForm('default');
-  } catch (error) { console.error(error); }
-}
+  } catch (e) {
+    console.error(`Error loading design for ${context}:`, e);
+    designData[context] = { default_theme: { background_mode: "deep_ocean" }, albums: {} };
+  }
 
-function populateTargetSelect() {
-  targetSelect.innerHTML = '<option value="default">Default Theme</option>';
-  if (currentDesignData.albums) {
-    Object.values(currentDesignData.albums).forEach(album => {
+  // Populate Target Select (if applicable)
+  if (targetSelect && designData[context].albums) {
+    // Keep default option
+    targetSelect.innerHTML = '<option value="default">Default Theme</option>';
+    Object.values(designData[context].albums).forEach(album => {
       const option = document.createElement("option");
       option.value = album.slug;
       option.textContent = `Album: ${album.title || album.slug}`;
       targetSelect.appendChild(option);
     });
+
+    // Listen for target change to refill form
+    targetSelect.addEventListener("change", () => fillDesignForm(context));
   }
+
+  // Fill form initially
+  fillDesignForm(context);
+
+  // Save Listener
+  saveBtn.addEventListener("click", () => saveDesign(context));
 }
 
-function fillDesignForm(targetKey) {
-  let themeData = (targetKey === 'default') ? currentDesignData.default_theme : (currentDesignData.albums[targetKey] || {});
-  bgModeSelect.value = themeData.background_mode || "deep_ocean";
-  speedInput.value = themeData.lava_speed || 50;
-  intensityInput.value = themeData.lava_intensity || 50;
-  colorPriInput.value = themeData.lava_color_primary || "#000000";
-  colorSecInput.value = themeData.lava_color_secondary || "#000000";
-  colorAccInput.value = themeData.lava_color_accent || "#000000";
+function fillDesignForm(context) {
+  const targetSelect = document.getElementById(`design-target-${context}`);
+  const targetKey = targetSelect ? targetSelect.value : "default";
+
+  const data = designData[context];
+  const theme = (targetKey === "default") ? data.default_theme : (data.albums?.[targetKey] || {});
+
+  // Elements
+  const bgMode = document.getElementById(`design-bg-mode-${context}`);
+  const speed = document.getElementById(`design-speed-${context}`);
+  const intensity = document.getElementById(`design-intensity-${context}`);
+  const colPri = document.getElementById(`design-col-pri-${context}`);
+  const colSec = document.getElementById(`design-col-sec-${context}`);
+  const colAcc = document.getElementById(`design-col-acc-${context}`);
+
+  if (bgMode) bgMode.value = theme.background_mode || "deep_ocean";
+  if (speed) speed.value = theme.lava_speed || 50;
+  if (intensity) intensity.value = theme.lava_intensity || 50;
+  if (colPri) colPri.value = theme.lava_color_primary || "#000000";
+  if (colSec) colSec.value = theme.lava_color_secondary || "#000000";
+  if (colAcc) colAcc.value = theme.lava_color_accent || "#000000";
 }
 
-function updateCurrentInMemoryData() {
-  const targetKey = targetSelect.value;
-  const formTheme = {
-    background_mode: bgModeSelect.value,
-    lava_speed: parseInt(speedInput.value, 10),
-    lava_intensity: parseInt(intensityInput.value, 10),
+async function saveDesign(context) {
+  const targetSelect = document.getElementById(`design-target-${context}`);
+  const targetKey = targetSelect ? targetSelect.value : "default";
+
+  // Read values
+  const bgMode = document.getElementById(`design-bg-mode-${context}`).value;
+  const speed = parseInt(document.getElementById(`design-speed-${context}`).value) || 50;
+  const intensity = parseInt(document.getElementById(`design-intensity-${context}`).value) || 50;
+  const colPri = document.getElementById(`design-col-pri-${context}`).value;
+  const colSec = document.getElementById(`design-col-sec-${context}`).value;
+  const colAcc = document.getElementById(`design-col-acc-${context}`).value;
+
+  const newTheme = {
+    background_mode: bgMode,
+    lava_speed: speed,
+    lava_intensity: intensity,
     use_custom_colors: true,
-    lava_color_primary: colorPriInput.value,
-    lava_color_secondary: colorSecInput.value,
-    lava_color_accent: colorAccInput.value
+    lava_color_primary: colPri,
+    lava_color_secondary: colSec,
+    lava_color_accent: colAcc
   };
-  if (targetKey === 'default') {
-    currentDesignData.default_theme = { ...currentDesignData.default_theme, ...formTheme };
+
+  // Update memory
+  if (targetKey === "default") {
+    designData[context].default_theme = { ...designData[context].default_theme, ...newTheme };
   } else {
-    if (currentDesignData.albums[targetKey]) {
-      currentDesignData.albums[targetKey] = { ...currentDesignData.albums[targetKey], ...formTheme };
-    }
+    if (!designData[context].albums) designData[context].albums = {};
+    if (!designData[context].albums[targetKey]) designData[context].albums[targetKey] = {};
+    designData[context].albums[targetKey] = { ...designData[context].albums[targetKey], ...newTheme };
   }
-}
 
-async function saveDesign() {
+  // Save to DB
   try {
-    saveDesignButton.disabled = true;
-    updateCurrentInMemoryData();
-    await setDoc(designRef(currentContext), currentDesignData, { merge: true });
-    statusElement.textContent = "Design saved.";
-    statusElement.className = "status-ok";
-  } catch (error) {
-    console.error(error);
-    statusElement.textContent = "Error saving design.";
-    statusElement.className = "status-error";
-  } finally {
-    saveDesignButton.disabled = false;
+    await setDoc(doc(db, "pages", `design_${context}`), designData[context], { merge: true });
+    alert(`Design for ${context} (${targetKey}) saved.`);
+  } catch (e) {
+    alert("Error saving design: " + e.message);
   }
 }
 
-// --- 3. GALLERY CRUD LOGIC (CORRECTED) ---
+// --- 3. GALLERY CRUD ---
+function initGallerySection(context) {
+  const listElement = document.getElementById(`gallery-list-${context}`);
+  const uploadBtn = document.getElementById(`btn-upload-${context}`);
 
-// READ (Real-time List)
-function initGalleryListener() {
-  const q = query(photosCollectionRef, orderBy("year", "desc"));
+  // 1. Listen for Real-time Updates
+  // Collection: pages/{context}/{context} (e.g. pages/inside/inside)
+  // Note: Firestore collection structure might be different? 
+  // Previous code used: collection(db, "pages", "inside", "inside")
+  // So for outside it should be: collection(db, "pages", "outside", "outside")
+
+  const colRef = collection(db, "pages", context, context);
+  const q = query(colRef, orderBy("year", "desc"));
 
   onSnapshot(q, (snapshot) => {
-    galleryList.innerHTML = "";
+    listElement.innerHTML = "";
     if (snapshot.empty) {
-      galleryList.innerHTML = "<p class='muted'>No photos found in database.</p>";
+      listElement.innerHTML = "<p class='muted'>No photos found.</p>";
       return;
     }
 
     snapshot.forEach((docSnap) => {
       const data = docSnap.data();
       const id = docSnap.id;
-
-      // Construct public URL to view the image
-      // Use standard version if exists, otherwise original
       const viewPath = data.standard_path || data.original_path;
-
-      // Placeholder URL while loading
-      let viewUrl = "#";
 
       const row = document.createElement("div");
       row.style.background = "#020617";
@@ -273,43 +256,40 @@ function initGalleryListener() {
       row.style.alignItems = "center";
 
       row.innerHTML = `
-                <div style="display:flex; align-items:center; gap:1rem;">
-                    <img class="row-thumb" style="height:60px; width:auto; max-width:120px; object-fit:contain; border-radius:4px; background:#1a1d26; display:none;" alt="Thumb" />
-                    <div>
-                        <strong style="color: #e5e7eb;">${data.title || "Untitled"}</strong>
-                        <div style="font-size:0.8rem; color: #9ca3af; margin-top:0.2rem;">
-                            ${data.year} · ${data.album} · Sort: ${data.order || 0}
-                        </div>
-                        <div style="font-size:0.7rem; color: #555; margin-top:0.2rem; word-break:break-all;">
-                            ID: ${id}<br>
-                            Path: ${viewPath}
-                        </div>
-                    </div>
+        <div style="display:flex; align-items:center; gap:1rem;">
+            <img class="row-thumb" style="height:60px; width:auto; max-width:120px; object-fit:contain; border-radius:4px; background:#1a1d26; display:none;" alt="Thumb" />
+            <div>
+                <strong style="color: #e5e7eb;">${data.title || "Untitled"}</strong>
+                <div style="font-size:0.8rem; color: #9ca3af; margin-top:0.2rem;">
+                    ${data.year} · ${data.album} · Sort: ${data.order || 0}
                 </div>
-                <div style="display:flex; gap:0.5rem;">
-                    <a href="${viewUrl}" target="_blank" class="btn-view-link" style="font-size:1.2rem; text-decoration:none; opacity: 0.5; pointer-events: none;" title="Loading...">⏳</a>
-                    <button class="btn-edit" style="background:none; border:none; cursor:pointer; font-size:1.2rem;" title="Edit Metadata">✏️</button>
-                    <button class="btn-delete" style="background:none; border:none; cursor:pointer; font-size:1.2rem;" title="Delete Permanently">🗑️</button>
+                <div style="font-size:0.7rem; color: #555; margin-top:0.2rem; word-break:break-all;">
+                    ID: ${id}
                 </div>
-            `;
+            </div>
+        </div>
+        <div style="display:flex; gap:0.5rem;">
+            <a href="#" target="_blank" class="btn-view-link" style="font-size:1.2rem; text-decoration:none; opacity: 0.5; pointer-events: none;" title="Loading...">⏳</a>
+            <button class="btn-edit" style="background:none; border:none; cursor:pointer; font-size:1.2rem;" title="Edit">✏️</button>
+            <button class="btn-delete" style="background:none; border:none; cursor:pointer; font-size:1.2rem;" title="Delete">🗑️</button>
+        </div>
+      `;
 
-      row.querySelector(".btn-edit").addEventListener("click", () => openEditModal(id, data));
-      row.querySelector(".btn-delete").addEventListener("click", () => handleDelete(id, data));
+      // Handlers
+      row.querySelector(".btn-edit").addEventListener("click", () => openEditModal(id, data, context));
+      row.querySelector(".btn-delete").addEventListener("click", () => handleDelete(id, data, context));
 
-      galleryList.appendChild(row);
+      listElement.appendChild(row);
 
-      // Fetch the secure URL asynchronously
+      // Async Image Load
       if (viewPath) {
-        const storageRef = ref(storage, viewPath);
-        getDownloadURL(storageRef)
+        getDownloadURL(ref(storage, viewPath))
           .then((url) => {
             const link = row.querySelector(".btn-view-link");
             const thumb = row.querySelector(".row-thumb");
-
             if (link) {
               link.href = url;
               link.textContent = "👁️";
-              link.title = "View Image";
               link.style.opacity = "1";
               link.style.pointerEvents = "auto";
             }
@@ -318,90 +298,74 @@ function initGalleryListener() {
               thumb.style.display = "block";
             }
           })
-          .catch((err) => {
-            console.warn("Error fetching URL for", viewPath, err);
-            const link = row.querySelector(".btn-view-link");
-            if (link) {
-              link.textContent = "❌";
-              link.title = "Error loading image";
-            }
-          });
-      } else {
-        const link = row.querySelector(".btn-view-link");
-        if (link) {
-          link.textContent = "⚠️";
-          link.title = "No path";
-        }
+          .catch(e => console.warn(e));
       }
     });
   });
+
+  // 2. Upload Handler
+  uploadBtn.addEventListener("click", () => handleUpload(context));
 }
 
-// CREATE (Upload + Database Entry) - CORRECTED FOR CLEAN NAMES
-btnUpload.addEventListener("click", async () => {
-  const file = uploadFile.files[0];
-  if (!file) {
-    alert("Please select a file.");
-    return;
-  }
+async function handleUpload(context) {
+  const fileInput = document.getElementById(`upload-file-${context}`);
+  const titleInput = document.getElementById(`upload-title-${context}`);
+  const yearInput = document.getElementById(`upload-year-${context}`);
+  const albumInput = document.getElementById(`upload-album-${context}`);
+  const colorInput = document.getElementById(`upload-color-${context}`);
+  const progress = document.getElementById(`upload-progress-${context}`);
+  const btn = document.getElementById(`btn-upload-${context}`);
 
-  const title = uploadTitle.value || "Untitled";
-  const year = parseInt(uploadYear.value) || new Date().getFullYear();
-  const album = uploadAlbum.value || "daily";
-  const color = uploadColor.value || "";
-
-  // 1. Name cleaning (remove original extension .jpg/.png)
-  const originalName = file.name; // Ej: foto.jpg
-  const lastDotIndex = originalName.lastIndexOf('.');
-  const nameWithoutExt = lastDotIndex !== -1 ? originalName.substring(0, lastDotIndex) : originalName; // Ej: foto
-
-  // 2. Paths
-  // The original is saved intact
-  const storageRefOriginal = ref(storage, `image/${originalName}`);
-
-  // WebP prediction uses clean name + suffix
-  // Result: image/webp/photo_2048x2048.webp
-  const standardPathPredicted = `image/webp/${nameWithoutExt}_2048x2048.webp`;
+  const file = fileInput.files[0];
+  if (!file) { alert("Select a file."); return; }
 
   try {
-    btnUpload.disabled = true;
-    uploadProgress.style.display = "block";
-    uploadProgress.textContent = "Uploading original to Storage...";
+    btn.disabled = true;
+    progress.style.display = "block";
+    progress.textContent = "Uploading...";
 
-    // A. Upload to Storage
-    await uploadBytes(storageRefOriginal, file);
+    const originalName = file.name;
+    const lastDot = originalName.lastIndexOf('.');
+    const nameNoExt = lastDot !== -1 ? originalName.substring(0, lastDot) : originalName;
 
-    uploadProgress.textContent = "Registering in Database...";
+    // Path: image/originalName (Shared folder? Or separate?)
+    // Previous code used `image/${originalName}`. 
+    // Maybe we should namespace by context? `image/${context}/${originalName}`?
+    // User didn't specify, but to avoid collisions let's keep it simple or stick to previous behavior.
+    // Previous behavior was flat `image/`. Let's stick to that for now to avoid breaking existing images if they share bucket.
+    // Actually, let's just use `image/${originalName}` as before.
 
-    // B. Save to Firestore
-    await addDoc(photosCollectionRef, {
-      title: title,
-      year: year,
-      album: album,
-      color_label: color,
+    const storageRef = ref(storage, `image/${originalName}`);
+    await uploadBytes(storageRef, file);
+
+    const standardPath = `image/webp/${nameNoExt}_2048x2048.webp`;
+
+    await addDoc(collection(db, "pages", context, context), {
+      title: titleInput.value || "Untitled",
+      year: parseInt(yearInput.value) || new Date().getFullYear(),
+      album: albumInput.value || "default",
+      color_label: colorInput.value || "",
       original_path: `image/${originalName}`,
-      standard_path: standardPathPredicted, // Predicted clean path
+      standard_path: standardPath,
       order: 0,
       created_at: serverTimestamp()
     });
 
-    alert("Upload successful! Optimized version processing...");
-
-    // Reset form
-    uploadFile.value = "";
-    uploadTitle.value = "";
-  } catch (error) {
-    console.error("Upload failed:", error);
-    alert("Error during upload: " + error.message);
+    alert("Uploaded successfully.");
+    fileInput.value = "";
+    titleInput.value = "";
+  } catch (e) {
+    alert("Upload failed: " + e.message);
   } finally {
-    btnUpload.disabled = false;
-    uploadProgress.style.display = "none";
+    btn.disabled = false;
+    progress.style.display = "none";
   }
-});
+}
 
-// UPDATE
-function openEditModal(id, data) {
+// --- 4. EDIT / DELETE ---
+function openEditModal(id, data, context) {
   editIdInput.value = id;
+  editContextInput.value = context;
   editTitleInput.value = data.title || "";
   editYearInput.value = data.year || 0;
   editOrderInput.value = data.order || 0;
@@ -413,64 +377,45 @@ btnCancelEdit.addEventListener("click", () => editDialog.close());
 
 btnConfirmUpdate.addEventListener("click", async () => {
   const id = editIdInput.value;
-  if (!id) return;
+  const context = editContextInput.value;
+  if (!id || !context) return;
+
   try {
-    const docRef = doc(db, "pages", "inside", "inside", id);
-    await updateDoc(docRef, {
+    await updateDoc(doc(db, "pages", context, context, id), {
       title: editTitleInput.value,
       year: parseInt(editYearInput.value),
       order: parseInt(editOrderInput.value),
       album: editAlbumInput.value
     });
     editDialog.close();
-  } catch (error) {
-    console.error("Update failed", error);
-    alert("Failed to update.");
+  } catch (e) {
+    alert("Update failed: " + e.message);
   }
 });
 
-// DELETE
-async function handleDelete(id, data) {
-  if (!confirm(`Are you sure you want to delete "${data.title}"?`)) return;
-
+async function handleDelete(id, data, context) {
+  if (!confirm(`Delete "${data.title}"?`)) return;
   try {
-    statusElement.textContent = "Deleting...";
-    if (data.original_path) {
-      const origRef = ref(storage, data.original_path);
-      await deleteObject(origRef).catch(e => console.warn("Original not found:", e));
-    }
-    if (data.standard_path) {
-      const stdRef = ref(storage, data.standard_path);
-      await deleteObject(stdRef).catch(e => console.warn("Standard not found:", e));
-    }
-    await deleteDoc(doc(db, "pages", "inside", "inside", id));
-    statusElement.textContent = "Delete successful.";
-    statusElement.className = "status-ok";
-  } catch (error) {
-    console.error("Delete failed", error);
-    alert("Error deleting: " + error.message);
+    if (data.original_path) await deleteObject(ref(storage, data.original_path)).catch(e => console.warn(e));
+    if (data.standard_path) await deleteObject(ref(storage, data.standard_path)).catch(e => console.warn(e));
+
+    await deleteDoc(doc(db, "pages", context, context, id));
+  } catch (e) {
+    alert("Delete failed: " + e.message);
   }
 }
 
-// --- EVENT LISTENERS (Shared) ---
-contextSelect.addEventListener("change", (e) => loadDesignData(e.target.value));
-targetSelect.addEventListener("change", (e) => fillDesignForm(e.target.value));
-[bgModeSelect, speedInput, intensityInput, colorPriInput, colorSecInput, colorAccInput].forEach(input => {
-  input.addEventListener("change", () => updateCurrentInMemoryData());
-});
-saveContentButton.addEventListener("click", (e) => { e.preventDefault(); saveHomeContent(); });
-saveDesignButton.addEventListener("click", (e) => { e.preventDefault(); saveDesign(); });
-
+// --- AUTH LISTENERS ---
 loginButton.addEventListener("click", async () => {
   try { await signInWithPopup(auth, provider); }
-  catch (error) { console.error(error); statusElement.textContent = "Login error."; }
+  catch (e) { console.error(e); }
 });
 logoutButton.addEventListener("click", async () => {
   try { await signOut(auth); showLogin("Signed out."); }
-  catch (error) { console.error(error); }
+  catch (e) { console.error(e); }
 });
 onAuthStateChanged(auth, async (user) => {
   if (!user) { showLogin(); return; }
   if (!ADMIN_EMAILS.includes(user.email)) { await signOut(auth); showLogin("Not authorized."); return; }
   await showAdmin(user);
-}, (error) => { console.error(error); showLogin("Auth error."); });
+}, (e) => { console.error(e); showLogin("Auth error."); });
