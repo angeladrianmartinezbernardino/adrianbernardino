@@ -273,14 +273,17 @@ function initGalleryListener() {
       row.style.alignItems = "center";
 
       row.innerHTML = `
-                <div>
-                    <strong style="color: #e5e7eb;">${data.title || "Untitled"}</strong>
-                    <div style="font-size:0.8rem; color: #9ca3af; margin-top:0.2rem;">
-                        ${data.year} · ${data.album} · Sort: ${data.order || 0}
-                    </div>
-                    <div style="font-size:0.7rem; color: #555; margin-top:0.2rem; word-break:break-all;">
-                        ID: ${id}<br>
-                        Path: ${viewPath}
+                <div style="display:flex; align-items:center; gap:1rem;">
+                    <img class="row-thumb" style="height:60px; width:auto; max-width:120px; object-fit:contain; border-radius:4px; background:#1a1d26; display:none;" alt="Thumb" />
+                    <div>
+                        <strong style="color: #e5e7eb;">${data.title || "Untitled"}</strong>
+                        <div style="font-size:0.8rem; color: #9ca3af; margin-top:0.2rem;">
+                            ${data.year} · ${data.album} · Sort: ${data.order || 0}
+                        </div>
+                        <div style="font-size:0.7rem; color: #555; margin-top:0.2rem; word-break:break-all;">
+                            ID: ${id}<br>
+                            Path: ${viewPath}
+                        </div>
                     </div>
                 </div>
                 <div style="display:flex; gap:0.5rem;">
@@ -301,12 +304,18 @@ function initGalleryListener() {
         getDownloadURL(storageRef)
           .then((url) => {
             const link = row.querySelector(".btn-view-link");
+            const thumb = row.querySelector(".row-thumb");
+
             if (link) {
               link.href = url;
               link.textContent = "👁️";
               link.title = "View Image";
               link.style.opacity = "1";
               link.style.pointerEvents = "auto";
+            }
+            if (thumb) {
+              thumb.src = url;
+              thumb.style.display = "block";
             }
           })
           .catch((err) => {
