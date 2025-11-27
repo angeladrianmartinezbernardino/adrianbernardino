@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <title>Inside · Adrián Bernardino</title>
@@ -26,16 +27,16 @@
       display: flex;
       flex-direction: column;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      
+
       background-color: var(--page-bg);
       color: var(--page-text);
 
       /* The magic background */
-      background-image: 
+      background-image:
         radial-gradient(circle at 15% 50%, var(--lava-color-primary), transparent 25%),
         radial-gradient(circle at 85% 30%, var(--lava-color-secondary), transparent 25%),
         radial-gradient(circle at 50% 80%, var(--lava-color-accent), transparent 25%);
-      
+
       background-attachment: fixed;
       transition: background 1.5s ease;
     }
@@ -314,6 +315,7 @@
     }
   </style>
 </head>
+
 <body>
   <div class="page-shell">
     <header>
@@ -376,4 +378,5 @@
   <!-- Gallery logic (Firebase + dynamic layout). -->
   <script type="module" src="/js/inside-gallery.js"></script>
 </body>
+
 </html>

@@ -22,14 +22,14 @@ const designRef = doc(db, "pages", "design_outside");
 
 function applyTheme(theme) {
   if (!theme) return;
-  
+
   const root = document.documentElement;
-  
+
   // Apply colors
   if (theme.lava_color_primary) root.style.setProperty("--lava-color-primary", theme.lava_color_primary);
   if (theme.lava_color_secondary) root.style.setProperty("--lava-color-secondary", theme.lava_color_secondary);
   if (theme.lava_color_accent) root.style.setProperty("--lava-color-accent", theme.lava_color_accent);
-  
+
   // Apply speed
   if (theme.lava_speed) root.style.setProperty("--lava-speed", theme.lava_speed + "s");
 }
@@ -60,15 +60,15 @@ window.addEventListener("DOMContentLoaded", () => {
 
   // Listen for content updates
   onSnapshot(homeRef, (snapshot) => {
-      if (snapshot.exists()) {
-        const data = snapshot.data();
-        if (data.main_title) titleElement.textContent = data.main_title;
-        if (data.main_subtitle) subtitleElement.textContent = data.main_subtitle;
-      } else {
-        titleElement.textContent = "Hello, I am Adrián Bernardino";
-        subtitleElement.textContent = "0 — 🌲🌱📌🌐☀️🎬🕣💧🔥🌸🍇🪵📡 — ∞";
-      }
-    },
+    if (snapshot.exists()) {
+      const data = snapshot.data();
+      if (data.main_title) titleElement.textContent = data.main_title;
+      if (data.main_subtitle) subtitleElement.textContent = data.main_subtitle;
+    } else {
+      titleElement.textContent = "Hello, I am Adrián Bernardino";
+      subtitleElement.textContent = "0 — 🌲🌱📌🌐☀️🎬🕣💧🔥🌸🍇🪵📡 — ∞";
+    }
+  },
     (error) => {
       console.error("Error reading Firestore:", error);
       titleElement.textContent = "Hello, I am Adrián Bernardino";

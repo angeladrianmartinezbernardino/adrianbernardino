@@ -31,14 +31,14 @@ const designRef = doc(db, "pages", "design_inside");
 
 function applyTheme(theme) {
   if (!theme) return;
-  
+
   const root = document.documentElement;
-  
+
   // Apply colors
   if (theme.lava_color_primary) root.style.setProperty("--lava-color-primary", theme.lava_color_primary);
   if (theme.lava_color_secondary) root.style.setProperty("--lava-color-secondary", theme.lava_color_secondary);
   if (theme.lava_color_accent) root.style.setProperty("--lava-color-accent", theme.lava_color_accent);
-  
+
   // Apply speed (optional, affects future animations)
   if (theme.lava_speed) root.style.setProperty("--lava-speed", theme.lava_speed + "s");
 }
@@ -247,17 +247,17 @@ window.addEventListener("DOMContentLoaded", () => {
 async function loadPhotosFromFirestore() {
   const photosRef = collection(db, "pages", "inside", "inside");
   const q = query(photosRef, orderBy("year", "asc"), orderBy("order", "asc"));
-  
+
   try {
     const snapshot = await getDocs(q);
     const photos = [];
 
     for (const docSnap of snapshot.docs) {
       const data = docSnap.data();
-      
+
       try {
         const pathForStandard = data.standard_path || data.original_path;
-        
+
         const standardRef = ref(storage, pathForStandard);
         const originalRef = ref(storage, data.original_path);
 
