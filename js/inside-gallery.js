@@ -1,14 +1,14 @@
 // js/inside-gallery.js
 
-// Import shared Firebase app and Firestore instance.
 import { app, db } from "./firebase-setup.js";
 
-// Import Firestore helpers.
 import {
   collection,
   getDocs,
   query,
   orderBy,
+  doc,          // <-- NEW
+  onSnapshot,   // <-- NEW
 } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
 // Import Storage helpers.
@@ -23,6 +23,36 @@ const storage = getStorage(app);
 
 // Keep all loaded photos in memory for filtering.
 let allPhotos = [];
+
+// --- DESIGN LOGIC ---
+
+// Reference to Inside design document
+const designRef = doc(db, "pages", "design_inside");
+
+function applyTheme(theme) {
+  if (!theme) return;
+  
+  const root = document.documentElement;
+  
+  // Apply colors
+  if (theme.lava_color_primary) root.style.setProperty("--lava-color-primary", theme.lava_color_primary);
+  if (theme.lava_color_secondary) root.style.setProperty("--lava-color-secondary", theme.lava_color_secondary);
+  if (theme.lava_color_accent) root.style.setProperty("--lava-color-accent", theme.lava_color_accent);
+  
+  // Apply speed (optional, affects future animations)
+  if (theme.lava_speed) root.style.setProperty("--lava-speed", theme.lava_speed + "s");
+}
+
+// Listen for real-time changes
+onSnapshot(designRef, (snapshot) => {
+  if (snapshot.exists()) {
+    const data = snapshot.data();
+    // Apply default theme globally for now
+    const theme = data.default_theme || {};
+    applyTheme(theme);
+    console.log("🎨 Design theme updated:", theme.background_mode);
+  }
+});
 
 /**
  * Initializes the gallery once the DOM is ready.
