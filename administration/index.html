@@ -15,6 +15,7 @@
       min-height: 100vh;
       align-items: center;
       justify-content: center;
+      padding: 1rem; /* Added padding for mobile */
     }
 
     /* Main card. */
@@ -25,6 +26,8 @@
       max-width: 520px;
       width: 100%;
       box-shadow: 0 18px 40px rgba(0,0,0,0.55);
+      max-height: 90vh; /* Limit height */
+      overflow-y: auto; /* Scroll if content is too long */
     }
 
     h1 {
@@ -60,13 +63,15 @@
       color: #f9fafb;
     }
 
-    #btn-save {
+    .btn-primary {
       background: #22c55e;
       color: #022c22;
       margin-top: 0.8rem;
+      width: 100%;
+      justify-content: center;
     }
 
-    #btn-save:disabled {
+    .btn-primary:disabled {
       opacity: 0.5;
       cursor: default;
     }
@@ -85,10 +90,16 @@
       margin-top: 1rem;
     }
 
-    #config-panel {
-      margin-top: 1rem;
+    section.panel-section {
+      margin-top: 1.5rem;
       padding-top: 1rem;
-      border-top: 1px solid rgba(148,163,184,0.3);
+      border-top: 1px solid rgba(148,163,184,0.2);
+    }
+
+    h2 {
+        font-size: 1rem;
+        margin: 0 0 1rem;
+        opacity: 0.9;
     }
 
     .field {
@@ -102,23 +113,32 @@
       margin-bottom: 0.25rem;
     }
 
-    .field input {
+    .field input, .field select {
       width: 100%;
       border-radius: 8px;
-      border: 1px solid rgba(148,163,184,0.7);
+      border: 1px solid rgba(148,163,184,0.3);
       background: #020617;
       color: #e5e7eb;
       padding: 0.45rem 0.6rem;
       font-size: 0.9rem;
+      box-sizing: border-box; /* Ensure padding doesn't break width */
+    }
+    
+    .field input[type="color"] {
+        padding: 0.2rem;
+        height: 40px;
     }
 
-    .status-ok {
-      color: #4ade80;
+    .row {
+        display: flex;
+        gap: 0.5rem;
+    }
+    .row .field {
+        flex: 1;
     }
 
-    .status-error {
-      color: #f97373;
-    }
+    .status-ok { color: #4ade80; }
+    .status-error { color: #f97373; }
   </style>
 </head>
 
@@ -126,8 +146,7 @@
   <main class="card">
     <div class="tag">Internal Panel</div>
 
-    <h1>Administration of adrianbernardino.com</h1>
-
+    <h1>Administration</h1>
     <p id="status">Checking session...</p>
 
     <section id="login-view" style="display:none;">
@@ -145,42 +164,91 @@
         You have administrator access.
       </p>
 
-      <section id="config-panel">
-        <h2 style="font-size:1rem; margin:0 0 .6rem;">Quick Page Settings</h2>
+      <section id="config-panel" class="panel-section">
+        <h2>Content Settings (Home)</h2>
 
         <div class="field">
           <label for="input-title">Main Title</label>
-          <input
-            id="input-title"
-            type="text"
-            placeholder="Hello, I am Adrián Bernardino">
+          <input id="input-title" type="text" placeholder="Hello, I am Adrián Bernardino">
         </div>
 
         <div class="field">
           <label for="input-subtitle">Subtitle / Description</label>
-          <input
-            id="input-subtitle"
-            type="text"
-            placeholder="0 — 🌲🌱📌🌐☀️🎬🕣💧🔥🌸🍇🪵📡 — ∞">
+          <input id="input-subtitle" type="text" placeholder="0 — ... — ∞">
         </div>
 
-        <button id="btn-save">
-          💾 Save Changes
+        <button id="btn-save-content" class="btn-primary">
+          💾 Save Content
         </button>
-
-        <p class="muted">
-          These fields are stored in the <code>pages/home</code> Firestore collection.
-          The public site can read them to display your presentation.
-        </p>
       </section>
 
-      <button id="btn-logout" style="margin-top:1rem;">
+      <section id="design-panel" class="panel-section">
+        <h2>Design Settings</h2>
+        
+        <div class="row">
+            <div class="field">
+                <label for="design-context">Context (Page)</label>
+                <select id="design-context">
+                    <option value="inside">Inside (Personal)</option>
+                    <option value="outside">Outside (Public)</option>
+                </select>
+            </div>
+            <div class="field">
+                <label for="design-target">Target (Album/Default)</label>
+                <select id="design-target">
+                    <option value="default">Default Theme</option>
+                    </select>
+            </div>
+        </div>
+
+        <div class="field">
+            <label for="design-bg-mode">Background Mode</label>
+            <select id="design-bg-mode">
+                <option value="classic_lava">Classic Lava</option>
+                <option value="deep_ocean">Deep Ocean</option>
+                <option value="neon_night">Neon Night</option>
+                <option value="infrared">Infrared</option>
+                <option value="monochrome_glass">Monochrome Glass</option>
+            </select>
+        </div>
+
+        <div class="row">
+            <div class="field">
+                <label>Speed (0-100)</label>
+                <input id="design-speed" type="number" min="0" max="100">
+            </div>
+            <div class="field">
+                <label>Intensity (0-100)</label>
+                <input id="design-intensity" type="number" min="0" max="100">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="field">
+                <label>Primary Color</label>
+                <input id="design-col-pri" type="color">
+            </div>
+            <div class="field">
+                <label>Secondary Color</label>
+                <input id="design-col-sec" type="color">
+            </div>
+            <div class="field">
+                <label>Accent Color</label>
+                <input id="design-col-acc" type="color">
+            </div>
+        </div>
+
+        <button id="btn-save-design" class="btn-primary">
+          🎨 Save Design
+        </button>
+      </section>
+
+      <button id="btn-logout" style="margin-top:2rem; background: transparent; border: 1px solid #333;">
         🚪 Sign Out
       </button>
     </section>
   </main>
 
-  <!-- Admin logic (Google sign-in + Firestore writes) -->
   <script type="module" src="/js/admin-home.js"></script>
 </body>
 </html>
