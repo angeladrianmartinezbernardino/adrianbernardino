@@ -42,6 +42,21 @@
       position: relative;
       z-index: 10;
       padding: 1rem 1.5rem 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: transparent;
+    }
+
+    .header-left {
+      font-size: 0.8rem;
+      letter-spacing: 0.2em;
+      opacity: 0.7;
+    }
+
+    .header-nav {
+      display: flex;
+      align-items: center;
       gap: 0.75rem;
     }
 
@@ -278,214 +293,61 @@
       </div>
 
       <nav class="header-nav" aria-label="Main navigation">
-        backdrop-filter: blur(14px);
-        opacity: 0;
-        transform: translateY(-4px);
-        pointer-events: none;
-        transition: opacity 0.16s ease-out, transform 0.16s ease-out;
-        }
+        <div class="menu">
+          <button class="menu-button" type="button" aria-haspopup="true" aria-expanded="false"
+            aria-label="Open main menu">
+            <span class="menu-button-bar"></span>
+            <span class="menu-button-bar"></span>
+            <span class="menu-button-bar"></span>
+          </button>
 
-        /* Show on hover/focus (desktop hover + keyboard focus). */
-        .menu:hover .menu-panel,
-        .menu:focus-within .menu-panel {
-        opacity: 1;
-        transform: translateY(0);
-        pointer-events: auto;
-        }
+          <div class="menu-panel">
+            <!-- Direct link to inside, for convenience. -->
+            <a class="menu-item" href="/inside">
+              Inside
+            </a>
+            <!-- First option: outside / "It's Me" -->
+            <a class="menu-item" href="/outside">
+              It's Me
+            </a>
+            <!-- Placeholder options for future sections. -->
+            <button class="menu-item" type="button" disabled>
+              More soon
+            </button>
+          </div>
+        </div>
+      </nav>
+    </header>
 
-        .menu-item {
-        display: block;
-        padding: 0.4rem 0.55rem;
-        margin: 0.05rem 0;
-        border-radius: 8px;
-        font-size: 0.85rem;
-        text-decoration: none;
-        color: var(--page-text);
-        opacity: 0.88;
-        cursor: pointer;
-        text-align: left;
-        background: transparent;
-        border: none;
-        width: 100%;
-        }
+    <main class="hero">
+      <div>
+        <!-- Firestore-driven content (kept from the original file). -->
+        <h1 id="main-title">Loading...</h1>
+        <p id="main-subtitle"></p>
+      </div>
+    </main>
 
-        .menu-item:hover {
-        opacity: 1;
-        background: rgba(148, 163, 184, 0.16);
-        }
+    <footer class="site-footer">
+      <span style="font-size: 0.8rem; color: var(--muted); opacity: 0.75;">
+        © <span id="current-year">2025</span> Adrián Bernardino
+      </span>
+    </footer>
+  </div>
 
-        .menu-item[disabled] {
-        opacity: 0.4;
-        cursor: default;
-        background: transparent;
-        }
+  <!-- Public home logic (reads main_title and main_subtitle from Firestore). -->
+  <script type="module" src="/js/public-home.js"></script>
 
-        /* Hero in the center of the page. */
-        .hero {
-        flex: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        padding: 2.5rem 1.5rem 2rem;
-        }
-
-        #main-title {
-        font-size: clamp(2.2rem, 4vw, 2.8rem);
-        margin: 0 0 0.75rem;
-        }
-
-        #main-subtitle {
-        font-size: 1rem;
-        opacity: 0.9;
-        max-width: 36rem;
-        margin: 0 auto;
-        }
-
-        /* Transparent footer aligned to the left. */
-        .site-footer {
-        padding: 0.75rem 1.5rem 1.25rem;
-        background: transparent;
-        display: flex;
-        justify-content: flex-start;
-        }
-
-        .footer-button {
-        border: none;
-        background: transparent;
-        padding: 0;
-        font-size: 0.8rem;
-        color: var(--muted);
-        cursor: pointer;
-        opacity: 0.75;
-        }
-
-        .footer-button:hover {
-        opacity: 1;
-        color: var(--page-text);
-        text-decoration: underline;
-        }
-
-        /* --- LAVA LAMP ENGINE --- */
-        #lava-container {
-        position: fixed;
-        inset: 0;
-        z-index: -1;
-        overflow: hidden;
-        background: var(--bg-base);
-        filter: blur(80px);
-        pointer-events: none;
-        }
-
-        .lava-blob {
-        position: absolute;
-        border-radius: 50%;
-        opacity: var(--lava-opacity);
-        mix-blend-mode: var(--lava-blend);
-        animation-timing-function: ease-in-out;
-        animation-iteration-count: infinite;
-        animation-direction: alternate;
-        }
-
-        .blob-1 {
-        background: var(--lava-c1);
-        width: 70vw;
-        height: 70vw;
-        top: -10%;
-        left: -10%;
-        animation-name: move1;
-        animation-duration: var(--lava-duration);
-        }
-
-        .blob-2 {
-        background: var(--lava-c2);
-        width: 60vw;
-        height: 60vw;
-        bottom: -10%;
-        right: -10%;
-        animation-name: move2;
-        animation-duration: calc(var(--lava-duration) * 1.2);
-        }
-
-        .blob-3 {
-        background: var(--lava-c3);
-        width: 50vw;
-        height: 50vw;
-        top: 40%;
-        left: 40%;
-        animation-name: move3;
-        animation-duration: calc(var(--lava-duration) * 0.8);
-        }
-
-        @keyframes move1 {
-        0% {
-        transform: translate(0, 0) scale(1);
-        }
-
-        33% {
-        transform: translate(30vw, 10vh) scale(1.1);
-        }
-
-        66% {
-        transform: translate(10vw, 40vh) scale(0.9);
-        }
-
-        100% {
-        transform: translate(40vw, 5vh) scale(1);
-        }
-        }
-
-        @keyframes move2 {
-        0% {
-        transform: translate(0, 0) rotate(0deg);
-        }
-
-        50% {
-        transform: translate(-20vw, -20vh) rotate(180deg);
-        }
-
-        100% {
-        transform: translate(-40vw, 10vh) rotate(360deg);
-        }
-        }
-
-        @keyframes move3 {
-        0% {
-        transform: translate(0, 0) scale(1);
-        }
-
-        50% {
-        transform: translate(20vw, -30vh) scale(1.2);
-        }
-
-        100% {
-        transform: translate(-20vw, 20vh) scale(0.8);
-        }
-        }
-        </style>
-        </head>
-
-        <body>
-          <div class="page-shell">
-            <header class="site-header">
-              <div class="header-left">
-                Adrián&nbsp;Bernardino
-              </div>
-
-              <nav class="header-nav" aria-label="Main navigation">
-                <div class="menu">
-                  <button class="menu-button" type="button" aria-haspopup="true" aria-expanded="false"
-                    aria-label="Open main menu">
-                    <script>
-                      document.addEventListener("DOMContentLoaded", function () {
-                        // Dynamic year (can later be replaced by a server time source if needed).
-                        const yearSpan = document.getElementById("current-year");
-                        if (yearSpan) {
-                          const currentYear = new Date().getFullYear();
-                          yearSpan.textContent = currentYear;
-                        }
-                      });
-                    </script>
-        </body>
+  <!-- Layout helpers: dynamic year. -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Dynamic year (can later be replaced by a server time source if needed).
+      const yearSpan = document.getElementById("current-year");
+      if (yearSpan) {
+        const currentYear = new Date().getFullYear();
+        yearSpan.textContent = currentYear;
+      }
+    });
+  </script>
+</body>
 
 </html>
