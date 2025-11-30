@@ -261,10 +261,21 @@ async function loadPhotosFromFirestore() {
         const standardRef = ref(storage, pathForStandard);
         const originalRef = ref(storage, data.original_path);
 
-        const [standardUrl, originalUrl] = await Promise.all([
-          getDownloadURL(standardRef),
-          getDownloadURL(originalRef),
-        ]);
+        // Fetch URLs safely. If standard fails, fallback to original.
+        let standardUrl, originalUrl;
+        try {
+          originalUrl = await getDownloadURL(originalRef);
+        } catch (e) {
+          console.warn(`Missing original file for ${docSnap.id}:`, data.original_path);
+          continue; // Skip if original is missing
+        }
+
+        try {
+          standardUrl = await getDownloadURL(standardRef);
+        } catch (e) {
+          // Fallback to original if standard is missing
+          standardUrl = originalUrl;
+        }
 
         photos.push({
           id: docSnap.id,
