@@ -16,25 +16,6 @@ import {
   addDoc,
   updateDoc,
   deleteDoc,
-```javascript
-// js/admin-home.js
-console.log("Admin script loading...");
-
-import { app, db, auth } from "./firebase-setup.js";
-import {
-  GoogleAuthProvider,
-  signInWithPopup,
-  signOut,
-  onAuthStateChanged,
-} from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
-import {
-  doc,
-  getDoc,
-  setDoc,
-  collection,
-  addDoc,
-  updateDoc,
-  deleteDoc,
   query,
   orderBy,
   onSnapshot,
@@ -139,12 +120,12 @@ async function loadHomeContent() {
 
 // --- 2. DESIGN SECTIONS ---
 async function initDesignSection(context) {
-  const saveBtn = document.getElementById(`btn - save - design - ${ context } `);
-  const targetSelect = document.getElementById(`design - target - ${ context } `);
+  const saveBtn = document.getElementById(`btn-save-design-${context}`);
+  const targetSelect = document.getElementById(`design-target-${context}`);
 
   // Load data
   try {
-    const docRef = doc(db, "pages", `design_${ context } `);
+    const docRef = doc(db, "pages", `design_${context}`);
     const snapshot = await getDoc(docRef);
     if (snapshot.exists()) {
       designData[context] = snapshot.data();
@@ -152,7 +133,7 @@ async function initDesignSection(context) {
       designData[context] = { default_theme: { background_mode: "deep_ocean" }, albums: {} };
     }
   } catch (e) {
-    console.error(`Error loading design for ${ context }: `, e);
+    console.error(`Error loading design for ${context}:`, e);
     designData[context] = { default_theme: { background_mode: "deep_ocean" }, albums: {} };
   }
 
@@ -163,7 +144,7 @@ async function initDesignSection(context) {
     Object.values(designData[context].albums).forEach(album => {
       const option = document.createElement("option");
       option.value = album.slug;
-      option.textContent = `Album: ${ album.title || album.slug } `;
+      option.textContent = `Album: ${album.title || album.slug}`;
       targetSelect.appendChild(option);
     });
 
@@ -179,19 +160,19 @@ async function initDesignSection(context) {
 }
 
 function fillDesignForm(context) {
-  const targetSelect = document.getElementById(`design - target - ${ context } `);
+  const targetSelect = document.getElementById(`design-target-${context}`);
   const targetKey = targetSelect ? targetSelect.value : "default";
 
   const data = designData[context];
   const theme = (targetKey === "default") ? data.default_theme : (data.albums?.[targetKey] || {});
 
   // Elements
-  const bgMode = document.getElementById(`design - bg - mode - ${ context } `);
-  const speed = document.getElementById(`design - speed - ${ context } `);
-  const intensity = document.getElementById(`design - intensity - ${ context } `);
-  const colPri = document.getElementById(`design - col - pri - ${ context } `);
-  const colSec = document.getElementById(`design - col - sec - ${ context } `);
-  const colAcc = document.getElementById(`design - col - acc - ${ context } `);
+  const bgMode = document.getElementById(`design-bg-mode-${context}`);
+  const speed = document.getElementById(`design-speed-${context}`);
+  const intensity = document.getElementById(`design-intensity-${context}`);
+  const colPri = document.getElementById(`design-col-pri-${context}`);
+  const colSec = document.getElementById(`design-col-sec-${context}`);
+  const colAcc = document.getElementById(`design-col-acc-${context}`);
 
   if (bgMode) bgMode.value = theme.background_mode || "deep_ocean";
   if (speed) speed.value = theme.lava_speed || 50;
@@ -202,16 +183,16 @@ function fillDesignForm(context) {
 }
 
 async function saveDesign(context) {
-  const targetSelect = document.getElementById(`design - target - ${ context } `);
+  const targetSelect = document.getElementById(`design-target-${context}`);
   const targetKey = targetSelect ? targetSelect.value : "default";
 
   // Read values
-  const bgMode = document.getElementById(`design - bg - mode - ${ context } `).value;
-  const speed = parseInt(document.getElementById(`design - speed - ${ context } `).value) || 50;
-  const intensity = parseInt(document.getElementById(`design - intensity - ${ context } `).value) || 50;
-  const colPri = document.getElementById(`design - col - pri - ${ context } `).value;
-  const colSec = document.getElementById(`design - col - sec - ${ context } `).value;
-  const colAcc = document.getElementById(`design - col - acc - ${ context } `).value;
+  const bgMode = document.getElementById(`design-bg-mode-${context}`).value;
+  const speed = parseInt(document.getElementById(`design-speed-${context}`).value) || 50;
+  const intensity = parseInt(document.getElementById(`design-intensity-${context}`).value) || 50;
+  const colPri = document.getElementById(`design-col-pri-${context}`).value;
+  const colSec = document.getElementById(`design-col-sec-${context}`).value;
+  const colAcc = document.getElementById(`design-col-acc-${context}`).value;
 
   const newTheme = {
     background_mode: bgMode,
@@ -234,8 +215,8 @@ async function saveDesign(context) {
 
   // Save to DB
   try {
-    await setDoc(doc(db, "pages", `design_${ context } `), designData[context], { merge: true });
-    alert(`Design for ${ context }(${ targetKey }) saved.`);
+    await setDoc(doc(db, "pages", `design_${context}`), designData[context], { merge: true });
+    alert(`Design for ${context} (${targetKey}) saved.`);
   } catch (e) {
     alert("Error saving design: " + e.message);
   }
@@ -243,16 +224,11 @@ async function saveDesign(context) {
 
 // --- 3. GALLERY CRUD ---
 function initGallerySection(context) {
-  const listElement = document.getElementById(`gallery - list - ${ context } `);
-  const uploadBtn = document.getElementById(`btn - upload - ${ context } `);
-  const syncBtn = document.getElementById(`btn - sync - ${ context } `);
+  const listElement = document.getElementById(`gallery-list-${context}`);
+  const uploadBtn = document.getElementById(`btn-upload-${context}`);
+  const syncBtn = document.getElementById(`btn-sync-${context}`);
 
   // 1. Listen for Real-time Updates
-  // Collection: pages/{context}/{context} (e.g. pages/inside/inside)
-  // Note: Firestore collection structure might be different? 
-  // Previous code used: collection(db, "pages", "inside", "inside")
-  // So for outside it should be: collection(db, "pages", "outside", "outside")
-
   const colRef = collection(db, "pages", context, context);
   const q = query(colRef, orderBy("year", "desc"));
 
@@ -278,7 +254,7 @@ function initGallerySection(context) {
       row.style.alignItems = "center";
 
       row.innerHTML = `
-  < div style = "display:flex; align-items:center; gap:1rem;" >
+        <div style="display:flex; align-items:center; gap:1rem;">
             <img class="row-thumb" style="height:60px; width:auto; max-width:120px; object-fit:contain; border-radius:4px; background:#1a1d26; display:none;" alt="Thumb" />
             <div>
                 <strong style="color: #e5e7eb;">${data.title || "Untitled"}</strong>
@@ -289,13 +265,13 @@ function initGallerySection(context) {
                     ID: ${id}
                 </div>
             </div>
-        </div >
-  <div style="display:flex; gap:0.5rem;">
-    <a href="#" target="_blank" class="btn-view-link" style="font-size:1.2rem; text-decoration:none; opacity: 0.5; pointer-events: none;" title="Loading...">⏳</a>
-    <button class="btn-edit" style="background:none; border:none; cursor:pointer; font-size:1.2rem;" title="Edit">✏️</button>
-    <button class="btn-delete" style="background:none; border:none; cursor:pointer; font-size:1.2rem;" title="Delete">🗑️</button>
-  </div>
-`;
+        </div>
+        <div style="display:flex; gap:0.5rem;">
+            <a href="#" target="_blank" class="btn-view-link" style="font-size:1.2rem; text-decoration:none; opacity: 0.5; pointer-events: none;" title="Loading...">⏳</a>
+            <button class="btn-edit" style="background:none; border:none; cursor:pointer; font-size:1.2rem;" title="Edit">✏️</button>
+            <button class="btn-delete" style="background:none; border:none; cursor:pointer; font-size:1.2rem;" title="Delete">🗑️</button>
+        </div>
+      `;
 
       // Handlers
       row.querySelector(".btn-edit").addEventListener("click", () => openEditModal(id, data, context));
@@ -323,14 +299,14 @@ function initGallerySection(context) {
           .catch(e => {
             // Fallback to original if standard fails
             if (data.original_path && viewPath !== data.original_path) {
-                getDownloadURL(ref(storage, data.original_path))
-                    .then(url => {
-                        const link = row.querySelector(".btn-view-link");
-                        const thumb = row.querySelector(".row-thumb");
-                        if (link) { link.href = url; link.textContent = "👁️"; link.style.opacity = "1"; link.style.pointerEvents = "auto"; }
-                        if (thumb) { thumb.src = url; thumb.style.display = "block"; }
-                    })
-                    .catch(err => console.warn("Thumb load failed", err));
+              getDownloadURL(ref(storage, data.original_path))
+                .then(url => {
+                  const link = row.querySelector(".btn-view-link");
+                  const thumb = row.querySelector(".row-thumb");
+                  if (link) { link.href = url; link.textContent = "👁️"; link.style.opacity = "1"; link.style.pointerEvents = "auto"; }
+                  if (thumb) { thumb.src = url; thumb.style.display = "block"; }
+                })
+                .catch(err => console.warn("Thumb load failed", err));
             }
           });
       }
@@ -347,71 +323,71 @@ function initGallerySection(context) {
 }
 
 async function handleSync(context) {
-    const syncBtn = document.getElementById(`btn - sync - ${ context } `);
-    try {
-        syncBtn.disabled = true;
-        syncBtn.textContent = "Syncing...";
+  const syncBtn = document.getElementById(`btn-sync-${context}`);
+  try {
+    syncBtn.disabled = true;
+    syncBtn.textContent = "Syncing...";
 
-        // 1. List all files in 'image/'
-        const listRef = ref(storage, 'image/');
-        const res = await listAll(listRef);
-        const storageFiles = res.items; // Array of Reference
+    // 1. List all files in 'image/'
+    const listRef = ref(storage, 'image/');
+    const res = await listAll(listRef);
+    const storageFiles = res.items; // Array of Reference
 
-        // 2. Get all existing docs in current context
-        const colRef = collection(db, "pages", context, context);
-        const snapshot = await getDocs(colRef);
-        const existingPaths = new Set();
-        snapshot.forEach(doc => {
-            const data = doc.data();
-            if (data.original_path) existingPaths.add(data.original_path);
+    // 2. Get all existing docs in current context
+    const colRef = collection(db, "pages", context, context);
+    const snapshot = await getDocs(colRef);
+    const existingPaths = new Set();
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      if (data.original_path) existingPaths.add(data.original_path);
+    });
+
+    // 3. Find missing and add them
+    let addedCount = 0;
+    for (const itemRef of storageFiles) {
+      const fullPath = itemRef.fullPath;
+      if (!existingPaths.has(fullPath)) {
+        // Add to Firestore
+        const name = itemRef.name;
+        const lastDot = name.lastIndexOf('.');
+        const nameNoExt = lastDot !== -1 ? name.substring(0, lastDot) : name;
+
+        // Optimistic standard path
+        const standardPath = `image/webp/${nameNoExt}_2048x2048.webp`;
+
+        await addDoc(colRef, {
+          title: nameNoExt,
+          year: new Date().getFullYear(), // Default to current year
+          album: "imported",
+          color_label: "",
+          original_path: fullPath,
+          standard_path: standardPath,
+          order: 0,
+          created_at: serverTimestamp()
         });
-
-        // 3. Find missing and add them
-        let addedCount = 0;
-        for (const itemRef of storageFiles) {
-            const fullPath = itemRef.fullPath;
-            if (!existingPaths.has(fullPath)) {
-                // Add to Firestore
-                const name = itemRef.name;
-                const lastDot = name.lastIndexOf('.');
-                const nameNoExt = lastDot !== -1 ? name.substring(0, lastDot) : name;
-                
-                // Optimistic standard path
-                const standardPath = `image / webp / ${ nameNoExt } _2048x2048.webp`;
-
-                await addDoc(colRef, {
-                    title: nameNoExt,
-                    year: new Date().getFullYear(), // Default to current year
-                    album: "imported",
-                    color_label: "",
-                    original_path: fullPath,
-                    standard_path: standardPath,
-                    order: 0,
-                    created_at: serverTimestamp()
-                });
-                addedCount++;
-            }
-        }
-
-        alert(`Sync complete.Imported ${ addedCount } new images.`);
-
-    } catch (e) {
-        console.error(e);
-        alert("Sync failed: " + e.message);
-    } finally {
-        syncBtn.disabled = false;
-        syncBtn.textContent = "🔄 Sync GCS";
+        addedCount++;
+      }
     }
+
+    alert(`Sync complete. Imported ${addedCount} new images.`);
+
+  } catch (e) {
+    console.error(e);
+    alert("Sync failed: " + e.message);
+  } finally {
+    syncBtn.disabled = false;
+    syncBtn.textContent = "🔄 Sync GCS";
+  }
 }
 
 async function handleUpload(context) {
-  const fileInput = document.getElementById(`upload - file - ${ context } `);
-  const titleInput = document.getElementById(`upload - title - ${ context } `);
-  const yearInput = document.getElementById(`upload - year - ${ context } `);
-  const albumInput = document.getElementById(`upload - album - ${ context } `);
-  const colorInput = document.getElementById(`upload - color - ${ context } `);
-  const progress = document.getElementById(`upload - progress - ${ context } `);
-  const btn = document.getElementById(`btn - upload - ${ context } `);
+  const fileInput = document.getElementById(`upload-file-${context}`);
+  const titleInput = document.getElementById(`upload-title-${context}`);
+  const yearInput = document.getElementById(`upload-year-${context}`);
+  const albumInput = document.getElementById(`upload-album-${context}`);
+  const colorInput = document.getElementById(`upload-color-${context}`);
+  const progress = document.getElementById(`upload-progress-${context}`);
+  const btn = document.getElementById(`btn-upload-${context}`);
 
   const file = fileInput.files[0];
   if (!file) { alert("Select a file."); return; }
@@ -425,38 +401,31 @@ async function handleUpload(context) {
     const lastDot = originalName.lastIndexOf('.');
     const nameNoExt = lastDot !== -1 ? originalName.substring(0, lastDot) : originalName;
 
-    // Path: image/originalName (Shared folder? Or separate?)
-    // Previous code used `image / ${ originalName } `. 
-    // Maybe we should namespace by context? `image / ${ context }/${originalName}`?
-// User didn't specify, but to avoid collisions let's keep it simple or stick to previous behavior.
-// Previous behavior was flat `image/`. Let's stick to that for now to avoid breaking existing images if they share bucket.
-// Actually, let's just use `image/${originalName}` as before.
+    const storageRef = ref(storage, `image/${originalName}`);
+    await uploadBytes(storageRef, file);
 
-const storageRef = ref(storage, `image/${originalName}`);
-await uploadBytes(storageRef, file);
+    const standardPath = `image/webp/${nameNoExt}_2048x2048.webp`;
 
-const standardPath = `image/webp/${nameNoExt}_2048x2048.webp`;
+    await addDoc(collection(db, "pages", context, context), {
+      title: titleInput.value || "Untitled",
+      year: parseInt(yearInput.value) || new Date().getFullYear(),
+      album: albumInput.value || "default",
+      color_label: colorInput.value || "",
+      original_path: `image/${originalName}`,
+      standard_path: standardPath,
+      order: 0,
+      created_at: serverTimestamp()
+    });
 
-await addDoc(collection(db, "pages", context, context), {
-  title: titleInput.value || "Untitled",
-  year: parseInt(yearInput.value) || new Date().getFullYear(),
-  album: albumInput.value || "default",
-  color_label: colorInput.value || "",
-  original_path: `image/${originalName}`,
-  standard_path: standardPath,
-  order: 0,
-  created_at: serverTimestamp()
-});
-
-alert("Uploaded successfully.");
-fileInput.value = "";
-titleInput.value = "";
+    alert("Uploaded successfully.");
+    fileInput.value = "";
+    titleInput.value = "";
   } catch (e) {
-  alert("Upload failed: " + e.message);
-} finally {
-  btn.disabled = false;
-  progress.style.display = "none";
-}
+    alert("Upload failed: " + e.message);
+  } finally {
+    btn.disabled = false;
+    progress.style.display = "none";
+  }
 }
 
 // --- 4. EDIT / DELETE ---
@@ -516,4 +485,3 @@ onAuthStateChanged(auth, async (user) => {
   if (!ADMIN_EMAILS.includes(user.email)) { await signOut(auth); showLogin("Not authorized."); return; }
   await showAdmin(user);
 }, (e) => { console.error(e); showLogin("Auth error."); });
-```
