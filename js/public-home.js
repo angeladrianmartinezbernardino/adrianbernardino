@@ -12,37 +12,16 @@ import {
   onSnapshot,
 } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
+// Import Lava Lamp
+import { initLavaLamp } from "./lava-lamp.js";
+
 // Initialize Analytics.
 const analytics = getAnalytics(app);
 
 // --- DESIGN LOGIC ---
-
-// Reference to Outside design document
-const designRef = doc(db, "pages", "design_outside");
-
-function applyTheme(theme) {
-  if (!theme) return;
-
-  const root = document.documentElement;
-
-  // Apply colors
-  if (theme.lava_color_primary) root.style.setProperty("--lava-color-primary", theme.lava_color_primary);
-  if (theme.lava_color_secondary) root.style.setProperty("--lava-color-secondary", theme.lava_color_secondary);
-  if (theme.lava_color_accent) root.style.setProperty("--lava-color-accent", theme.lava_color_accent);
-
-  // Apply speed
-  if (theme.lava_speed) root.style.setProperty("--lava-speed", theme.lava_speed + "s");
-}
-
-// Listen for design changes
-onSnapshot(designRef, (snapshot) => {
-  if (snapshot.exists()) {
-    const data = snapshot.data();
-    const theme = data.default_theme || {};
-    applyTheme(theme);
-    console.log("🎨 Public design updated:", theme.background_mode);
-  }
-});
+// Initialize Lava Lamp with "home" context. 
+// This handles the background animations and colors based on 'pages/design_home'.
+initLavaLamp("home");
 
 // --- CONTENT LOGIC ---
 
