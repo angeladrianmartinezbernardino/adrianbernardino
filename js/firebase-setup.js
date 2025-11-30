@@ -14,7 +14,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyCXJH_AH-_lhnBv3CpDn-GKKLvZKzIjYTQ",
   authDomain: "adrian-bernardino.firebaseapp.com",
   projectId: "adrian-bernardino",
-  storageBucket: "adrian-bernardino.firebasestorage.app",
+  storageBucket: "adrianbernardino",
   messagingSenderId: "666230030620",
   appId: "1:666230030620:web:877ca977270ff3f7d73ad9",
   measurementId: "G-K2GREQ6BL5",
