@@ -283,51 +283,38 @@
       }
     }
   </style>
-</head>
+  <span class="menu-button-bar"></span>
+  <span class="menu-button-bar"></span>
+  <span class="menu-button-bar"></span>
+  </button>
 
-<body>
-  <div class="page-shell">
-    <header class="site-header">
-      <div class="header-left">
-        <a href="/inside" style="text-decoration: none; color: inherit; cursor: inherit;">Adrián&nbsp;Bernardino</a>
-      </div>
+  <div class="menu-panel">
+    <!-- First option: outside / "It's Me" -->
+    <a class="menu-item" href="/outside">
+      It's Me
+    </a>
+    <!-- Placeholder options for future sections. -->
+    <button class="menu-item" type="button" disabled>
+      More soon
+    </button>
+  </div>
+  </div>
+  </nav>
+  </header>
 
-      <nav class="header-nav" aria-label="Main navigation">
-        <div class="menu">
-          <button class="menu-button" type="button" aria-haspopup="true" aria-expanded="false"
-            aria-label="Open main menu">
-            <span class="menu-button-bar"></span>
-            <span class="menu-button-bar"></span>
-            <span class="menu-button-bar"></span>
-          </button>
+  <main class="hero">
+    <div>
+      <!-- Firestore-driven content (kept from the original file). -->
+      <h1 id="main-title">Loading...</h1>
+      <p id="main-subtitle"></p>
+    </div>
+  </main>
 
-          <div class="menu-panel">
-            <!-- First option: outside / "It's Me" -->
-            <a class="menu-item" href="/outside">
-              It's Me
-            </a>
-            <!-- Placeholder options for future sections. -->
-            <button class="menu-item" type="button" disabled>
-              More soon
-            </button>
-          </div>
-        </div>
-      </nav>
-    </header>
-
-    <main class="hero">
-      <div>
-        <!-- Firestore-driven content (kept from the original file). -->
-        <h1 id="main-title">Loading...</h1>
-        <p id="main-subtitle"></p>
-      </div>
-    </main>
-
-    <footer class="site-footer">
-      <span style="font-size: 0.8rem; color: var(--muted); opacity: 0.75;">
-        © <span id="current-year">2025</span> Adrián Bernardino
-      </span>
-    </footer>
+  <footer class="site-footer">
+    <span style="font-size: 0.8rem; color: var(--muted); opacity: 0.75;">
+      © <span id="current-year">2025</span> Adrián Bernardino
+    </span>
+  </footer>
   </div>
 
   <!-- Public home logic (reads main_title and main_subtitle from Firestore). -->
@@ -344,6 +331,6 @@
       }
     });
   </script>
-</body>
+  </body>
 
 </html>
