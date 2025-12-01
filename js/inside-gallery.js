@@ -107,7 +107,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const modalImage = document.getElementById("modal-image");
   const modalTitle = document.getElementById("modal-title");
   const modalMeta = document.getElementById("modal-meta");
-  const modalViewLink = document.getElementById("modal-view-link");
+  const modalViewBtn = document.getElementById("modal-view-btn");
   const modalDownloadLink = document.getElementById("modal-download-link");
   const modalCloseBtn = document.getElementById("modal-close-btn");
 
@@ -166,7 +166,11 @@ window.addEventListener("DOMContentLoaded", () => {
     if (photo.album) metaParts.push(photo.album);
     modalMeta.textContent = metaParts.join(" · ");
 
-    modalViewLink.href = photo.standardUrl;
+    modalMeta.textContent = metaParts.join(" · ");
+
+    // We don't set href anymore since it's a button for fullscreen
+    // modalViewLink.href = photo.standardUrl; 
+
     // We'll handle the download click separately, but keep href as a fallback/hint
     modalDownloadLink.href = photo.originalUrl;
     currentModalPhoto = photo;
@@ -200,15 +204,17 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Handle modal download click
-  if (modalDownloadLink) {
-    modalDownloadLink.addEventListener("click", (event) => {
-      event.preventDefault();
-      if (currentModalPhoto) {
-        const filename = currentModalPhoto.title
-          ? currentModalPhoto.title.replace(/[^a-z0-9]/gi, "_").toLowerCase() + ".jpg"
-          : "photo.jpg";
-        forceDownload(currentModalPhoto.originalUrl, filename, modalDownloadLink);
+  // Handle modal view (fullscreen) click
+  if (modalViewBtn) {
+    modalViewBtn.addEventListener("click", () => {
+      if (modalImage && modalImage.src) {
+        if (modalImage.requestFullscreen) {
+          modalImage.requestFullscreen();
+        } else if (modalImage.webkitRequestFullscreen) { /* Safari */
+          modalImage.webkitRequestFullscreen();
+        } else if (modalImage.msRequestFullscreen) { /* IE11 */
+          modalImage.msRequestFullscreen();
+        }
       }
     });
   }
