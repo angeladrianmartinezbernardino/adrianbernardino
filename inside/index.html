@@ -430,47 +430,42 @@
 <body>
   <div class="page-shell">
     <header class="site-header">
-      <div class="header-left">Hi</div>
+      <div class="header-left">
+        <a href="/" style="text-decoration: none; color: inherit;">Adrián Bernardino</a>
+      </div>
     </header>
 
+    <script type="module">
+      import { initLavaLamp } from "/js/lava-lamp.js";
+      initLavaLamp("inside");
+    </script>
+
+    <header style="padding: 1rem 1.5rem 0.5rem;">
+      <h1>Inside</h1>
+    </header>
+
+    <!-- Album filters: later you can sync slugs with your 15 albums. -->
     <div class="filters" id="album-filters">
+      <button class="filter-btn is-active" data-album="all">All</button>
+      <button class="filter-btn" data-album="darkgreen">Dark Green</button>
+      <button class="filter-btn" data-album="lightgreen">Light Green</button>
+      <button class="filter-btn" data-album="red">Red</button>
+      <button class="filter-btn" data-album="darkblue">Dark Blue</button>
+      <button class="filter-btn" data-album="yellow">Yellow</button>
+      <button class="filter-btn" data-album="black">Black</button>
+      <button class="filter-btn" data-album="white">White</button>
+      <button class="filter-btn" data-album="lightblue">Light Blue</button>
+      <button class="filter-btn" data-album="orange">Orange</button>
+      <button class="filter-btn" data-album="pink">Pink</button>
+      <button class="filter-btn" data-album="purple">Purple</button>
+      <button class="filter-btn" data-album="brown">Brown</button>
+      <button class="filter-btn" data-album="gray">Gray</button>
+      <button class="filter-btn" data-album="zero">Zero</button>
+      <button class="filter-btn" data-album="infinity">Infinity</button>
     </div>
 
+    <!-- Grid container; JS will inject cards here. -->
     <section id="gallery-grid" class="gallery-grid"></section>
-  </div>
-
-  <script type="module" src="/js/inside-gallery.js"></script>
-
-  <script type="module">
-    import { initLavaLamp } from "/js/lava-lamp.js";
-    initLavaLamp("home");
-  </script>
-  <header>
-    <h1>Inside</h1>
-  </header>
-
-  <!-- Album filters: later you can sync slugs with your 15 albums. -->
-  <div class="filters" id="album-filters">
-    <button class="filter-btn is-active" data-album="all">All</button>
-    <button class="filter-btn" data-album="darkgreen">Dark Green</button>
-    <button class="filter-btn" data-album="lightgreen">Light Green</button>
-    <button class="filter-btn" data-album="red">Red</button>
-    <button class="filter-btn" data-album="darkblue">Dark Blue</button>
-    <button class="filter-btn" data-album="yellow">Yellow</button>
-    <button class="filter-btn" data-album="black">Black</button>
-    <button class="filter-btn" data-album="white">White</button>
-    <button class="filter-btn" data-album="lightblue">Light Blue</button>
-    <button class="filter-btn" data-album="orange">Orange</button>
-    <button class="filter-btn" data-album="pink">Pink</button>
-    <button class="filter-btn" data-album="purple">Purple</button>
-    <button class="filter-btn" data-album="brown">Brown</button>
-    <button class="filter-btn" data-album="gray">Gray</button>
-    <button class="filter-btn" data-album="zero">Zero</button>
-    <button class="filter-btn" data-album="infinity">Infinity</button>
-  </div>
-
-  <!-- Grid container; JS will inject cards here. -->
-  <section id="gallery-grid" class="gallery-grid"></section>
   </div>
 
   <!-- Modal to focus on a single photo. -->

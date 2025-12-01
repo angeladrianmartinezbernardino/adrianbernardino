@@ -23,6 +23,32 @@ const storage = getStorage(app);
 
 // Keep all loaded photos in memory for filtering.
 let allPhotos = [];
+let currentModalPhoto = null;
+
+/**
+ * Helper to download an image as a blob, so it appears to come from the site
+ * rather than redirecting to Firebase Storage.
+ */
+async function forceDownload(url, filename) {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error("Network response was not ok");
+    const blob = await response.blob();
+    const blobUrl = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = blobUrl;
+    a.download = filename || "download.jpg";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(blobUrl);
+  } catch (error) {
+    console.error("Download failed:", error);
+    // Fallback: open in new tab
+    window.open(url, "_blank");
+  }
+}
 
 // --- DESIGN LOGIC ---
 
@@ -125,7 +151,9 @@ window.addEventListener("DOMContentLoaded", () => {
     modalMeta.textContent = metaParts.join(" · ");
 
     modalViewLink.href = photo.standardUrl;
+    // We'll handle the download click separately, but keep href as a fallback/hint
     modalDownloadLink.href = photo.originalUrl;
+    currentModalPhoto = photo;
 
     modalElement.classList.add("open");
   }
@@ -155,6 +183,19 @@ window.addEventListener("DOMContentLoaded", () => {
       closeModal();
     }
   });
+
+  // Handle modal download click
+  if (modalDownloadLink) {
+    modalDownloadLink.addEventListener("click", (event) => {
+      event.preventDefault();
+      if (currentModalPhoto) {
+        const filename = currentModalPhoto.title 
+          ? currentModalPhoto.title.replace(/[^a-z0-9]/gi, "_").toLowerCase() + ".jpg"
+          : "photo.jpg";
+        forceDownload(currentModalPhoto.originalUrl, filename);
+      }
+    });
+  }
 
   /**
    * Renders a list of photos into the gallery grid.
@@ -215,6 +256,11 @@ window.addEventListener("DOMContentLoaded", () => {
       // Prevent card click when pressing "Download" (so it does not re-open modal).
       downloadLink.addEventListener("click", (event) => {
         event.stopPropagation();
+        event.preventDefault();
+        const filename = photo.title 
+          ? photo.title.replace(/[^a-z0-9]/gi, "_").toLowerCase() + ".jpg"
+          : "photo.jpg";
+        forceDownload(photo.originalUrl, filename);
       });
 
       viewButton.addEventListener("click", (event) => {
