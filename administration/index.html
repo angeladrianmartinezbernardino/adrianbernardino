@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <title>Administration Panel · Adrián Bernardino</title>
@@ -26,7 +27,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      overflow: hidden; /* Evita scroll en el body */
+      overflow: hidden;
+      /* Evita scroll en el body */
       padding: 1rem;
       box-sizing: border-box;
     }
@@ -38,18 +40,20 @@
       width: 100%;
       max-width: 1800px;
       /* Usamos dvh para mejor soporte en pantallas con barras dinámicas */
-      height: 95dvh;      
-      display: flex;     
+      height: 95dvh;
+      display: flex;
       flex-direction: column;
       box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
-      overflow: hidden;  /* Sin scroll en la tarjeta */
+      overflow: hidden;
+      /* Sin scroll en la tarjeta */
       padding: 0;
     }
 
     /* --- CABECERA FIJA --- */
     .card-header {
       padding: 20px 28px 15px;
-      flex-shrink: 0; /* No encoger */
+      flex-shrink: 0;
+      /* No encoger */
       border-bottom: 1px solid var(--border-color);
       background: var(--card-bg);
       z-index: 10;
@@ -57,24 +61,28 @@
 
     /* --- GRID DE 3 COLUMNAS --- */
     .admin-grid {
-      flex: 1; /* Ocupa todo el espacio restante */
+      flex: 1;
+      /* Ocupa todo el espacio restante */
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 0;
-      overflow: hidden; /* Sin scroll aquí */
+      overflow: hidden;
+      /* Sin scroll aquí */
       height: 100%;
-      min-height: 0; /* <--- FIX CRÍTICO: Permite que el flex container no se desborde */
+      min-height: 0;
+      /* <--- FIX CRÍTICO: Permite que el flex container no se desborde */
     }
 
     /* --- SECCIONES INDIVIDUALES (CON SCROLL) --- */
     .panel-section {
       padding: 1.5rem;
-      overflow-y: auto; /* Scroll independiente */
+      overflow-y: auto;
+      /* Scroll independiente */
       height: 100%;
       border-right: 1px solid var(--border-color);
       box-sizing: border-box;
       /* Padding extra abajo para asegurar que el contenido final no se corte */
-      padding-bottom: 150px; 
+      padding-bottom: 150px;
     }
 
     .panel-section:last-child {
@@ -82,45 +90,98 @@
     }
 
     /* Estilizar las barras de desplazamiento */
-    .panel-section::-webkit-scrollbar { width: 8px; }
-    .panel-section::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); }
-    .panel-section::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
-    .panel-section::-webkit-scrollbar-thumb:hover { background: #555; }
+    .panel-section::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .panel-section::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.1);
+    }
+
+    .panel-section::-webkit-scrollbar-thumb {
+      background: #333;
+      border-radius: 4px;
+    }
+
+    .panel-section::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
 
     /* --- RESPONSIVE --- */
     @media (max-width: 1024px) {
-      .card { height: auto; max-height: 95dvh; overflow-y: auto; display: block; }
-      .admin-grid { display: block; height: auto; }
-      .panel-section { height: auto; overflow-y: visible; border-right: none; border-bottom: 1px solid var(--border-color); padding-bottom: 2rem;}
+      .card {
+        height: auto;
+        max-height: 95dvh;
+        overflow-y: auto;
+        display: block;
+      }
+
+      .admin-grid {
+        display: block;
+        height: auto;
+      }
+
+      .panel-section {
+        height: auto;
+        overflow-y: visible;
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 2rem;
+      }
     }
 
     /* --- TIPOGRAFÍA Y COMPONENTES --- */
-    h1 { margin: 0 0 0.2rem; font-size: 1.4rem; }
-    /* Títulos de sección pegajosos (Sticky) */
-    h2 { 
-      font-size: 1.1rem; 
-      margin: 0 0 1.5rem; 
-      color: var(--accent-color); 
-      display:flex; 
-      align-items:center; 
-      gap:0.5rem; 
-      position: sticky; 
-      top: -1.5rem; /* Ajustado al padding negativo */
-      background: var(--card-bg); /* Fondo para tapar contenido al scrollear */
-      padding: 1rem 0; 
-      z-index: 5; 
-      margin-top:-1.5rem; 
-      border-bottom:1px dashed #333; 
+    h1 {
+      margin: 0 0 0.2rem;
+      font-size: 1.4rem;
     }
-    
-    h3 { font-size: 0.85rem; margin: 1.5rem 0 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); border-left: 3px solid var(--accent-color); padding-left: 0.5rem; }
-    
-    .sub-panel { margin-bottom: 2rem; }
 
-    .field { margin-bottom: 0.8rem; }
-    .field label { display: block; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.3rem; }
-    
-    input, select {
+    /* Títulos de sección pegajosos (Sticky) */
+    h2 {
+      font-size: 1.1rem;
+      margin: 0 0 1.5rem;
+      color: var(--accent-color);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      position: sticky;
+      top: -1.5rem;
+      /* Ajustado al padding negativo */
+      background: var(--card-bg);
+      /* Fondo para tapar contenido al scrollear */
+      padding: 1rem 0;
+      z-index: 5;
+      margin-top: -1.5rem;
+      border-bottom: 1px dashed #333;
+    }
+
+    h3 {
+      font-size: 0.85rem;
+      margin: 1.5rem 0 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      border-left: 3px solid var(--accent-color);
+      padding-left: 0.5rem;
+    }
+
+    .sub-panel {
+      margin-bottom: 2rem;
+    }
+
+    .field {
+      margin-bottom: 0.8rem;
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 0.3rem;
+    }
+
+    input,
+    select {
       width: 100%;
       background: var(--input-bg);
       border: 1px solid var(--border-color);
@@ -130,10 +191,21 @@
       font-size: 0.9rem;
       box-sizing: border-box;
     }
-    input[type="color"] { height: 35px; padding: 2px; cursor: pointer; }
-    
-    .row { display: flex; gap: 0.5rem; }
-    .row .field { flex: 1; }
+
+    input[type="color"] {
+      height: 35px;
+      padding: 2px;
+      cursor: pointer;
+    }
+
+    .row {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .row .field {
+      flex: 1;
+    }
 
     button {
       border: none;
@@ -146,8 +218,17 @@
       gap: 0.5rem;
       transition: all 0.2s;
     }
-    button:hover { opacity: 0.9; transform: translateY(-1px); }
-    button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    button:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
 
     .btn-primary {
       background: var(--accent-color);
@@ -158,244 +239,305 @@
       margin-top: 0.8rem;
     }
 
-    #btn-logout { background: transparent; border: 1px solid #444; color: #ccc; padding: 0.4rem 0.8rem; font-size: 0.8rem; }
-    #btn-logout:hover { border-color: #fff; color: #fff; }
+    #btn-logout {
+      background: transparent;
+      border: 1px solid #444;
+      color: #ccc;
+      padding: 0.4rem 0.8rem;
+      font-size: 0.8rem;
+    }
 
-    #btn-login-google { background: white; color: black; width: 100%; justify-content: center; }
+    #btn-logout:hover {
+      border-color: #fff;
+      color: #fff;
+    }
 
-    .tag { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.15em; opacity: 0.5; margin-bottom: 0.2rem; }
-    .status-ok { color: #4ade80; }
-    .status-error { color: #f97373; }
-    .muted { font-size: 0.8rem; opacity: 0.7; }
+    #btn-login-google {
+      background: white;
+      color: black;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .tag {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      opacity: 0.5;
+      margin-bottom: 0.2rem;
+    }
+
+    .status-ok {
+      color: #4ade80;
+    }
+
+    .status-error {
+      color: #f97373;
+    }
+
+    .muted {
+      font-size: 0.8rem;
+      opacity: 0.7;
+    }
 
     /* Upload box */
     .upload-box {
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px dashed rgba(255, 255, 255, 0.15);
-        padding: 1rem;
-        border-radius: 8px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px dashed rgba(255, 255, 255, 0.15);
+      padding: 1rem;
+      border-radius: 8px;
     }
 
     /* Modal */
-    dialog { border:none; outline:none; }
-    dialog::backdrop { background: rgba(0,0,0,0.85); backdrop-filter: blur(4px); }
+    dialog {
+      border: none;
+      outline: none;
+    }
+
+    dialog::backdrop {
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(4px);
+    }
   </style>
 </head>
 
 <body>
-  
-  <section id="login-view" style="display:none; width: 100%; max-width: 400px; background: #11131b; padding: 2rem; border-radius: 16px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
-      <h1>Administration</h1>
-      <p class="muted" style="margin-bottom: 2rem;">Authorized Access Only</p>
-      <button id="btn-login-google"><span>🔐 Sign in with Google</span></button>
-      <p id="status" style="margin-top:1rem; font-size:0.8rem;">Checking session...</p>
+
+  <section id="login-view"
+    style="display:none; width: 100%; max-width: 400px; background: #11131b; padding: 2rem; border-radius: 16px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+    <h1>Administration</h1>
+    <p class="muted" style="margin-bottom: 2rem;">Authorized Access Only</p>
+    <button id="btn-login-google"><span>🔐 Sign in with Google</span></button>
+    <p id="status" style="margin-top:1rem; font-size:0.8rem;">Checking session...</p>
   </section>
 
   <section id="admin-view" class="card" style="display:none;">
-      
-      <div class="card-header">
-        <div style="display:flex; justify-content:space-between; align-items:start;">
-            <div>
-                <div class="tag">INTERNAL PANEL V2.2</div>
-                <h1 id="admin-name">Admin</h1>
-                <p class="muted" style="margin:0; font-size:0.8rem;">Session active</p>
-            </div>
-            <button id="btn-logout">🚪 Sign Out</button>
+
+    <div class="card-header">
+      <div style="display:flex; justify-content:space-between; align-items:start;">
+        <div>
+          <div class="tag">INTERNAL PANEL V2.2</div>
+          <h1 id="admin-name">Admin</h1>
+          <p class="muted" style="margin:0; font-size:0.8rem;">Session active</p>
         </div>
+        <button id="btn-logout">🚪 Sign Out</button>
       </div>
+    </div>
 
-      <div class="admin-grid">
-        
-        <section id="admin-panel-home" class="panel-section">
-          <h2>🏠 Home / Global</h2>
+    <div class="admin-grid">
 
-          <div class="sub-panel">
-            <h3>Content Texts</h3>
-            <div class="field">
-              <label>Main Title</label>
-              <input id="home-title" type="text" placeholder="Hello...">
-            </div>
-            <div class="field">
-              <label>Subtitle</label>
-              <input id="home-subtitle" type="text" placeholder="0 — ... — ∞">
-            </div>
-            <button id="btn-save-home-content" class="btn-primary">💾 Save Content</button>
+      <section id="admin-panel-home" class="panel-section">
+        <h2>🏠 Home / Global</h2>
+
+        <div class="sub-panel">
+          <h3>Content Texts</h3>
+          <div class="field">
+            <label>Main Title</label>
+            <input id="home-title" type="text" placeholder="Hello...">
           </div>
-
-          <div class="sub-panel">
-            <h3>Design (Landing)</h3>
-            <input type="hidden" id="design-context-home" value="home">
-            <input type="hidden" id="design-target-home" value="default">
-
-            <div class="field">
-              <label>Mode</label>
-              <select id="design-bg-mode-home">
-                <option value="classic_lava">Classic Lava</option>
-                <option value="deep_ocean">Deep Ocean</option>
-                <option value="neon_night">Neon Night</option>
-                <option value="infrared">Infrared</option>
-                <option value="monochrome_glass">Monochrome Glass</option>
-              </select>
-            </div>
-            <div class="row">
-                <div class="field"><label>Speed</label><input id="design-speed-home" type="number"></div>
-                <div class="field"><label>Intensity</label><input id="design-intensity-home" type="number"></div>
-            </div>
-            <div class="row">
-              <div class="field"><label>Pri</label><input id="design-col-pri-home" type="color"></div>
-              <div class="field"><label>Sec</label><input id="design-col-sec-home" type="color"></div>
-              <div class="field"><label>Acc</label><input id="design-col-acc-home" type="color"></div>
-            </div>
-            <button id="btn-save-design-home" class="btn-primary">🎨 Save Design</button>
+          <div class="field">
+            <label>Subtitle</label>
+            <input id="home-subtitle" type="text" placeholder="0 — ... — ∞">
           </div>
-        </section>
+          <button id="btn-save-home-content" class="btn-primary">💾 Save Content</button>
+        </div>
 
-        <section id="admin-panel-inside" class="panel-section">
-          <h2>🔒 Inside (Personal)</h2>
-
-          <div class="sub-panel">
-            <h3>Visual Theme</h3>
-            <input type="hidden" id="design-context-inside" value="inside">
-            <div class="field">
-              <label>Target Album</label>
-              <select id="design-target-inside">
-                <option value="default">Default Theme</option>
-              </select>
+        <div class="sub-panel">
+          <h3>Social Media</h3>
+          <div class="upload-box">
+            <div class="row">
+              <div class="field" style="flex:0 0 60px;"><input type="text" id="social-icon" placeholder="Icon" /></div>
+              <div class="field"><input type="text" id="social-title" placeholder="Title (e.g. Instagram)" /></div>
             </div>
             <div class="field">
-              <label>Mode</label>
-              <select id="design-bg-mode-inside">
-                <option value="classic_lava">Classic Lava</option>
-                <option value="deep_ocean">Deep Ocean</option>
-                <option value="neon_night">Neon Night</option>
-                <option value="infrared">Infrared</option>
-                <option value="monochrome_glass">Monochrome Glass</option>
-              </select>
+              <input type="url" id="social-url" placeholder="URL (https://...)" />
             </div>
-            <div class="row">
-                <div class="field"><label>Speed</label><input id="design-speed-inside" type="number"></div>
-                <div class="field"><label>Intensity</label><input id="design-intensity-inside" type="number"></div>
-            </div>
-            <div class="row">
-              <div class="field"><label>Pri</label><input id="design-col-pri-inside" type="color"></div>
-              <div class="field"><label>Sec</label><input id="design-col-sec-inside" type="color"></div>
-              <div class="field"><label>Acc</label><input id="design-col-acc-inside" type="color"></div>
-            </div>
-            <button id="btn-save-design-inside" class="btn-primary">🎨 Save Theme</button>
+            <button id="btn-add-social" class="btn-primary">➕ Add Link</button>
           </div>
+          <div id="social-list" style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem;">
+            <p class="muted">Loading links...</p>
+          </div>
+        </div>
 
-          <div class="sub-panel">
-            <h3>Gallery Management <button id="btn-sync-inside" style="font-size:0.7rem; padding:0.2rem 0.5rem; margin-left:0.5rem; background:#334155;">🔄 Sync GCS</button></h3>
-            <div class="upload-box">
+        <div class="sub-panel">
+          <h3>Design (Landing)</h3>
+          <input type="hidden" id="design-context-home" value="home">
+          <input type="hidden" id="design-target-home" value="default">
+
+          <div class="field">
+            <label>Mode</label>
+            <select id="design-bg-mode-home">
+              <option value="classic_lava">Classic Lava</option>
+              <option value="deep_ocean">Deep Ocean</option>
+              <option value="neon_night">Neon Night</option>
+              <option value="infrared">Infrared</option>
+              <option value="monochrome_glass">Monochrome Glass</option>
+            </select>
+          </div>
+          <div class="row">
+            <div class="field"><label>Speed</label><input id="design-speed-home" type="number"></div>
+            <div class="field"><label>Intensity</label><input id="design-intensity-home" type="number"></div>
+          </div>
+          <div class="row">
+            <div class="field"><label>Pri</label><input id="design-col-pri-home" type="color"></div>
+            <div class="field"><label>Sec</label><input id="design-col-sec-home" type="color"></div>
+            <div class="field"><label>Acc</label><input id="design-col-acc-home" type="color"></div>
+          </div>
+          <button id="btn-save-design-home" class="btn-primary">🎨 Save Design</button>
+        </div>
+      </section>
+
+      <section id="admin-panel-inside" class="panel-section">
+        <h2>🔒 Inside (Personal)</h2>
+
+        <div class="sub-panel">
+          <h3>Visual Theme</h3>
+          <input type="hidden" id="design-context-inside" value="inside">
+          <div class="field">
+            <label>Target Album</label>
+            <select id="design-target-inside">
+              <option value="default">Default Theme</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Mode</label>
+            <select id="design-bg-mode-inside">
+              <option value="classic_lava">Classic Lava</option>
+              <option value="deep_ocean">Deep Ocean</option>
+              <option value="neon_night">Neon Night</option>
+              <option value="infrared">Infrared</option>
+              <option value="monochrome_glass">Monochrome Glass</option>
+            </select>
+          </div>
+          <div class="row">
+            <div class="field"><label>Speed</label><input id="design-speed-inside" type="number"></div>
+            <div class="field"><label>Intensity</label><input id="design-intensity-inside" type="number"></div>
+          </div>
+          <div class="row">
+            <div class="field"><label>Pri</label><input id="design-col-pri-inside" type="color"></div>
+            <div class="field"><label>Sec</label><input id="design-col-sec-inside" type="color"></div>
+            <div class="field"><label>Acc</label><input id="design-col-acc-inside" type="color"></div>
+          </div>
+          <button id="btn-save-design-inside" class="btn-primary">🎨 Save Theme</button>
+        </div>
+
+        <div class="sub-panel">
+          <h3>Gallery Management <button id="btn-sync-inside"
+              style="font-size:0.7rem; padding:0.2rem 0.5rem; margin-left:0.5rem; background:#334155;">🔄 Sync
+              GCS</button></h3>
+          <div class="upload-box">
+            <div class="field">
+              <label>Upload Image</label>
+              <input type="file" id="upload-file-inside" accept="image/jpeg, image/png" />
+            </div>
+            <div class="row">
+              <div class="field"><input type="text" id="upload-title-inside" placeholder="Title" /></div>
+              <div class="field"><input type="number" id="upload-year-inside" placeholder="Year" value="2025" /></div>
+            </div>
+            <div class="row">
               <div class="field">
-                <label>Upload Image</label>
-                <input type="file" id="upload-file-inside" accept="image/jpeg, image/png" />
+                <select id="upload-album-inside">
+                  <option value="daily">Daily</option>
+                  <option value="artistic">Artistic</option>
+                  <option value="darkgreen">Dark Green</option>
+                  <option value="lightgreen">Light Green</option>
+                  <option value="red">Red</option>
+                  <option value="darkblue">Dark Blue</option>
+                  <option value="yellow">Yellow</option>
+                  <option value="black">Black</option>
+                  <option value="white">White</option>
+                  <option value="lightblue">Light Blue</option>
+                  <option value="orange">Orange</option>
+                  <option value="pink">Pink</option>
+                  <option value="purple">Purple</option>
+                  <option value="brown">Brown</option>
+                  <option value="gray">Gray</option>
+                </select>
               </div>
-              <div class="row">
-                <div class="field"><input type="text" id="upload-title-inside" placeholder="Title" /></div>
-                <div class="field"><input type="number" id="upload-year-inside" placeholder="Year" value="2025" /></div>
-              </div>
-              <div class="row">
-                <div class="field">
-                  <select id="upload-album-inside">
-                    <option value="daily">Daily</option>
-                    <option value="artistic">Artistic</option>
-                    <option value="darkgreen">Dark Green</option>
-                    <option value="lightgreen">Light Green</option>
-                    <option value="red">Red</option>
-                    <option value="darkblue">Dark Blue</option>
-                    <option value="yellow">Yellow</option>
-                    <option value="black">Black</option>
-                    <option value="white">White</option>
-                    <option value="lightblue">Light Blue</option>
-                    <option value="orange">Orange</option>
-                    <option value="pink">Pink</option>
-                    <option value="purple">Purple</option>
-                    <option value="brown">Brown</option>
-                    <option value="gray">Gray</option>
-                  </select>
-                </div>
-                <div class="field"><input type="text" id="upload-color-inside" placeholder="Color" /></div>
-              </div>
-              <button id="btn-upload-inside" class="btn-primary">☁️ Upload</button>
-              <p id="upload-progress-inside" class="muted" style="display:none; margin-top:0.5rem;">Uploading...</p>
+              <div class="field"><input type="text" id="upload-color-inside" placeholder="Color" /></div>
             </div>
-
-            <div id="gallery-list-inside" style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem;">
-              <p class="muted">Loading...</p>
-            </div>
-          </div>
-        </section>
-
-        <section id="admin-panel-outside" class="panel-section">
-          <h2>🌍 Outside (Public)</h2>
-
-          <div class="sub-panel">
-            <h3>Visual Theme</h3>
-            <input type="hidden" id="design-context-outside" value="outside">
-            <div class="field">
-              <label>Target Album</label>
-              <select id="design-target-outside">
-                <option value="default">Default Theme</option>
-              </select>
-            </div>
-            <div class="field">
-              <label>Mode</label>
-              <select id="design-bg-mode-outside">
-                <option value="classic_lava">Classic Lava</option>
-                <option value="deep_ocean">Deep Ocean</option>
-                <option value="neon_night">Neon Night</option>
-                <option value="infrared">Infrared</option>
-                <option value="monochrome_glass">Monochrome Glass</option>
-              </select>
-            </div>
-            <div class="row">
-                <div class="field"><label>Speed</label><input id="design-speed-outside" type="number"></div>
-                <div class="field"><label>Intensity</label><input id="design-intensity-outside" type="number"></div>
-            </div>
-            <div class="row">
-              <div class="field"><label>Pri</label><input id="design-col-pri-outside" type="color"></div>
-              <div class="field"><label>Sec</label><input id="design-col-sec-outside" type="color"></div>
-              <div class="field"><label>Acc</label><input id="design-col-acc-outside" type="color"></div>
-            </div>
-            <button id="btn-save-design-outside" class="btn-primary">🎨 Save Theme</button>
+            <button id="btn-upload-inside" class="btn-primary">☁️ Upload</button>
+            <p id="upload-progress-inside" class="muted" style="display:none; margin-top:0.5rem;">Uploading...</p>
           </div>
 
-          <div class="sub-panel">
-            <h3>Gallery Management <button id="btn-sync-outside" style="font-size:0.7rem; padding:0.2rem 0.5rem; margin-left:0.5rem; background:#334155;">🔄 Sync GCS</button></h3>
-            <div class="upload-box">
+          <div id="gallery-list-inside" style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem;">
+            <p class="muted">Loading...</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="admin-panel-outside" class="panel-section">
+        <h2>🌍 Outside (Public)</h2>
+
+        <div class="sub-panel">
+          <h3>Visual Theme</h3>
+          <input type="hidden" id="design-context-outside" value="outside">
+          <div class="field">
+            <label>Target Album</label>
+            <select id="design-target-outside">
+              <option value="default">Default Theme</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Mode</label>
+            <select id="design-bg-mode-outside">
+              <option value="classic_lava">Classic Lava</option>
+              <option value="deep_ocean">Deep Ocean</option>
+              <option value="neon_night">Neon Night</option>
+              <option value="infrared">Infrared</option>
+              <option value="monochrome_glass">Monochrome Glass</option>
+            </select>
+          </div>
+          <div class="row">
+            <div class="field"><label>Speed</label><input id="design-speed-outside" type="number"></div>
+            <div class="field"><label>Intensity</label><input id="design-intensity-outside" type="number"></div>
+          </div>
+          <div class="row">
+            <div class="field"><label>Pri</label><input id="design-col-pri-outside" type="color"></div>
+            <div class="field"><label>Sec</label><input id="design-col-sec-outside" type="color"></div>
+            <div class="field"><label>Acc</label><input id="design-col-acc-outside" type="color"></div>
+          </div>
+          <button id="btn-save-design-outside" class="btn-primary">🎨 Save Theme</button>
+        </div>
+
+        <div class="sub-panel">
+          <h3>Gallery Management <button id="btn-sync-outside"
+              style="font-size:0.7rem; padding:0.2rem 0.5rem; margin-left:0.5rem; background:#334155;">🔄 Sync
+              GCS</button></h3>
+          <div class="upload-box">
+            <div class="field">
+              <label>Upload Image</label>
+              <input type="file" id="upload-file-outside" accept="image/jpeg, image/png" />
+            </div>
+            <div class="row">
+              <div class="field"><input type="text" id="upload-title-outside" placeholder="Title" /></div>
+              <div class="field"><input type="number" id="upload-year-outside" placeholder="Year" value="2025" /></div>
+            </div>
+            <div class="row">
               <div class="field">
-                <label>Upload Image</label>
-                <input type="file" id="upload-file-outside" accept="image/jpeg, image/png" />
+                <select id="upload-album-outside">
+                  <option value="portfolio">Portfolio</option>
+                  <option value="commercial">Commercial</option>
+                  <option value="exhibitions">Exhibitions</option>
+                </select>
               </div>
-              <div class="row">
-                <div class="field"><input type="text" id="upload-title-outside" placeholder="Title" /></div>
-                <div class="field"><input type="number" id="upload-year-outside" placeholder="Year" value="2025" /></div>
-              </div>
-              <div class="row">
-                <div class="field">
-                  <select id="upload-album-outside">
-                    <option value="portfolio">Portfolio</option>
-                    <option value="commercial">Commercial</option>
-                    <option value="exhibitions">Exhibitions</option>
-                  </select>
-                </div>
-                <div class="field"><input type="text" id="upload-color-outside" placeholder="Color" /></div>
-              </div>
-              <button id="btn-upload-outside" class="btn-primary">☁️ Upload</button>
-              <p id="upload-progress-outside" class="muted" style="display:none; margin-top:0.5rem;">Uploading...</p>
+              <div class="field"><input type="text" id="upload-color-outside" placeholder="Color" /></div>
             </div>
-
-            <div id="gallery-list-outside" style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem;">
-              <p class="muted">Loading...</p>
-            </div>
+            <button id="btn-upload-outside" class="btn-primary">☁️ Upload</button>
+            <p id="upload-progress-outside" class="muted" style="display:none; margin-top:0.5rem;">Uploading...</p>
           </div>
-        </section>
 
-      </div>
+          <div id="gallery-list-outside" style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem;">
+            <p class="muted">Loading...</p>
+          </div>
+        </div>
+      </section>
+
+    </div>
   </section>
 
-  <dialog id="edit-dialog" style="background: #11131b; color: white; border: 1px solid #333; border-radius: 12px; padding: 1.5rem; max-width: 400px;">
+  <dialog id="edit-dialog"
+    style="background: #11131b; color: white; border: 1px solid #333; border-radius: 12px; padding: 1.5rem; max-width: 400px;">
     <h3 style="margin-top: 0; color: white; border:none; padding:0;">Edit Image</h3>
     <input type="hidden" id="edit-id" />
     <input type="hidden" id="edit-context" />
@@ -421,4 +563,5 @@
 
   <script type="module" src="/js/admin-home.js"></script>
 </body>
+
 </html>

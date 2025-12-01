@@ -43,6 +43,29 @@ window.addEventListener("DOMContentLoaded", () => {
       const data = snapshot.data();
       if (data.main_title) titleElement.textContent = data.main_title;
       if (data.main_subtitle) subtitleElement.textContent = data.main_subtitle;
+
+      // Render Social Links
+      const socialContainer = document.getElementById("social-links-container");
+      if (socialContainer) {
+        const links = data.social_links || [];
+        socialContainer.innerHTML = "";
+        links.forEach(link => {
+          const a = document.createElement("a");
+          a.href = link.url;
+          a.target = "_blank";
+          a.rel = "noopener noreferrer";
+          a.className = "footer-button";
+          a.style.display = "flex";
+          a.style.alignItems = "center";
+          a.style.justifyContent = "flex-end";
+          a.style.gap = "0.5rem";
+          a.style.textDecoration = "none";
+          a.style.marginBottom = "0.2rem";
+
+          a.innerHTML = `<span>${link.title}</span> <span style="font-size:1.1em;">${link.icon || ""}</span>`;
+          socialContainer.appendChild(a);
+        });
+      }
     } else {
       titleElement.textContent = "Hello, I am Adrián Bernardino";
       subtitleElement.textContent = "0 — 🌲🌱📌🌐☀️🎬🕣💧🔥🌸🍇🪵📡 — ∞";

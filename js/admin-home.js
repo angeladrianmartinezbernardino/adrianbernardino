@@ -85,7 +85,8 @@ async function showAdmin(user) {
     initDesignSection("inside"),
     initDesignSection("outside"),
     initGallerySection("inside"),
-    initGallerySection("outside")
+    initGallerySection("outside"),
+    initSocialMediaSection()
   ]);
 }
 
@@ -115,6 +116,88 @@ async function loadHomeContent() {
       alert("Home content saved.");
     } catch (e) { alert("Error saving content: " + e.message); }
     finally { saveBtn.disabled = false; }
+  });
+}
+
+// --- 1.5 SOCIAL MEDIA ---
+function initSocialMediaSection() {
+  const iconInput = document.getElementById("social-icon");
+  const titleInput = document.getElementById("social-title");
+  const urlInput = document.getElementById("social-url");
+  const addBtn = document.getElementById("btn-add-social");
+  const listElement = document.getElementById("social-list");
+
+  // Listen for changes
+  onSnapshot(doc(db, "pages", "home"), (docSnap) => {
+    if (!docSnap.exists()) return;
+    const data = docSnap.data();
+    const links = data.social_links || [];
+
+    listElement.innerHTML = "";
+    if (links.length === 0) {
+      listElement.innerHTML = "<p class='muted'>No social links.</p>";
+    } else {
+      links.forEach((link, index) => {
+        const row = document.createElement("div");
+        row.style.background = "#020617";
+        row.style.border = "1px solid rgba(148,163,184,0.1)";
+        row.style.padding = "0.5rem 0.8rem";
+        row.style.borderRadius = "8px";
+        row.style.display = "flex";
+        row.style.justifyContent = "space-between";
+        row.style.alignItems = "center";
+
+        row.innerHTML = `
+          <div style="display:flex; align-items:center; gap:0.8rem;">
+            <span style="font-size:1.2rem;">${link.icon || "🔗"}</span>
+            <div>
+              <div style="font-size:0.9rem; color:#e5e7eb;">${link.title}</div>
+              <div style="font-size:0.75rem; color:#9ca3af;">${link.url}</div>
+            </div>
+          </div>
+          <button class="btn-delete-social" style="background:none; border:none; cursor:pointer; opacity:0.6;" title="Delete">❌</button>
+        `;
+
+        row.querySelector(".btn-delete-social").addEventListener("click", async () => {
+          if (!confirm("Delete this link?")) return;
+          const newLinks = [...links];
+          newLinks.splice(index, 1);
+          await updateDoc(doc(db, "pages", "home"), { social_links: newLinks });
+        });
+
+        listElement.appendChild(row);
+      });
+    }
+  });
+
+  // Add Handler
+  addBtn.addEventListener("click", async () => {
+    const icon = iconInput.value.trim();
+    const title = titleInput.value.trim();
+    const url = urlInput.value.trim();
+
+    if (!title || !url) {
+      alert("Title and URL are required.");
+      return;
+    }
+
+    try {
+      addBtn.disabled = true;
+      const docRef = doc(db, "pages", "home");
+      const snapshot = await getDoc(docRef);
+      const currentLinks = snapshot.exists() ? (snapshot.data().social_links || []) : [];
+
+      const newLink = { icon, title, url };
+      await updateDoc(docRef, { social_links: [...currentLinks, newLink] });
+
+      iconInput.value = "";
+      titleInput.value = "";
+      urlInput.value = "";
+    } catch (e) {
+      alert("Error adding link: " + e.message);
+    } finally {
+      addBtn.disabled = false;
+    }
   });
 }
 
