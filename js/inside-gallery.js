@@ -29,7 +29,16 @@ let currentModalPhoto = null;
  * Helper to download an image as a blob, so it appears to come from the site
  * rather than redirecting to Firebase Storage.
  */
-async function forceDownload(url, filename) {
+async function forceDownload(url, filename, buttonElement) {
+  let originalText = "";
+  if (buttonElement) {
+    originalText = buttonElement.textContent;
+    buttonElement.textContent = "Downloading...";
+    buttonElement.disabled = true;
+    buttonElement.style.opacity = "0.7";
+    buttonElement.style.cursor = "wait";
+  }
+
   try {
     const response = await fetch(url);
     if (!response.ok) throw new Error("Network response was not ok");
@@ -47,6 +56,13 @@ async function forceDownload(url, filename) {
     console.error("Download failed:", error);
     // Fallback: open in new tab
     window.open(url, "_blank");
+  } finally {
+    if (buttonElement) {
+      buttonElement.textContent = originalText;
+      buttonElement.disabled = false;
+      buttonElement.style.opacity = "";
+      buttonElement.style.cursor = "";
+    }
   }
 }
 
@@ -189,10 +205,10 @@ window.addEventListener("DOMContentLoaded", () => {
     modalDownloadLink.addEventListener("click", (event) => {
       event.preventDefault();
       if (currentModalPhoto) {
-        const filename = currentModalPhoto.title 
+        const filename = currentModalPhoto.title
           ? currentModalPhoto.title.replace(/[^a-z0-9]/gi, "_").toLowerCase() + ".jpg"
           : "photo.jpg";
-        forceDownload(currentModalPhoto.originalUrl, filename);
+        forceDownload(currentModalPhoto.originalUrl, filename, modalDownloadLink);
       }
     });
   }
@@ -257,10 +273,10 @@ window.addEventListener("DOMContentLoaded", () => {
       downloadLink.addEventListener("click", (event) => {
         event.stopPropagation();
         event.preventDefault();
-        const filename = photo.title 
+        const filename = photo.title
           ? photo.title.replace(/[^a-z0-9]/gi, "_").toLowerCase() + ".jpg"
           : "photo.jpg";
-        forceDownload(photo.originalUrl, filename);
+        forceDownload(photo.originalUrl, filename, downloadLink);
       });
 
       viewButton.addEventListener("click", (event) => {
