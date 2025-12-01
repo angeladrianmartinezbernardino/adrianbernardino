@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Outside</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        /* Page shell. */
+        :root {
+            /* Valores por defecto (serán sobrescritos por JS) */
+            --bg-base: #05040a;
+            --lava-c1: #ff0000;
+            --lava-c2: #00ff00;
+            --lava-c3: #0000ff;
+            --lava-duration: 30s;
+            --lava-opacity: 0.6;
+            --lava-blend: normal;
+
+            --page-text: #f5f5f5;
+            --muted: #9ca3af;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background-color: var(--bg-base);
+            color: var(--page-text);
+            overflow-x: hidden;
+            /* Importante para evitar scroll horizontal por los blobs */
+            transition: background-color 0.5s ease;
+        }
+
+        /* --- LAVA LAMP ENGINE --- */
+        #lava-container {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            /* Detrás de todo */
+            overflow: hidden;
+            background: var(--bg-base);
+            /* El filtro blur fusiona los colores */
+            filter: blur(80px);
+            pointer-events: none;
+        }
+
+        .lava-blob {
+            position: absolute;
+            border-radius: 50%;
+            opacity: var(--lava-opacity);
+            mix-blend-mode: var(--lava-blend);
+            animation-timing-function: ease-in-out;
+            animation-iteration-count: infinite;
+            animation-direction: alternate;
+        }
+
+        /* Blob 1: Color Primario (Grande, movimiento lento circular) */
+        .blob-1 {
+            background: var(--lava-c1);
+            width: 70vw;
+            height: 70vw;
+            top: -10%;
+            left: -10%;
+            animation-name: move1;
+            animation-duration: var(--lava-duration);
+        }
+
+        /* Blob 2: Color Secundario (Mediano, movimiento cruzado) */
+        .blob-2 {
+            background: var(--lava-c2);
+            width: 60vw;
+            height: 60vw;
+            bottom: -10%;
+            right: -10%;
+            animation-name: move2;
+            animation-duration: calc(var(--lava-duration) * 1.2);
+        }
+
+        /* Blob 3: Acento (Pequeño, movimiento rápido) */
+        .blob-3 {
+            background: var(--lava-c3);
+            width: 50vw;
+            height: 50vw;
+            top: 40%;
+            left: 40%;
+            animation-name: move3;
+            animation-duration: calc(var(--lava-duration) * 0.8);
+        }
+
+        /* ANIMACIONES KEYFRAMES (Complejos para evitar repetición obvia) */
+        @keyframes move1 {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            33% {
+                transform: translate(30vw, 10vh) scale(1.1);
+            }
+
+            66% {
+                transform: translate(10vw, 40vh) scale(0.9);
+            }
+
+            100% {
+                transform: translate(40vw, 5vh) scale(1);
+            }
+        }
+
+        @keyframes move2 {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+
+            50% {
+                transform: translate(-20vw, -20vh) rotate(180deg);
+            }
+
+            100% {
+                transform: translate(-40vw, 10vh) rotate(360deg);
+            }
+        }
+
+        @keyframes move3 {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            50% {
+                transform: translate(20vw, -30vh) scale(1.2);
+            }
+
+            100% {
+                transform: translate(-20vw, 20vh) scale(0.8);
+            }
+        }
+
+        .page-shell {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Album filter chips. */
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem 0.5rem;
+        }
+
+        .filter-btn {
+            border: 1px solid rgba(148, 163, 184, 0.8);
+            background: #020617;
+            color: #e5e7eb;
+            border-radius: 999px;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.8rem;
+            cursor: pointer;
+            opacity: 0.85;
+        }
+
+        .filter-btn.is-active {
+            background: #e5e7eb;
+            color: #020617;
+            opacity: 1;
+        }
+
+        /* Responsive gallery grid (max 5 columns). */
+        .gallery-grid {
+            flex: 1;
+            display: grid;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem 1.5rem;
+        }
+
+        /* Mobile: 1–2 columns. */
+        @media (max-width: 639px) {
+            .gallery-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        /* Tablet: 3 columns. */
+        @media (min-width: 640px) and (max-width: 1023px) {
+            .gallery-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+
+        /* Desktop: 4 columns. */
+        @media (min-width: 1024px) and (max-width: 1279px) {
+            .gallery-grid {
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+            }
+        }
+
+        /* Large desktop: up to 5 columns. */
+        @media (min-width: 1280px) {
+            .gallery-grid {
+                grid-template-columns: repeat(5, minmax(0, 1fr));
+            }
+        }
+
+        /* Photo cards. */
+        .photo-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            background: rgba(11, 16, 32, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: zoom-in;
+        }
+
+        .photo-thumb {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+            transition: transform 0.25s ease-out;
+        }
+
+        .photo-card:hover .photo-thumb {
+            transform: scale(1.03);
+        }
+
+        /* Overlay with actions. */
+        .photo-overlay {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, rgba(15, 23, 42, 0.6), rgba(15, 23, 42, 0.95));
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 0.6rem;
+            opacity: 0;
+            transition: opacity 0.2s ease-out;
+        }
+
+        .photo-card:hover .photo-overlay {
+            opacity: 1;
+        }
+
+        .photo-meta {
+            font-size: 0.75rem;
+            opacity: 0.9;
+            margin-bottom: 0.4rem;
+        }
+
+        .photo-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.4rem;
+        }
+
+        .photo-actions {
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .photo-actions button,
+        .photo-actions a {
+            flex: 1;
+            border-radius: 999px;
+            border: none;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .btn-view {
+            background: #e5e7eb;
+            color: #020617;
+        }
+
+        .btn-download {
+            background: #111827;
+            color: #e5e7eb;
+            border: 1px solid rgba(148, 163, 184, 0.8);
+        }
+
+        /* Modal for focusing on one photo. */
+        #photo-modal {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 50;
+            padding: 1rem;
+        }
+
+        #photo-modal.open {
+            display: flex;
+        }
+
+        .modal-card {
+            max-width: 960px;
+            width: 100%;
+            max-height: 100%;
+            background: #020617;
+            border-radius: 16px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-image-wrapper {
+            position: relative;
+            background: #020617;
+            max-height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-image-wrapper img {
+            max-width: 100%;
+            max-height: 70vh;
+            object-fit: contain;
+            display: block;
+        }
+
+        .modal-body {
+            padding: 0.8rem 1rem 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .modal-header-line {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .modal-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .modal-meta {
+            font-size: 0.75rem;
+            opacity: 0.8;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.4rem;
+        }
+
+        .modal-actions a,
+        .modal-actions button {
+            flex: 1;
+            border-radius: 999px;
+            border: none;
+            padding: 0.35rem 0.75rem;
+            font-size: 0.8rem;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .modal-btn-view {
+            background: #e5e7eb;
+            color: #020617;
+        }
+
+        .modal-btn-download {
+            background: #111827;
+            color: #e5e7eb;
+            border: 1px solid rgba(148, 163, 184, 0.8);
+        }
+
+        .modal-btn-close {
+            background: transparent;
+            color: #9ca3af;
+            border: 1px solid rgba(75, 85, 99, 0.9);
+        }
+
+        /* Transparent header on top of the global background. */
+        .site-header {
+            position: relative;
+            z-index: 10;
+            padding: 1rem 1.5rem 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: transparent;
+        }
+
+        /* Asegura que el header y contenido tengan z-index > 0 para estar sobre la lava */
+        .site-header,
+        .filters,
+        .gallery-grid {
+            position: relative;
+            z-index: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-shell">
+        <header class="site-header">
+            <div class="header-left">
+                <a href="/" style="text-decoration: none; color: inherit;">Adrián Bernardino</a>
+            </div>
+        </header>
+
+        <script type="module">
+            import { initLavaLamp } from "/js/lava-lamp.js";
+            initLavaLamp("outside");
+        </script>
+
+        <header style="padding: 1rem 1.5rem 0.5rem;">
+            <h1>Outside</h1>
+        </header>
+
+        <!-- Album filters -->
+        <div class="filters" id="album-filters">
+            <button class="filter-btn is-active" data-album="all">All</button>
+            <button class="filter-btn" data-album="portfolio">Portfolio</button>
+            <button class="filter-btn" data-album="commercial">Commercial</button>
+            <button class="filter-btn" data-album="exhibitions">Exhibitions</button>
+        </div>
+
+        <!-- Grid container; JS will inject cards here. -->
+        <section id="gallery-grid" class="gallery-grid"></section>
+    </div>
+
+    <!-- Modal to focus on a single photo. -->
+    <div id="photo-modal">
+        <div class="modal-card">
+            <div class="modal-image-wrapper">
+                <img id="modal-image" src="" alt="" />
+            </div>
+            <div class="modal-body">
+                <div class="modal-header-line">
+                    <div>
+                        <div id="modal-title" class="modal-title"></div>
+                        <div id="modal-meta" class="modal-meta"></div>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button id="modal-view-btn" class="modal-btn-view" type="button">
+                        View
+                    </button>
+                    <a id="modal-download-link" class="modal-btn-download" href="#" download>
+                        Download
+                    </a>
+                    <button id="modal-close-btn" class="modal-btn-close">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gallery logic (Firebase + dynamic layout). -->
+    <script type="module" src="/js/outside-gallery.js"></script>
+</body>
+
+</html>
