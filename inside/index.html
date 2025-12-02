@@ -470,229 +470,34 @@
 
   <!-- Modal to focus on a single photo. -->
   <div id="photo-modal">
-
-    .photo-actions {
-    display: flex;
-    gap: 0.4rem;
-    }
-
-    .photo-actions button,
-    .photo-actions a {
-    flex: 1;
-    border-radius: 999px;
-    border: none;
-    padding: 0.25rem 0.5rem;
-    font-size: 0.75rem;
-    cursor: pointer;
-    text-align: center;
-    text-decoration: none;
-    }
-
-    .btn-view {
-    background: #e5e7eb;
-    color: #020617;
-    }
-
-    .btn-download {
-    background: #111827;
-    color: #e5e7eb;
-    border: 1px solid rgba(148, 163, 184, 0.8);
-    }
-
-    /* Modal for focusing on one photo. */
-    #photo-modal {
-    position: fixed;
-    inset: 0;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    background: rgba(0, 0, 0, 0.7);
-    z-index: 50;
-    padding: 1rem;
-    }
-
-    #photo-modal.open {
-    display: flex;
-    }
-
-    .modal-card {
-    max-width: 960px;
-    width: 100%;
-    max-height: 100%;
-    background: #020617;
-    border-radius: 16px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    }
-
-    .modal-image-wrapper {
-    position: relative;
-    background: #020617;
-    max-height: 70vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    }
-
-    .modal-image-wrapper img {
-    max-width: 100%;
-    max-height: 70vh;
-    object-fit: contain;
-    display: block;
-    }
-
-    .modal-body {
-    padding: 0.8rem 1rem 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-    }
-
-    .modal-header-line {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 0.5rem;
-    }
-
-    .modal-title {
-    font-weight: 600;
-    font-size: 0.95rem;
-    }
-
-    .modal-meta {
-    font-size: 0.75rem;
-    opacity: 0.8;
-    }
-
-    .modal-actions {
-    display: flex;
-    gap: 0.5rem;
-    margin-top: 0.4rem;
-    }
-
-    .modal-actions a,
-    .modal-actions button {
-    flex: 1;
-    border-radius: 999px;
-    border: none;
-    padding: 0.35rem 0.75rem;
-    font-size: 0.8rem;
-    cursor: pointer;
-    text-align: center;
-    text-decoration: none;
-    }
-
-    .modal-btn-view {
-    background: #e5e7eb;
-    color: #020617;
-    }
-
-    .modal-btn-download {
-    background: #111827;
-    color: #e5e7eb;
-    border: 1px solid rgba(148, 163, 184, 0.8);
-    }
-
-    .modal-btn-close {
-    background: transparent;
-    color: #9ca3af;
-    border: 1px solid rgba(75, 85, 99, 0.9);
-    }
-
-    /* Transparent header on top of the global background. */
-    .site-header {
-    position: relative;
-    z-index: 10;
-    padding: 1rem 1.5rem 0.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: transparent;
-    }
-
-    /* Asegura que el header y contenido tengan z-index > 0 para estar sobre la lava */
-    .site-header,
-    .filters,
-    .gallery-grid {
-    position: relative;
-    z-index: 1;
-    }
-    </style>
-    </head>
-
-    <body>
-      <div class="page-shell">
-        <header class="site-header">
-          <div class="header-left">
-            <a href="/" style="text-decoration: none; color: inherit;">Adrián Bernardino</a>
-          </div>
-        </header>
-
-        <script type="module">
-          import { initLavaLamp } from "/js/lava-lamp.js";
-          initLavaLamp("inside");
-        </script>
-
-        <header style="padding: 1rem 1.5rem 0.5rem;">
-          <h1>Inside</h1>
-        </header>
-
-        <!-- Album filters: later you can sync slugs with your 15 albums. -->
-        <div class="filters" id="album-filters">
-          <button class="filter-btn is-active" data-album="all">All</button>
-          <button class="filter-btn" data-album="darkgreen">Dark Green</button>
-          <button class="filter-btn" data-album="lightgreen">Light Green</button>
-          <button class="filter-btn" data-album="red">Red</button>
-          <button class="filter-btn" data-album="darkblue">Dark Blue</button>
-          <button class="filter-btn" data-album="yellow">Yellow</button>
-          <button class="filter-btn" data-album="black">Black</button>
-          <button class="filter-btn" data-album="white">White</button>
-          <button class="filter-btn" data-album="lightblue">Light Blue</button>
-          <button class="filter-btn" data-album="orange">Orange</button>
-          <button class="filter-btn" data-album="pink">Pink</button>
-          <button class="filter-btn" data-album="purple">Purple</button>
-          <button class="filter-btn" data-album="brown">Brown</button>
-          <button class="filter-btn" data-album="gray">Gray</button>
-          <button class="filter-btn" data-album="zero">Zero</button>
-          <button class="filter-btn" data-album="infinity">Infinity</button>
-        </div>
-
-        <!-- Grid container; JS will inject cards here. -->
-        <section id="gallery-grid" class="gallery-grid"></section>
+    <div class="modal-card">
+      <div class="modal-image-wrapper">
+        <img id="modal-image" src="" alt="" />
       </div>
-
-      <!-- Modal to focus on a single photo. -->
-      <div id="photo-modal">
-        <div class="modal-card">
-          <div class="modal-image-wrapper">
-            <img id="modal-image" src="" alt="" />
-          </div>
-          <div class="modal-body">
-            <div class="modal-header-line">
-              <div>
-                <div id="modal-title" class="modal-title"></div>
-                <div id="modal-meta" class="modal-meta"></div>
-              </div>
-            </div>
-            <div class="modal-actions">
-              <button id="modal-view-btn" class="modal-btn-view" type="button">
-                View
-              </button>
-              <a id="modal-download-link" class="modal-btn-download" href="#" download>
-                Download
-              </a>
-              <button id="modal-close-btn" class="modal-btn-close">
-                Close
-              </button>
-            </div>
+      <div class="modal-body">
+        <div class="modal-header-line">
+          <div>
+            <div id="modal-title" class="modal-title"></div>
+            <div id="modal-meta" class="modal-meta"></div>
           </div>
         </div>
+        <div class="modal-actions">
+          <button id="modal-view-btn" class="modal-btn-view" type="button">
+            View
+          </button>
+          <a id="modal-download-link" class="modal-btn-download" href="#" download>
+            Download
+          </a>
+          <button id="modal-close-btn" class="modal-btn-close">
+            Close
+          </button>
+        </div>
       </div>
+    </div>
+  </div>
 
-      <!-- Gallery logic (Firebase + dynamic layout). -->
-      <script type="module" src="/js/inside-gallery.js"></script>
-    </body>
+  <!-- Gallery logic (Firebase + dynamic layout). -->
+  <script type="module" src="/js/inside-gallery.js"></script>
+</body>
 
 </html>
