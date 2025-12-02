@@ -1,6 +1,6 @@
 // js/inside-gallery.js
 
-import { app, db } from "./firebase-setup.js";
+import { app, db, auth } from "./firebase-setup.js";
 
 import {
   collection,
@@ -9,7 +9,11 @@ import {
   orderBy,
   doc,          // <-- NEW
   onSnapshot,   // <-- NEW
+  writeBatch,
 } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+import Sortable from 'https://cdn.jsdelivr.net/npm/sortablejs@latest/modular/sortable.esm.js';
 
 // Import Storage helpers.
 import {
@@ -24,6 +28,10 @@ const storage = getStorage(app);
 // Keep all loaded photos in memory for filtering.
 let allPhotos = [];
 let currentModalPhoto = null;
+
+const ADMIN_EMAILS = ["angeladrianmartinezbernardino@gmail.com"];
+let isAdmin = false;
+let sortableInstance = null;
 
 /**
  * Helper to download an image as a blob, so it appears to come from the site
@@ -93,6 +101,63 @@ onSnapshot(designRef, (snapshot) => {
     const theme = data.default_theme || {};
     applyTheme(theme);
     console.log("🎨 Design theme updated:", theme.background_mode);
+  }
+});
+
+// --- ADMIN SORTING ---
+
+function initSortable(el) {
+  if (sortableInstance) sortableInstance.destroy();
+  
+  sortableInstance = new Sortable(el, {
+    animation: 150,
+    delay: 2000, // 2 seconds delay for "long press"
+    delayOnTouchOnly: false, 
+    onEnd: async function (evt) {
+      if (evt.newIndex === evt.oldIndex) return;
+      
+      // Get new order of IDs
+      const newOrderIds = Array.from(el.children).map(child => child.dataset.id).filter(id => id);
+      
+      if (newOrderIds.length > 0) {
+        await updateOrderInFirestore(newOrderIds);
+      }
+    },
+  });
+}
+
+async function updateOrderInFirestore(ids) {
+  const batch = writeBatch(db);
+  ids.forEach((id, index) => {
+    // Collection: pages/inside/inside
+    const ref = doc(db, "pages", "inside", "inside", id);
+    batch.update(ref, { order: index });
+  });
+  
+  try {
+    await batch.commit();
+    console.log("Order updated successfully in Firestore.");
+  } catch(e) {
+    console.error("Error updating order:", e);
+    alert("Failed to save new order. Check console for details.");
+  }
+}
+
+// Listen for auth state to enable/disable sorting
+onAuthStateChanged(auth, (user) => {
+  if (user && ADMIN_EMAILS.includes(user.email)) {
+    isAdmin = true;
+    console.log("Admin logged in. Enabling sorting features.");
+    const gridElement = document.getElementById("gallery-grid");
+    if (gridElement && gridElement.children.length > 0) {
+      initSortable(gridElement);
+    }
+  } else {
+    isAdmin = false;
+    if (sortableInstance) {
+      sortableInstance.destroy();
+      sortableInstance = null;
+    }
   }
 });
 
@@ -236,6 +301,7 @@ window.addEventListener("DOMContentLoaded", () => {
     photos.forEach((photo) => {
       const card = document.createElement("article");
       card.className = "photo-card";
+      card.dataset.id = photo.id; // Store ID for sorting
 
       const img = document.createElement("img");
       img.className = "photo-thumb";
@@ -302,6 +368,11 @@ window.addEventListener("DOMContentLoaded", () => {
 
       container.appendChild(card);
     });
+
+    // If admin, re-initialize sortable on the new elements
+    if (isAdmin) {
+      initSortable(container);
+    }
   }
 });
 
